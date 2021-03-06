@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3>{{title}}</h3>
+<div style="margin: auto;width: 30%;">
+<form method="POST">
+
+{% for book in books %}
+    {% if book.St is iterable and book.St is not string  %}
+    <div>題目:</div>
+    {% for St1 in book.St %}
+    <div> \[{{St1|safe}}\]</div>
+    {% endfor %}
+    
+    {% else %}
+    <div> \[{{book.St|safe}}\]</div>
+    {% endif %}
+    <div>{{book.Tip}}</div>
+    {% if book.Val is iterable and book.Val is not string  %}
+    {% for Val1 in book.Val %}
+    <div>作答:<input name="{{book.Id}}" autocomplete="off"></div>
+    {% endfor %}
+    {% else %}
+    <div>作答:<input name="{{book.Id}}" autocomplete="off"></div>
+    {% endif %}
+    <P>.
+        <input name="SID" type="hidden" value="{{sid}}">
+    </P>
+{% else %}
+<p>No books found</p>
+{% endfor %}
+<div><input type="submit"></div>
+</form>
+</div>
+{% endblock %}

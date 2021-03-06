@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script>
+  function showCtx(cid) {
+    var x = document.getElementById("content" + cid);
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+    for (let i = 1; i < 8; i++) {
+      x = document.getElementById("content" + (cid + i));
+      if (x !== null) {
+        if (x.style.display === "none") {
+          x.style.display = "block";
+        } else {
+          x.style.display = "none";
+        }
+      } else {
+        continue
+      }
+      break;
+    }
+  }
+</script>
+
+<h3>{{title}}</h3>
+<div style="margin: auto;width: 30%;">
+  <form method="POST">
+    <P>
+      <input name="SID" type="hidden" value="{{sid}}">
+    </P>
+    {% for TE in NTE %}
+    {% if loop.previtem is defined %}
+    {% set display_style = "display:none" %}
+    {% else %}
+    {% set display_style = "display:block" %}
+    {% endif %}
+    <div id="content{{TE.Id}}" style="{{display_style}}">
+      <span>題目{{TE.Id+1}}:</span>
+      {% if TE.St is iterable and TE.St is not string %}
+
+      {% for St1 in TE.St %}
+      <div> \[{{St1|safe}}\]</div>
+      {% endfor %}
+
+      {% else %}
+      <div> \[{{TE.St|safe}}\]</div>
+      {% endif %}
+      <div>{{TE.Tip}}</div>
+      {% if TE.Val is iterable and TE.Val is not string %}
+      {% for Val1 in TE.Val %}
+      <div>作答:<input name="{{TE.Id}}" autocomplete="off"></div>
+      {% endfor %}
+      {% else %}
+      <div>作答:<input name="{{TE.Id}}" autocomplete="off"></div>
+      {% endif %}
+
+      {% if TE.PlotImg %}
+      <img src="/apps/img/{{TE.PlotImg}}">
+      {% else %}
+      <p>.</p>
+      {% endif %}
+
+
+      {% if loop.nextitem is defined %}
+
+      <div><a class="btn btn-primary" href=# onclick="showCtx({{TE.Id}})">下一題</a></div>
+      {% else %}
+      <div><input class="btn btn-success" type="submit" value="提交試題"></div>
+      {% endif %}
+
+    </div>
+    {% else %}
+    <p>No books found</p>
+    {% endfor %}
+
+  </form>
+</div>
+{% endblock %}
