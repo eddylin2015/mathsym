@@ -41,77 +41,12 @@ def Text2St(ans):
     ans = ans.replace(r"J(", r"sqrt(")
     return ans
 
+def GetTE(i, St, Val, Tx=-1):#記錄:Id號,St題,Val值,Ans答,OK檢查,Tx,題型,Tip提示'''    
+    return {"Id": i,"St": St,"Val": Val,"Ans": "","OK": 0,"Tx":Tx,"Tip":""}
 
-### HTML LIST TABLE
-def LIST2TBL(data):
-    return   '<table><tr>{}</tr></table>'.format(
-           '</tr><tr>'.join(
-               '<td>{}</td>'.format('</td><td>'.join(str(_) for _ in row)) for row in data)
-           )
-
-def NTE2TBL(data):
-    return '<table><tr>{}</tr></table>'.format(
-           '</tr><tr>'.join(
-               '<td>{}</td>'.format(
-                   '</td><td>'.join("%s" % r[_] if i>0 else "$%s$" % r[_] for i, _ in enumerate(r))) for r in data)
-           )
-
-def NTE2HTMLTABLE(NTE):
-    HtmlTableContext="<table><tr><td>{}</td></tr>".format("</td><td>".join(_ for _ in ["St","Val","Ans","OK"]))
-    for row in NTE:
-        St=row["St"]
-        if isinstance(St,list):
-            HtmlTableContext+=r'<tr><td>{}</td>'.format('</td><td>'.join("$$"+str(_)+"$$" for _ in St))
-        else:
-            HtmlTableContext+=r'<tr><td>{}</td>'.format("$$"+str(St)+"$$")
-        Val=row["Val"]
-        Ans=row["Ans"]
-        OK=row["OK"]
-        HtmlTableContext+=f"<td>{Val}</td><td>{Ans}</td><td>{OK}</td></tr>"
-    HtmlTableContext+="</table>"
-    return HtmlTableContext  
-
-def NTE2HTML(NTE, Titles = None, LatexFlag = None):
-    if Titles == None:
-        Titles =  ["St","Val","Ans","OK"]
-    if LatexFlag == None:
-        LatexFlag=[1,0,0,0]
-        
-    HtmlTableContext="<table><tr><td>{}</td></tr>".format("</td><td>".join(_ for _ in Titles))
-    for row in NTE:
-        HtmlTableContext+=f"<tr>"
-        idx=0
-        for f_ in Titles:
-            txt=row[f_]
-            if LatexFlag==None:
-                HtmlTableContext+=f"<td>{txt}</td>"
-            elif LatexFlag[idx]==1:
-                HtmlTableContext+=f"<td>$${txt}$$</td>"
-            else:
-                HtmlTableContext+=f"<td>{txt}</td>"
-            idx+=1
-        HtmlTableContext+=f"</tr>"    
-    HtmlTableContext+="</table>"
-    return HtmlTableContext  
-
-def NTE2MD(NTE, Titles = None,LatexFlag = None):
-    TableContext =""
-    titles=[["Qiz","Val","Ans","OK"],["---","---","---","---"]]
-    for t_ in titles:
-        TableContext +="|{}|\n".format("|".join(_ for _ in t_))
-    for TE in NTE:
-        for idx,iteN in enumerate(TE):
-            ite=TE[iteN]
-            if isinstance(ite,list):
-                TableContext+=r'|{}|'.format(' '.join("$$"+str(_)+"$$" for _ in ite))
-            elif idx<1:
-                TableContext+=r'|{}|'.format("$$"+str(ite)+"$$")
-            else:
-                TableContext+=r'{}|'.format(str(ite))
-        TableContext+="\n"
-    return TableContext
-
-
+def NTE2TBL(t):
+    return '號|題|值|答|檢查|題型|提示\n--|--|--|--|--|--|--\n{}'.format(
+    '\n'.join('|'.join("$$%s$$" % r[_] if i==1 else str(r[_]) for i, _ in enumerate(r)) for r in t))
 
 ### datetime
 class DateHelper:
