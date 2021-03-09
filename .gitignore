@@ -22,3 +22,4 @@ web/requirements-dev.txt
 website/flask_session/
 web/flask_session/
 website/static/
+lesson/kw_data.xlsx
