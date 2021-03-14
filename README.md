@@ -4,11 +4,9 @@
 
 學習Python, 幫助數學學成, 培養數學素養.
 
-[lesson1_sympy簡介](lesson01_introduce_sympy.ipynb)   
-[lesson2_website簡介](lesson02_flask.ipynb)  
-[Sympy_代數](lesson3A_Sympy_代數.ipynb)
+[lesson1_sympy簡介](meeting/lesson01_ex0.ipynb)   
 
-### Python 3.8.7,以及第三方組件
+### Python 3.9.x,以及第三方組件
 - pip install numpy
 - pip install sympy
 - pip install jupyterlab
