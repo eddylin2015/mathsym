@@ -17,11 +17,11 @@ def create_app():
     # 根路由
     @app.route("/")
     def index():
-        return redirect('/apps')
+        return redirect('/trythisapps')
 
     # [START CODE 數學出題及比對答案]
     # 使用模版list.html, 顯示列表
-    @app.route("/apps")
+    @app.route("/trythisapps")
     def list():
         return render_template(
             "list.html",
@@ -30,7 +30,7 @@ def create_app():
 
     # GET 顯示QAMT題QID相關算式
     # POST 收集作答,並對比答案.
-    @app.route("/apps/<QID>", methods=['GET', 'POST'])
+    @app.route("/trythisapps/<QID>", methods=['GET', 'POST'])
     def MathPanel(QID):
         Tx = int(request.args.get('Tx', "-1"))
         QIID = QID.split(".")[0]
@@ -54,7 +54,7 @@ def create_app():
         NTE_Storage[SID] = NTE_blob
         return render_template("form.html", title=QID, NTE=NTE, sid=SID)
 
-    @app.route('/apps/img/<filename>')
+    @app.route('/trythisapps/img/<filename>')
     def showimage(filename):
         try:
             FilePath = os.getcwd()+"/static/"+filename
@@ -63,7 +63,7 @@ def create_app():
         except:
             pass
 
-    @app.route("/apps/showPlt")
+    @app.route("/trythisapps/showPlt")
     def showPlt():
         # Generate the figure **without using pyplot**.
         fig = Figure()
@@ -87,4 +87,4 @@ def create_app():
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=8081, debug=True)
+    app.run(host="0.0.0.0", port=83, debug=True)

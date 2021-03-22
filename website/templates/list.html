@@ -8,13 +8,13 @@
 {% for book in books %}
 
 <div class="media">
-  <a href="/apps/{{book}}">
+  <a href="/trythisapps/{{book}}">
       <span>{{book}}</span>
   </a>
   題型:
   {% set QID,TX,Name = book.split('.') %}
   {% for n in range(0,TX|int) %}
-  <a href="/apps/{{book}}?Tx={{n}}">{{n}}</a>
+  <a href="/trythisapps/{{book}}?Tx={{n}}">{{n}}</a>
   {% endfor %}
 
 </div>
