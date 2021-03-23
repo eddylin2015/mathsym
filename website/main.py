@@ -9,26 +9,20 @@ from datetime import datetime
 import esmathlib as lib    # 自定義,數學出題庫
 from functools import wraps
 from flask_session import Session
+import random
 import config
 QAMT = 6  # 出題數目
 NTE_Storage = {}
 records = [
-  { "id":987,"user":"祖沖之圓周率小數后七位","Pass":"3.1415926","Name":"test","Classno":"","Seat":"","Role":"9", "displayName":""},
+  { "id":500,"user":"祖沖之圓周率小數后七位","Pass":"3.1415926","Name":"祖沖之","Classno":"南北朝","Seat":"500","Role":"9", "displayName":"Zu Chongzhi"},
+  { "id":295,"user":"劉徽圓周率小數后四位","Pass":"3.1416","Name":"劉徽","Classno":"三國","Seat":"295","Role":"9", "displayName":"Liu Hui"},
 ]
 def create_app(config):
     # Flask 框架實例 app
     app = Flask(__name__)
     app.config.from_object(config)
     app.secret_key = app.config["SECRET_KEY"]      
-    app.config['SECRET_KEY'] =app.config["SECRET_KEY"]
-    app.config['SESSION_COOKIE_NAME'] =app.config["SESSION_COOKIE_NAME"]
-    app.config['SESSION_TYPE'] = 'filesystem'  # session类型为redis
-    app.config['SESSION_USE_SIGNER'] = True  # 是否对发送到浏览器上session的cookie值进行加密
-    app.config['SESSION_KEY_PREFIX'] = 'sess:'  # 保存到session中的值的前缀
-    app.config['SESSION_PERMANENT'] = True  # 如果设置为True，则关闭浏览器session就失效。
-    #app.config['SESSION_REDIS'] = redis.Redis(host='127.0.0.1',port=app.config["REDIS_PORT"])  
     Session(app)
-
 
     # 根路由
     @app.route("/")
@@ -96,23 +90,25 @@ def create_app(config):
 
     @app.route('/trythisapps/login', methods=['GET', 'POST'])
     def login():
+
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
             for record in records:
               if username == record['user'] and  password == record['Pass'] :
                  session['profile'] =  record
-                 return redirect(url_for('index'))
-        return '''
+                 #return redirect(url_for('index'))
+                 return redirect(config.IndexURL)
+        username=records[random.choice([0,1])]["user"]
+        return f'''
             <div style="margin-top: 20%;margin-left:50%;margin-right:50%">
             <form method="post">
-                <p>USER:<input type=text name=username value="祖沖之圓周率小數后七位">
+                <p>USER:<input type=text name=username value="{username}">
                 <p>PASS:<input type=password name=password>
                 <p><input type=submit value=Login>
             </form>
             </div>
         '''
-
 
     # 容錯處理
     @app.errorhandler(500)
@@ -120,7 +116,6 @@ def create_app(config):
         return """
         內部錯誤: <pre>{}</pre> 查看日誌 full stacktrace.
         """.format(e), 500
-      
 
     return app
 
@@ -131,7 +126,6 @@ def login_required_auth(f):
             return redirect(url_for('login', next=request.url))
         return f(*args, **kwargs)
     return decorated_function  
-
 
 app = create_app(config)
 
