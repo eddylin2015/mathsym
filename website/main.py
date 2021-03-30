@@ -60,8 +60,12 @@ def create_app(config):
 
         # GET 顯示QAMT題QID相關算式
         NTE = lib.Get_Expr(QIID, QAMT, Tx)
+        for te in NTE:
+            print(te["Val"])
         SID = lib.GetKey()
         NTE_blob = pickle.dumps(NTE)
+
+        
         NTE_Storage[SID] = NTE_blob
         return render_template("form.html", title=QID, NTE=NTE, sid=SID)
 

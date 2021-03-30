@@ -1324,18 +1324,26 @@ def Get_PF293_Expr(QN,Tx=-1):
 """
 PF301一元二次方程式
 """
-
-
 def Post_PF301_Expr(NTE):
     for TE in NTE:
         Val=TE["Val"]
         ans_=TE["Ans"].split(";")
+        ans=[]
+        ans_idx=[]
         try:
             cnt=0
-            for idx in ans_:
-                for v_ in Val:
-                    if int(idx)==v_ : cnt+=1
-            if cnt>1:                   #比對答案:
+            for value in ans_:
+                ans.append(parse_expr(value))
+            
+            for idx, a_ in enumerate(ans):
+                for vidx, v_ in enumerate(Val):
+                    if a_==v_ : 
+                        if vidx in ans_idx:
+                            pass
+                        else:
+                            cnt+=1
+                            ans_idx.append(vidx)
+            if cnt==len(Val):                   #比對答案:
                 TE["OK"]=1
             else:                                      #不則
                 TE["OK"]=0
@@ -1402,12 +1410,22 @@ def Post_PF302_Expr(NTE):
     for TE in NTE:
         Val=TE["Val"]
         ans_=TE["Ans"].split(";")
+        ans=[]
+        ans_idx=[]
         try:
             cnt=0
-            for idx in ans_:
-                for v_ in Val:
-                    if int(idx)==v_ : cnt+=1
-            if cnt>1:                   #比對答案:
+            for value in ans_:
+                ans.append(parse_expr(lib.Text2St(value)))
+            
+            for idx, a_ in enumerate(ans):
+                for vidx, v_ in enumerate(Val):
+                    if a_==v_ : 
+                        if vidx in ans_idx:
+                            pass
+                        else:
+                            cnt+=1
+                            ans_idx.append(vidx)
+            if cnt==len(Val):                   #比對答案:
                 TE["OK"]=1
             else:                                      #不則
                 TE["OK"]=0
