@@ -132,7 +132,7 @@ def Post_Expr_CheckAns(QIID,NTE):
         for TE in NTE:
             if QIID=="PF101" :   Put_PF101_Expr(TE)
             elif QIID=="PF102" : Put_PF102_Expr(TE)
-            elif QIID=="PF103" : Put_PF103_Expr(NTE)
+            elif QIID=="PF103" : Put_PF103_Expr(TE)
 
 
 """
@@ -289,8 +289,10 @@ def Post_PF103_Expr(NTE):
     for TE in NTE: Put_PF103_Expr(TE)
 
 def Put_PF103_Expr(TE):
+    print(TE)
     Val=TE["Val"]
     ans=TE["Ans"] if TE["Ans"] != "" else "3.14159"
+    ans = lib.Text2St(ans)
     try:
         if parse_expr(ans) == Val[0]:  # 比對答案:
             TE["OK"] = 1
@@ -353,7 +355,7 @@ def Get_PF103_Expr(QN,Tx=-1):
             fx=sp.Eq( QizStat, c )                           #sympy.Eq 方程式 f(x)=c ,
             St=sp.latex(fx)                                  #題目 latex 數學格式
             Val=sp.solve(fx)                                 #sympy.solve求根,得出標準答案
-        TE=GetTE(Qid,St,Val,Tx)
+        TE=GetTE(Qid, St, Val, Tx)
         TE["Tip"] = "請填x的值"
         NTE.append(TE)
     return NTE
