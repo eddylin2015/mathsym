@@ -14,8 +14,8 @@ import config
 QAMT = 6  # 出題數目
 NTE_Storage = {}
 records = [
-  { "id":500,"user":"祖沖之圓周率小數后七位","Pass":"3.1415926","Name":"祖沖之","Classno":"南北朝","Seat":"500","Role":"9", "displayName":"Zu Chongzhi"},
-  { "id":295,"user":"劉徽圓周率小數后四位","Pass":"3.1416","Name":"劉徽","Classno":"三國","Seat":"295","Role":"9", "displayName":"Liu Hui"},
+  { "id":500,"user":"圓周率","Pass":"3.14","Name":"祖沖之","Classno":"南北朝","Seat":"500","Role":"9", "displayName":"Zu Chongzhi"},
+  { "id":295,"user":"圓周率","Pass":"3.14","Name":"劉徽","Classno":"三國","Seat":"295","Role":"9", "displayName":"Liu Hui"},
 ]
 def create_app(config):
     # Flask 框架實例 app

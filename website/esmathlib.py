@@ -36,6 +36,7 @@ def GetTE(Qid, St, Val, Tx=0):
     TE["Val"] = Val
     TE["Ans"] = ""
     TE["OK"] = 0
+    TE["Minute"]= datetime.datetime.now().strftime("%M:%S")   #"%m-%d-%Y %H:%M:%S")
     TE["Tip"] = ""
     TE["PotImg"]=None
     return TE
@@ -101,14 +102,17 @@ def Post_Expr_UpdateAns(ReqForm,NTE):
         if key=="SID": continue
         for value in ReqForm.getlist(key):
             for TE in NTE:
-                if int(TE["Id"])==int(key):
+                if int(key)>=1000:
+                    if int(TE["Id"])==int(key)-1000:
+                        TE["Minute"]=value
+                elif int(TE["Id"])==int(key):
                     if TE["Ans"] != "" :  
                         TE["Ans"]=TE["Ans"]+";"+ value 
                     else:
                         TE["Ans"]=value
 
 def Post_Expr_CheckAns(QIID,NTE):
-    if QIID=="PF104" : Post_PF104_Expr(NTE)
+    if   QIID=="PF104" : Post_PF104_Expr(NTE)
     elif QIID=="PF105" : Post_PF105_Expr(NTE)
     elif QIID=="PF106" : Post_PF106_Expr(NTE)
     elif QIID=="PF107" : Post_PF107_Expr(NTE)
@@ -1021,6 +1025,7 @@ PF205分式的加減
 
 
 def Post_PF205_Expr(NTE):
+    x, y, z = sp.symbols('x,y,z')
     for TE in NTE:
         Val=TE["Val"]
         ans=TE["Ans"]
