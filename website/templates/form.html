@@ -31,7 +31,7 @@
     if(c<0) c=c+3600
     m=Math.floor(c / 60)
     s=c % 60
-    return (m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
+    return c;//(m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
   }
 
   function formSubmit(cid) {
