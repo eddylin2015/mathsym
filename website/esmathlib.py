@@ -63,7 +63,8 @@ def GetQList():
         "PF302.4.解可化為一元二次方程的分式方程",
         "PF303.4.解二元二次方程組",
         "PF304.4.二次函數圖像的性質",
-        "PF305.4.解直角三角形"]
+        "PF305.4.解直角三角形",
+        "PF306.1.解直角三角形",]
 
 """
 算式
@@ -93,6 +94,7 @@ def Get_Expr(QIID,QAMT,Tx=-1):
     elif QIID=="PF303" : NTE=Get_PF303_Expr(QAMT,Tx)
     elif QIID=="PF304" : NTE=Get_PF304_Expr(QAMT,Tx)
     elif QIID=="PF305" : NTE=Get_PF305_Expr(QAMT,Tx)
+    elif QIID=="PF306" : NTE=Get_PF306_Expr(QAMT,Tx)
     else:
         return None
     return NTE
@@ -137,7 +139,18 @@ def Post_Expr_CheckAns(QIID,NTE):
             if QIID=="PF101" :   Put_PF101_Expr(TE)
             elif QIID=="PF102" : Put_PF102_Expr(TE)
             elif QIID=="PF103" : Put_PF103_Expr(TE)
-
+            elif QIID=="PF306" : Put_Expr_V1(TE)
+                
+def Put_Expr_V1(TE):
+    ''' 檢查作答結果,比對Val == Ans, 對錯OK=[0/1] '''
+    ans = lib.Text2St(TE["Ans"])
+    Val = TE["Val"]
+    try:
+        if parse_expr(ans) == Val:  # 比對答案:
+            TE["OK"] = 1; return True
+    except:
+        pass
+    return False
 
 """
 PF101有理數運算
@@ -1179,6 +1192,8 @@ def Get_PF207_Expr(QN,Tx=-1):
             x_vals = np.linspace(-5, 5, 10)
             y_vals = lam_x(x_vals)
             fig = Figure()
+            fig.set_figheight(3)
+            fig.set_figwidth(3)            
             ax = fig.subplots()
             ax.plot(x_vals, y_vals)
             ax.axhline(0, color='black')
@@ -1649,4 +1664,78 @@ def Get_PF305_Expr(QN,Tx=-1):
 
         TE = GetTE(Qid, St, Val, Tx)
         NTE.append(TE)
+    return NTE
+
+#######################
+
+def Plot_RightTriangle(A,O,H,Path_):
+    try:
+        
+        #plt.close('all')
+        # Triangle 1
+        x=np.array([0,A,A,0])
+        y=np.array([0,0,O,0])
+        # Figure and Axes
+        
+        fig1=Figure()
+        fig1.set_figheight(3)
+        fig1.set_figwidth(3)
+        #ax1=fig1.add_subplot(111)
+        ax1=fig1.subplots()
+        ax1.axis('square')
+        ax1.plot(x,y)
+        # Axes Limits
+        ax1.set_xlim([-1,A+2])
+        ax1.set_ylim([-1,O+2])
+        ax1.text(0.5,0.25,'θ')
+        ax1.text(A-0.5,0.25,'90')
+        ax1.text(A-0.25,O-0.35,'γ')
+        ax1.text(A/2,-0.5,f'a={A}')
+        ax1.text(A+0.5,O/2,f'b={O}')
+        ax1.text(A/2-1,O/2,f'c=${sp.latex(H)}$')
+        fig1.savefig(os.getcwd()+"\\static\\"+Path_)
+        return Path_
+    except Exception as e:
+        print(e)
+        return None
+        
+    
+def Get_PF306_Expr(QN,Tx=-1):
+    TxFlag=Tx==-1       
+    x, y, z = sp.symbols('x,y,z')
+    sample_list0 = list(range(-10, 10))   # [-5,-4,-3,-2,-1,1,2,3,4,5]
+    sample_list1 = list(range(-10, 10))
+    sample_list1.remove(0)    # 非零數列
+    NTE = []
+    for Qid in range(0, QN):
+        A=random.choice([2,3,4,5,7])
+        O=random.choice([2,3,4,5,7])
+        H=sp.sqrt(A**2+O**2)
+        angle_=["theta","gamma"]
+        trig_=["sin","cos","tan"]
+        trig=random.choice(trig_)
+        ang=random.choice(angle_)
+        St=r"設直角三角形: a=%s,b=%s,c=%s , 求 %s  \%s = ?"%(A,O,sp.latex(H) , trig,ang)
+        Val = 1
+        if trig=="sin":
+            if ang=="theta":             
+                Val=O/H
+            if ang=="gamma":             
+                Val=A/H
+        if trig=="cos":
+            if ang=="theta":             
+                Val=A/H
+            if ang=="gamma":             
+                Val=O/H
+        if trig=="tan":
+            if ang=="theta":             
+                Val=O/A
+            if ang=="gamma":             
+                Val=A/O
+        
+        TE = GetTE(Qid, St, Val, Tx)
+        TE["Tip"] = " y 隨 x 的增大而____  (  +1 表示 增大  或  -1 表示  減少 )"
+        TE["PlotImg"]=Plot_RightTriangle(A,O,H,"img"+GetKey()+str(Qid)+".png")
+        NTE.append(TE)
+
     return NTE
