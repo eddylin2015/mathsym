@@ -1729,12 +1729,12 @@ def Get_PF306_Expr(QN,Tx=-1):
                 Val=O/H
         if trig=="tan":
             if ang=="theta":             
-                Val=O/A
+                Val=sp.S(O)/A
             if ang=="gamma":             
-                Val=A/O
+                Val=sp.S(A)/O
         
         TE = GetTE(Qid, St, Val, Tx)
-        TE["Tip"] = " y 隨 x 的增大而____  (  +1 表示 增大  或  -1 表示  減少 )"
+        #TE["Tip"] = " y 隨 x 的增大而____  (  +1 表示 增大  或  -1 表示  減少 )"
         TE["PlotImg"]=Plot_RightTriangle(A,O,H,"img"+GetKey()+str(Qid)+".png")
         NTE.append(TE)
 
