@@ -114,32 +114,31 @@ def Post_Expr_UpdateAns(ReqForm,NTE):
                         TE["Ans"]=value
 
 def Post_Expr_CheckAns(QIID,NTE):
-    if   QIID=="PF104" : Post_PF104_Expr(NTE)
-    elif QIID=="PF105" : Post_PF105_Expr(NTE)
-    elif QIID=="PF106" : Post_PF106_Expr(NTE)
-    elif QIID=="PF107" : Post_PF107_Expr(NTE)
-    elif QIID=="PF108" : Post_PF108_Expr(NTE)
-    elif QIID=="PF201" : Post_PF201_Expr(NTE)
-    elif QIID=="PF202" : Post_PF202_Expr(NTE)
-    elif QIID=="PF203" : Post_PF203_Expr(NTE)
-    elif QIID=="PF204" : Post_PF204_Expr(NTE)
-    elif QIID=="PF205" : Post_PF205_Expr(NTE)
-    elif QIID=="PF206" : Post_PF206_Expr(NTE)
-    elif QIID=="PF207" : Post_PF207_Expr(NTE)
-    elif QIID=="PF291" : Post_PF291_Expr(NTE)
-    elif QIID=="PF292" : Post_PF292_Expr(NTE)
-    elif QIID=="PF293" : Post_PF293_Expr(NTE)
-    elif QIID=="PF301" : Post_PF301_Expr(NTE)
-    elif QIID=="PF302" : Post_PF302_Expr(NTE)
-    elif QIID=="PF303" : Post_PF303_Expr(NTE)
-    elif QIID=="PF304" : Post_PF304_Expr(NTE)
-    elif QIID=="PF305" : Post_PF305_Expr(NTE)  
-    else:
-        for TE in NTE:
-            if QIID=="PF101" :   Put_PF101_Expr(TE)
-            elif QIID=="PF102" : Put_PF102_Expr(TE)
-            elif QIID=="PF103" : Put_PF103_Expr(TE)
-            elif QIID=="PF306" : Put_Expr_V1(TE)
+    for TE in NTE:
+        if QIID=="PF101" :   Put_PF101_Expr(TE)
+        elif QIID=="PF102" : Put_PF102_Expr(TE)
+        elif QIID=="PF103" : Put_PF103_Expr(TE)
+        elif QIID=="PF104" : Put_PF104_Expr(NTE)
+        elif QIID=="PF105" : Put_PF105_Expr(NTE)
+        elif QIID=="PF106" : Put_PF106_Expr(NTE)
+        elif QIID=="PF107" : Put_PF107_Expr(NTE)
+        elif QIID=="PF108" : Put_PF108_Expr(NTE)
+        elif QIID=="PF201" : Put_PF201_Expr(NTE)
+        elif QIID=="PF202" : Put_PF202_Expr(NTE)
+        elif QIID=="PF203" : Put_PF203_Expr(NTE)
+        elif QIID=="PF204" : Put_PF204_Expr(NTE)
+        elif QIID=="PF205" : Put_PF205_Expr(NTE)
+        elif QIID=="PF206" : Put_PF206_Expr(NTE)
+        elif QIID=="PF207" : Put_PF207_Expr(NTE)
+        elif QIID=="PF291" : Put_PF291_Expr(NTE)
+        elif QIID=="PF292" : Put_PF292_Expr(NTE)
+        elif QIID=="PF293" : Put_PF293_Expr(NTE)
+        elif QIID=="PF301" : Put_PF301_Expr(NTE)
+        elif QIID=="PF302" : Put_PF302_Expr(NTE)
+        elif QIID=="PF303" : Put_PF303_Expr(NTE)
+        elif QIID=="PF304" : Put_PF304_Expr(NTE)
+        elif QIID=="PF305" : Put_Expr_V1(NTE)  
+        elif QIID=="PF306" : Put_Expr_V1(TE)
                 
 def Put_Expr_V1(TE):
     ''' 檢查作答結果,比對Val == Ans, 對錯OK=[0/1] '''
@@ -299,10 +298,6 @@ def Get_PF102_Expr(QN,Tx=-1):
 """
 PF103一元一次方程
 """
-
-def Post_PF103_Expr(NTE):
-    for TE in NTE: Put_PF103_Expr(TE)
-
 def Put_PF103_Expr(TE):
     print(TE)
     Val=TE["Val"]
@@ -380,22 +375,19 @@ def Get_PF103_Expr(QN,Tx=-1):
 PF104整式的加減法練習
 """
 
-
-def Post_PF104_Expr(NTE):
+def Put_PF104_Expr(TE):
     x = sp.Symbol('x')
-    for TE in NTE:
-        Val = TE["Val"]
-        ans = TE["Ans"]
-        if ans.strip() == "": ans = "3.1415"
-        ans = lib.Text2St(ans)
-        try:
-
-            if parse_expr(ans).subs({x: 7}) == Val.subs({x: 7}):  # 比對答案:
-                TE["OK"] = 1
-            else:  # 不則
-                TE["OK"] = 0
-        except:
-            pass
+    Val = TE["Val"]
+    ans = TE["Ans"]
+    if ans.strip() == "": ans = "3.1415"
+    ans = lib.Text2St(ans)
+    try:
+        if parse_expr(ans).subs({x: 7}) == Val.subs({x: 7}):  # 比對答案:
+            TE["OK"] = 1
+        else:  
+            TE["OK"] = 0
+    except:
+        pass
 
 
 def Get_PF104_Expr(QN,Tx=-1):
@@ -435,35 +427,30 @@ def Get_PF104_Expr(QN,Tx=-1):
         NTE.append(TE)    
     return NTE
 
-  
-
-
 """
 PF105二元一次方程
 """
 
-
-def Post_PF105_Expr(NTE):
+def Put_PF105_Expr(TE):
     x, y, z = sp.symbols('x,y,z')
-    for TE in NTE:
-        ans = TE["Ans"]
-        Val = TE["Val"]
-        ans = ans.split(";")
-        ans1 = ans[0]
-        ans2 = ans[1] if len(ans) > 1 else "3.1415"
-        if ans1.strip() == "":
-            ans1 = "3.1415"
-        if ans2.strip() == "":
-            ans2 = "3.1415"
-        try:
-            ans = {x: parse_expr(ans1), y: parse_expr(ans2)}
-            if ans == Val:  # 比對答案:
-                TE["OK"] = 1
-            else:  # 不則
-                TE["OK"] = 0
-        except:
-            pass
-        TE["Val"] = r"\( {} \)".format(sp.latex(Val))
+    ans = TE["Ans"]
+    Val = TE["Val"]
+    ans = ans.split(";")
+    ans1 = ans[0]
+    ans2 = ans[1] if len(ans) > 1 else "3.1415"
+    if ans1.strip() == "":
+        ans1 = "3.1415"
+    if ans2.strip() == "":
+        ans2 = "3.1415"
+    try:
+        ans = {x: parse_expr(ans1), y: parse_expr(ans2)}
+        if ans == Val:  # 比對答案:
+            TE["OK"] = 1
+        else:  # 不則
+            TE["OK"] = 0
+    except:
+        pass
+    TE["Val"] = r"\( {} \)".format(sp.latex(Val))
 
 
 def Get_PF105_Expr(QN,Tx=-1):
@@ -495,20 +482,20 @@ PF106一元一次不等式
 """
 
 
-def Post_PF106_Expr(NTE):
+def Put_PF106_Expr(TE):
     x = sp.Symbol('x')
-    for TE in NTE:
-        Val = TE["Val"]
-        ans = TE["Ans"]
-        if ans == "":
-            continue
-        try:
-            if sp.solve(ans) == Val:  # 比對答案:
-                TE["OK"] = 1
-            else:  # 不則
-                TE["OK"] = 0
-        except:
-            pass
+    Val = TE["Val"]
+    ans = TE["Ans"]
+    if ans == "":
+        TE["OK"] = 0
+        return
+    try:
+        if sp.solve(ans) == Val:  # 比對答案:
+            TE["OK"] = 1
+        else:  # 不則
+            TE["OK"] = 0
+    except:
+        pass
 
 
 def Get_PF106_Expr(QN,Tx=-1):
@@ -593,45 +580,38 @@ def Get_PF106_Expr(QN,Tx=-1):
 """
 PF107一元一次不等式組
 """
-
-
-def Post_PF107_Expr(NTE,i=-1):
+def Put_PF107_Expr(TE):
     x = sp.symbols('x')
-    for idx,TE in enumerate(NTE):
-        if i==-1 or i==idx:
-            pass
+    Val = TE["Val"]
+    Flag = False
+    ans = TE["Ans"]
+    ans = re.sub(r"[<][ ]*x[ ]*[<]", r"<x & x<", ans)
+    ans = re.sub(r"[>][ ]*x[ ]*[>]", r">x & x>", ans)        
+    if ans == "": ans = "(-oo < x) & (x < oo)"
+    a1 = ans.split("|")
+    a2 = ans.split("&")
+    try:
+        if len(a1) > 1:
+            a_ = []
+            for aa_ in a1:
+                a_.append(sp.solve(aa_))
+            Flag = (a_[0] | a_[1]) == Val
+        elif len(a2) > 1:
+            a_ = []
+            for aa_ in a2:
+                a_.append(sp.parse_expr(aa_))
+            Flag = reduce_rational_inequalities([[a_[0], a_[1]]], x) == Val
+        elif ans == '0':
+            if str(Val) == "False":
+                Flag = True
         else:
-            continue
-        Val = TE["Val"]
-        Flag = False
-        ans = TE["Ans"]
-        ans = re.sub(r"[<][ ]*x[ ]*[<]", r"<x & x<", ans)
-        ans = re.sub(r"[>][ ]*x[ ]*[>]", r">x & x>", ans)        
-        if ans == "": ans = "(-oo < x) & (x < oo)"
-        a1 = ans.split("|")
-        a2 = ans.split("&")
-        try:
-            if len(a1) > 1:
-                a_ = []
-                for aa_ in a1:
-                    a_.append(sp.solve(aa_))
-                Flag = (a_[0] | a_[1]) == Val
-            elif len(a2) > 1:
-                a_ = []
-                for aa_ in a2:
-                    a_.append(sp.parse_expr(aa_))
-                Flag = reduce_rational_inequalities([[a_[0], a_[1]]], x) == Val
-            elif ans == '0':
-                if str(Val) == "False":
-                    Flag = True
-            else:
-                Flag = sp.solve(ans) == Val
-            if Flag:  # 比對答案:
-                TE["OK"] = 1
-            else:  # 不則
-                TE["OK"] = 0
-        except:
-            pass
+            Flag = sp.solve(ans) == Val
+        if Flag:  # 比對答案:
+            TE["OK"] = 1
+        else:  # 不則
+            TE["OK"] = 0
+    except:
+        pass
 
 def Get_PF107_Expr(QN,Tx=-1):
     TxFlag=Tx==-1       
@@ -749,20 +729,19 @@ PF108整式的乘法練習
 """
 
 
-def Post_PF108_Expr(NTE):
+def Put_PF108_Expr(TE):
     x = sp.Symbol('x')
-    for TE in NTE:
-        Val = TE["Val"]
-        ans = TE["Ans"]
-        if ans.strip() == "": ans = "3.1415926"
-        ans = lib.Text2St(ans)
-        try:
-            if parse_expr(ans).subs({x: 7}) == Val.subs({x: 7}):  # 比對答案:
-                TE["OK"] = 1
-            else:  # 不則
-                TE["OK"] = 0
-        except:
-            pass
+    Val = TE["Val"]
+    ans = TE["Ans"]
+    if ans.strip() == "": ans = "3.1415926"
+    ans = lib.Text2St(ans)
+    try:
+        if parse_expr(ans).subs({x: 7}) == Val.subs({x: 7}):  # 比對答案:
+            TE["OK"] = 1
+        else:  # 不則
+            TE["OK"] = 0
+    except:
+        pass
 
 
 def Get_PF108_Expr(QN,Tx=-1):
@@ -787,20 +766,19 @@ PF201根式的運算
 """
 
 
-def Post_PF201_Expr(NTE):
+def Put_PF201_Expr(TE):
     x=sp.Symbol('x')
-    for TE in NTE:
-        Val=TE["Val"]
-        ans=TE["Ans"]
-        if ans.strip() == "": ans = "3.1415926"
-        ans=lib.Text2St(ans)
-        try:
-            if parse_expr(ans).subs({x:7})==Val.subs({x:7}):                   #比對答案:
-                TE["OK"]=1
-            else:                                      #不則
-                TE["OK"]=0
-        except:
-            pass
+    Val=TE["Val"]
+    ans=TE["Ans"]
+    if ans.strip() == "": ans = "3.1415926"
+    ans=lib.Text2St(ans)
+    try:
+        if parse_expr(ans).subs({x:7})==Val.subs({x:7}):                   #比對答案:
+            TE["OK"]=1
+        else:                                      #不則
+            TE["OK"]=0
+    except:
+        pass
 
 def Get_PF201_Expr(QN,Tx=-1):
     TxFlag=Tx==-1       
@@ -871,20 +849,19 @@ PF202整式的乘法公式平方差
 """
 
 
-def Post_PF202_Expr(NTE):
+def Put_PF202_Expr(TE):
     x=sp.Symbol('x')
-    for TE in NTE:
-        Val=TE["Val"]
-        ans=TE["Ans"]
-        ans = lib.Text2St(ans)
-        if ans.strip()=="":ans="3.1415"
-        try:
-            if parse_expr(ans).subs({x:7})==Val.subs({x:7}):                   #比對答案:
-                TE["OK"]=1
-            else:                                      #不則
-                TE["OK"]=0
-        except:
-            pass
+    Val=TE["Val"]
+    ans=TE["Ans"]
+    ans = lib.Text2St(ans)
+    if ans.strip()=="":ans="3.1415"
+    try:
+        if parse_expr(ans).subs({x:7})==Val.subs({x:7}):                   #比對答案:
+            TE["OK"]=1
+        else:                                      #不則
+            TE["OK"]=0
+    except:
+        pass
 
 
 def Get_PF202_Expr(QN,Tx=-1):
@@ -928,20 +905,19 @@ PF203因式分解提公因式
 """
 
 
-def Post_PF203_Expr(NTE):
+def Put_PF203_Expr(TE):
     x,y,z=sp.symbols('x,y,z')
-    for TE in NTE:
-        Val = TE["Val"]
-        ans=TE["Ans"]
-        ans=lib.Text2St(ans)
-        if ans.strip()=="": ans="3.1415"
-        subsV={x:7,y:11,z:17}
-        try:
-            if parse_expr(ans).subs(subsV)==Val.subs(subsV):                   #比對答案:
-                TE["OK"]=1
-        except:
-            pass
-        TE["Val"] = r"\( %s \)" % sp.latex(Val)
+    Val = TE["Val"]
+    ans=TE["Ans"]
+    ans=lib.Text2St(ans)
+    if ans.strip()=="": ans="3.1415"
+    subsV={x:7,y:11,z:17}
+    try:
+        if parse_expr(ans).subs(subsV)==Val.subs(subsV):                   #比對答案:
+            TE["OK"]=1
+    except:
+        pass
+    TE["Val"] = r"\( %s \)" % sp.latex(Val)
 
 
 def Get_PF203_Expr(QN,Tx=-1):
@@ -971,22 +947,19 @@ PF204分式的乘除
 """
 
 
-def Post_PF204_Expr(NTE):
+def Put_PF204_Expr(TE):
     x=sp.Symbol('x')
-    for TE in NTE:
-        Val = TE["Val"]
-    for TE in NTE:
-        Val=TE["Val"]
-        ans=TE["Ans"]
-        ans=lib.Text2St(ans)
-        try:
-            if parse_expr(ans).subs({x:7})==Val.subs({x:7}):                   #比對答案:
-                TE["OK"]=1
-            else:                                      #不則
-                TE["OK"]=0
-        except:
-            pass
-        TE["Val"] = r"\( %s \)" % sp.latex(Val)
+    Val=TE["Val"]
+    ans=TE["Ans"]
+    ans=lib.Text2St(ans)
+    try:
+        if parse_expr(ans).subs({x:7})==Val.subs({x:7}):                   #比對答案:
+            TE["OK"]=1
+        else:                                      #不則
+            TE["OK"]=0
+    except:
+        pass
+    TE["Val"] = r"\( %s \)" % sp.latex(Val)
 
 
 def Get_PF204_Expr(QN,Tx=-1):
@@ -1035,20 +1008,19 @@ PF205分式的加減
 """
 
 
-def Post_PF205_Expr(NTE):
+def Put_PF205_Expr(TE):
     x, y, z = sp.symbols('x,y,z')
-    for TE in NTE:
-        Val=TE["Val"]
-        ans=TE["Ans"]
-        ans=lib.Text2St(ans)
-        try:
-            if parse_expr(ans).subs({x:7})==Val.subs({x:7}):                   #比對答案:
-                TE["OK"]=1
-            else:                                      #不則
-                TE["OK"]=0
-        except:
-            pass
-        TE["Val"] = r"\(%s\)" % sp.latex(Val)
+    Val=TE["Val"]
+    ans=TE["Ans"]
+    ans=lib.Text2St(ans)
+    try:
+        if parse_expr(ans).subs({x:7})==Val.subs({x:7}):                   #比對答案:
+            TE["OK"]=1
+        else:                                      #不則
+            TE["OK"]=0
+    except:
+        pass
+    TE["Val"] = r"\(%s\)" % sp.latex(Val)
 
 
 def Get_PF205_Expr(QN,Tx=-1):
@@ -1097,19 +1069,18 @@ PF206分式方程
 """
 
 
-def Post_PF206_Expr(NTE):
-    for TE in NTE:
-        x=sp.Symbol('x')
-        Val=TE["Val"]
-        ans=TE["Ans"]
-        ans=lib.Text2St(ans)
-        try:
-            if parse_expr(ans).subs({x:7})==Val[0].subs({x:7}):                   #比對答案:
-                TE["OK"]=1
-            else:                                      #不則
-                TE["OK"]=0
-        except:
-            pass
+def Put_PF206_Expr(TE):
+    x=sp.Symbol('x')
+    Val=TE["Val"]
+    ans=TE["Ans"]
+    ans=lib.Text2St(ans)
+    try:
+        if parse_expr(ans).subs({x:7})==Val[0].subs({x:7}):                   #比對答案:
+            TE["OK"]=1
+        else:                                      #不則
+            TE["OK"]=0
+    except:
+        pass
 
 
 def Get_PF206_Expr(QN,Tx=-1):
@@ -1151,18 +1122,17 @@ PF207一次函數圖像的性質
 """
 
 
-def Post_PF207_Expr(NTE):
-    for TE in NTE:
-        Val=TE["Val"]
-        ans=TE["Ans"]
-        ans=lib.Text2St(ans)
-        try:
-            if parse_expr(ans)==Val:                   #比對答案:
-                TE["OK"]=1
-            else:                                      #不則
-                TE["OK"]=0
-        except:
-            pass
+def Put_PF207_Expr(TE):
+    Val=TE["Val"]
+    ans=TE["Ans"]
+    ans=lib.Text2St(ans)
+    try:
+        if parse_expr(ans)==Val:                   #比對答案:
+            TE["OK"]=1
+        else:                                      #不則
+            TE["OK"]=0
+    except:
+        pass
 
 
 def Get_PF207_Expr(QN,Tx=-1):
@@ -1214,22 +1184,18 @@ PF291一元二次方程式十字相乘法求因式
 """
 
 
-def Post_PF291_Expr(NTE):
+def Put_PF291_Expr(TE):
     x=sp.Symbol('x')
-    for TE in NTE:
-        Val=TE["Val"]
-        ans=TE["Ans"]
-        ans = lib.Text2St(ans)
-        try:
-            if parse_expr(ans).subs({x:7})==Val.subs({x:7}):                   #比對答案:
-                TE["OK"]=1
-            else:                                      #不則
-                TE["OK"]=0
-        except:
-            pass
-    
-
-
+    Val=TE["Val"]
+    ans=TE["Ans"]
+    ans = lib.Text2St(ans)
+    try:
+        if parse_expr(ans).subs({x:7})==Val.subs({x:7}):                   #比對答案:
+            TE["OK"]=1
+        else:                                      #不則
+            TE["OK"]=0
+    except:
+        pass
 
 def Get_PF291_Expr(QN,Tx=-1):
     TxFlag=Tx==-1       
@@ -1258,21 +1224,20 @@ PF292一元二次方程式求解
 """
 
 
-def Post_PF292_Expr(NTE):
-    for TE in NTE:
-        Val=TE["Val"]
-        ans_=TE["Ans"].split(";")
-        try:
-            cnt=0
-            for idx in ans_:
-                for v_ in Val:
-                    if int(idx)==v_ : cnt+=1
-            if cnt>1:                   #比對答案:
-                TE["OK"]=1
-            else:                                      #不則
-                TE["OK"]=0
-        except:
-            pass
+def Put_PF292_Expr(TE):
+    Val=TE["Val"]
+    ans_=TE["Ans"].split(";")
+    try:
+        cnt=0
+        for idx in ans_:
+            for v_ in Val:
+                if int(idx)==v_ : cnt+=1
+        if cnt>1:                   #比對答案:
+            TE["OK"]=1
+        else:                                      #不則
+            TE["OK"]=0
+    except:
+        pass
         
 
 
@@ -1303,19 +1268,18 @@ PF293整式的乘法練習
 """
 
 
-def Post_PF293_Expr(NTE):
+def Put_PF293_Expr(TE):
     x=sp.Symbol('x')
-    for TE in NTE:
-        Val=TE["Val"]
-        ans=TE["Ans"]
-        ans = lib.Text2St(ans)
-        try:
-            if parse_expr(ans).subs({x:7})==Val.subs({x:7}):                   #比對答案:
-                TE["OK"]=1
-            else:                                      #不則
-                TE["OK"]=0
-        except:
-            pass
+    Val=TE["Val"]
+    ans=TE["Ans"]
+    ans = lib.Text2St(ans)
+    try:
+        if parse_expr(ans).subs({x:7})==Val.subs({x:7}):                   #比對答案:
+            TE["OK"]=1
+        else:                                      #不則
+            TE["OK"]=0
+    except:
+        pass
     
 
 def Get_PF293_Expr(QN,Tx=-1):
@@ -1344,31 +1308,30 @@ def Get_PF293_Expr(QN,Tx=-1):
 """
 PF301一元二次方程式
 """
-def Post_PF301_Expr(NTE):
-    for TE in NTE:
-        Val=TE["Val"]
-        ans_=TE["Ans"].split(";")
-        ans=[]
-        ans_idx=[]
-        try:
-            cnt=0
-            for value in ans_:
-                ans.append(parse_expr(value))
-            
-            for idx, a_ in enumerate(ans):
-                for vidx, v_ in enumerate(Val):
-                    if a_==v_ : 
-                        if vidx in ans_idx:
-                            pass
-                        else:
-                            cnt+=1
-                            ans_idx.append(vidx)
-            if cnt==len(Val):                   #比對答案:
-                TE["OK"]=1
-            else:                                      #不則
-                TE["OK"]=0
-        except:
-            pass
+def Put_PF301_Expr(TE):
+    Val=TE["Val"]
+    ans_=TE["Ans"].split(";")
+    ans=[]
+    ans_idx=[]
+    try:
+        cnt=0
+        for value in ans_:
+            ans.append(parse_expr(value))
+        
+        for idx, a_ in enumerate(ans):
+            for vidx, v_ in enumerate(Val):
+                if a_==v_ : 
+                    if vidx in ans_idx:
+                        pass
+                    else:
+                        cnt+=1
+                        ans_idx.append(vidx)
+        if cnt==len(Val):                   #比對答案:
+            TE["OK"]=1
+        else:                                      #不則
+            TE["OK"]=0
+    except:
+        pass
 
 
 def Get_PF301_Expr(QN,Tx=-1):
@@ -1426,31 +1389,30 @@ PF302解可化為一元二次方程的分式方程
 """
 
 
-def Post_PF302_Expr(NTE):
-    for TE in NTE:
-        Val=TE["Val"]
-        ans_=TE["Ans"].split(";")
-        ans=[]
-        ans_idx=[]
-        try:
-            cnt=0
-            for value in ans_:
-                ans.append(parse_expr(lib.Text2St(value)))
-            
-            for idx, a_ in enumerate(ans):
-                for vidx, v_ in enumerate(Val):
-                    if a_==v_ : 
-                        if vidx in ans_idx:
-                            pass
-                        else:
-                            cnt+=1
-                            ans_idx.append(vidx)
-            if cnt==len(Val):                   #比對答案:
-                TE["OK"]=1
-            else:                                      #不則
-                TE["OK"]=0
-        except:
-            pass
+def Put_PF302_Expr(TE):
+    Val=TE["Val"]
+    ans_=TE["Ans"].split(";")
+    ans=[]
+    ans_idx=[]
+    try:
+        cnt=0
+        for value in ans_:
+            ans.append(parse_expr(lib.Text2St(value)))
+        
+        for idx, a_ in enumerate(ans):
+            for vidx, v_ in enumerate(Val):
+                if a_==v_ : 
+                    if vidx in ans_idx:
+                        pass
+                    else:
+                        cnt+=1
+                        ans_idx.append(vidx)
+        if cnt==len(Val):                   #比對答案:
+            TE["OK"]=1
+        else:                                      #不則
+            TE["OK"]=0
+    except:
+        pass
 
     
 
@@ -1506,21 +1468,20 @@ PF303解二元二次方程組
 """
 
 
-def Post_PF303_Expr(NTE):
-    for TE in NTE:
-        Val=TE["Val"]
-        ans_=TE["Ans"].split(";")
-        try:
-            cnt=0
-            for idx in ans_:
-                for v_ in Val:
-                    if int(idx)==v_ : cnt+=1
-            if cnt>1:                   #比對答案:
-                TE["OK"]=1
-            else:                                      #不則
-                TE["OK"]=0
-        except:
-            pass
+def Put_PF303_Expr(TE):
+    Val=TE["Val"]
+    ans_=TE["Ans"].split(";")
+    try:
+        cnt=0
+        for idx in ans_:
+            for v_ in Val:
+                if int(idx)==v_ : cnt+=1
+        if cnt>1:                   #比對答案:
+            TE["OK"]=1
+        else:                                      #不則
+            TE["OK"]=0
+    except:
+        pass
 
 
 def Get_PF303_Expr(QN,Tx=-1):
@@ -1552,25 +1513,24 @@ PF304二次函數圖像的性質
 """
 
 
-def Post_PF304_Expr(NTE):
-    for TE in NTE:
-        Val=TE["Val"]
-        ans=TE["Ans"].split(";")
-        anss=[]
-        try:
-            for idx in ans:
-                if idx=="" : idx="0"
-                anss.append(parse_expr(lib.Text2St(idx)))
-            Flag=0
-            for v_ in Val:
-                for a_ in ans:
-                    if(v_==a_): Flag+=1
-            if Flag>1:                   #比對答案:
-                TE["OK"]=1
-            else:                                           #不則
-                TE["OK"]=0
-        except:
-            pass
+def Put_PF304_Expr(NTE):
+    Val=TE["Val"]
+    ans=TE["Ans"].split(";")
+    anss=[]
+    try:
+        for idx in ans:
+            if idx=="" : idx="0"
+            anss.append(parse_expr(lib.Text2St(idx)))
+        Flag=0
+        for v_ in Val:
+            for a_ in ans:
+                if(v_==a_): Flag+=1
+        if Flag>1:                   #比對答案:
+            TE["OK"]=1
+        else:                                           #不則
+            TE["OK"]=0
+    except:
+        pass
 
 def Get_PF304_Expr(QN,Tx=-1):
     TxFlag=Tx==-1       
@@ -1596,10 +1556,6 @@ def Get_PF304_Expr(QN,Tx=-1):
 """
 PF305解直角三角形    
 """
-
-
-def Post_PF305_Expr(NTE):
-    pass
 
 
 def sjstr(a, d, e):
@@ -1713,7 +1669,7 @@ def Get_PF306_Expr(QN,Tx=-1):
         trig_=["sin","cos","tan"]
         trig=random.choice(trig_)
         ang=random.choice(angle_)
-        St=r"設直角三角形: a=%s,b=%s,c=%s , 求 %s  \%s = ?"%(A,O,sp.latex(H) , trig,ang)
+        St=["設直角三角形:", r"a=%s,b=%s,c=%s, 求 %s \%s = ?"%(A,O,sp.latex(H) , trig,ang)]
         Val = 1
         if trig=="sin":
             if ang=="theta":             

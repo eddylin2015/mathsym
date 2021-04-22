@@ -12,11 +12,17 @@
       }
     });
   });
-  function MSTime() {
-    let d = new Date();
-    let m = d.getMinutes();
-    let s = d.getSeconds();
-    return (m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
+  function MSTime(x=null) {
+    if(x==null){
+      let d = new Date();
+      let m = d.getMinutes();
+      let s = d.getSeconds();
+      return (m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
+    }else{
+      let m=Math.floor(x / 60);
+      let s=x%60;
+      return (m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
+    }
   }
   function spend_Time(x) {
     let a_=x.split(":")
@@ -29,9 +35,7 @@
     let ms=m*60+s
     let c=ms-ms_;
     if(c<0) c=c+3600
-    m=Math.floor(c / 60)
-    s=c % 60
-    return c;//(m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
+    return MSTime(c);
   }
 
   function formSubmit(cid) {
@@ -66,8 +70,7 @@
   }
 </script>
 
-<h3>{{title}}</h3>
-<div style="margin: auto;width: 30%;">
+<div style="margin: auto;width: 50%;min-width: 350px;">
   <form method="POST" id="formid">
     <P>
       <input name="SID" type="hidden" value="{{sid}}">
@@ -79,17 +82,17 @@
     {% set display_style = "display:block" %}
     {% endif %}
     <div id="content{{TE.Id}}" style="{{display_style}}">
-      <span>題目{{TE.Id+1}}:</span>
+      <div style="padding-bottom: 10px;">題目{{TE.Id+1}}:</div>
       {% if TE.St is iterable and TE.St is not string %}
 
       {% for St1 in TE.St %}
-      <div> \[{{St1|safe}}\]</div>
+      <div> \({{St1|safe}}\)</div>
       {% endfor %}
 
       {% else %}
-      <div> \[{{TE.St|safe}}\]</div>
+      <div> \( \Large {{TE.St|safe}}\)</div>
       {% endif %}
-      <div>{{TE.Tip}}</div>
+      <div style="padding-top: 10px;">{{TE.Tip}}</div>
       {% if TE.Val is iterable and TE.Val is not string %}
       {% for Val1 in TE.Val %}
       <div>作答:<input name="{{TE.Id}}" autocomplete="off"></div>
@@ -102,13 +105,13 @@
       {% if TE.PlotImg %}
       <img src="/trythisapps/img/{{TE.PlotImg}}">
       {% else %}
-      <p>.</p>
+      
       {% endif %}
 
 
       {% if loop.nextitem is defined %}
 
-      <div><a class="btn btn-primary" href=# onclick="showCtx({{TE.Id}})">下一題</a></div>
+      <div style="padding-top: 20px;"><a class="btn btn-primary" href=# onclick="showCtx({{TE.Id}})">下一題</a></div>
       {% else %}
       <div><input class="btn btn-success" type="button" onclick="formSubmit({{TE.Id}})" value="提交試題"></div>
       {% endif %}
