@@ -156,7 +156,6 @@ def Put_Expr_V1(TE):
 PF101有理數運算
 """
 
-
 def Put_PF101_Expr(TE):
     ''' 檢查作答結果,比對Val == Ans, 對錯OK=[0/1] '''
     ans = lib.Text2St(TE["Ans"])
@@ -205,7 +204,6 @@ def Get_PF101_Expr(QN,Tx=-1):
 """
 PF102整數指數冪運算
 """
-
 
 def Put_PF102_Expr(TE):
     Val = TE["Val"]
