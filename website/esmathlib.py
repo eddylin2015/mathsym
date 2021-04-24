@@ -113,32 +113,35 @@ def Post_Expr_UpdateAns(ReqForm,NTE):
                     else:
                         TE["Ans"]=value
 
-def Post_Expr_CheckAns(QIID,NTE):
+def Post_Expr_CheckAns(QIID,NTE,TEid=-1):
     for TE in NTE:
+        if TEid > 0 and TE["Id"] != TEid:
+            continue
         if QIID=="PF101" :   Put_PF101_Expr(TE)
         elif QIID=="PF102" : Put_PF102_Expr(TE)
         elif QIID=="PF103" : Put_PF103_Expr(TE)
-        elif QIID=="PF104" : Put_PF104_Expr(NTE)
-        elif QIID=="PF105" : Put_PF105_Expr(NTE)
-        elif QIID=="PF106" : Put_PF106_Expr(NTE)
-        elif QIID=="PF107" : Put_PF107_Expr(NTE)
-        elif QIID=="PF108" : Put_PF108_Expr(NTE)
-        elif QIID=="PF201" : Put_PF201_Expr(NTE)
-        elif QIID=="PF202" : Put_PF202_Expr(NTE)
-        elif QIID=="PF203" : Put_PF203_Expr(NTE)
-        elif QIID=="PF204" : Put_PF204_Expr(NTE)
-        elif QIID=="PF205" : Put_PF205_Expr(NTE)
-        elif QIID=="PF206" : Put_PF206_Expr(NTE)
-        elif QIID=="PF207" : Put_PF207_Expr(NTE)
-        elif QIID=="PF291" : Put_PF291_Expr(NTE)
-        elif QIID=="PF292" : Put_PF292_Expr(NTE)
-        elif QIID=="PF293" : Put_PF293_Expr(NTE)
-        elif QIID=="PF301" : Put_PF301_Expr(NTE)
-        elif QIID=="PF302" : Put_PF302_Expr(NTE)
-        elif QIID=="PF303" : Put_PF303_Expr(NTE)
-        elif QIID=="PF304" : Put_PF304_Expr(NTE)
-        elif QIID=="PF305" : Put_Expr_V1(NTE)  
+        elif QIID=="PF104" : Put_PF104_Expr(TE)
+        elif QIID=="PF105" : Put_PF105_Expr(TE)
+        elif QIID=="PF106" : Put_PF106_Expr(TE)
+        elif QIID=="PF107" : Put_PF107_Expr(TE)
+        elif QIID=="PF108" : Put_PF108_Expr(TE)
+        elif QIID=="PF201" : Put_PF201_Expr(TE)
+        elif QIID=="PF202" : Put_PF202_Expr(TE)
+        elif QIID=="PF203" : Put_PF203_Expr(TE)
+        elif QIID=="PF204" : Put_PF204_Expr(TE)
+        elif QIID=="PF205" : Put_PF205_Expr(TE)
+        elif QIID=="PF206" : Put_PF206_Expr(TE)
+        elif QIID=="PF207" : Put_PF207_Expr(TE)
+        elif QIID=="PF291" : Put_PF291_Expr(TE)
+        elif QIID=="PF292" : Put_PF292_Expr(TE)
+        elif QIID=="PF293" : Put_PF293_Expr(TE)
+        elif QIID=="PF301" : Put_PF301_Expr(TE)
+        elif QIID=="PF302" : Put_PF302_Expr(TE)
+        elif QIID=="PF303" : Put_PF303_Expr(TE)
+        elif QIID=="PF304" : Put_PF304_Expr(TE)
+        elif QIID=="PF305" : Put_Expr_V1(TE)  
         elif QIID=="PF306" : Put_Expr_V1(TE)
+        else:  Put_Expr_V1(TE)
                 
 def Put_Expr_V1(TE):
     ''' 檢查作答結果,比對Val == Ans, 對錯OK=[0/1] '''

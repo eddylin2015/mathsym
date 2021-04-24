@@ -3,24 +3,47 @@
 
 {% block content %}
 
-<!--h3>List</h3-->
-
+<input class="form-control" id="myInput" type="text" placeholder="Search..">
+<table id="desc" class="table">
 {% for book in books %}
-
+{% set QID,TX,Name = book.split('.') %}
+<tr><td>
 <div class="media">
-  <a href="/trythisapps/{{book}}">
-      <span>{{book}}</span>
+  <a href="/trythisapps/{{book}}/view">
+    <h4>{{QID}}{{Name}}</h4>
   </a>
-  題型:
-  {% set QID,TX,Name = book.split('.') %}
-  {% for n in range(0,TX|int) %}
-  <a href="/trythisapps/{{book}}?Tx={{n}}">{{n}}</a>
-  {% endfor %}
-
 </div>
+<div>
+  {% for n in range(0,TX|int) %}
+  <a href="/trythisapps/{{book}}?Tx={{n}}"><button>題型{{n+1}}</button></a>
+  {% endfor %}
+</div>
+</td>  
+</tr>
 {% else %}
-<p>No books found</p>
+<tr><td><p>No books found</p></td></tr>
 {% endfor %}
+</table>
 
+<footer>
+<p class="float-right">
+  <a href="#"> Back to top</a>
+  <div>Macau Baptist College. All Rights Reserved</div>
+</p>
+</footer>
+
+<script>
+  console.log("xxx")
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    console.log(value)
+    $("#desc tr").filter(function() {
+      console.log($(this).text().toLowerCase());
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});      
+</script>
 
 {% endblock %}

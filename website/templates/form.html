@@ -44,6 +44,7 @@
     document.getElementById('formid').submit();
   }
   function showCtx(cid) {
+    
     var x = document.getElementById("content" + cid);
     var t = document.getElementById("T" + cid);
     t.value=spend_Time(t.value)
@@ -67,6 +68,16 @@
       }
       break;
     }
+  }
+  function CheckTE(i){
+
+    $.post( `?fmt=JSON&TEid=${i}`, $( "#formid" ).serialize(), function( data ) {
+       let d=JSON.parse(data)
+       $(`#Standrad_And${i}`).html(d.Val);
+       
+    });
+    let x = document.getElementById("NextB" + i);
+    x.style.display = "block";
   }
 </script>
 
@@ -110,8 +121,14 @@
 
 
       {% if loop.nextitem is defined %}
+      <div style="padding-top: 20px;"><a class="btn btn-primary" href=# onclick="CheckTE({{TE.Id}})">提交</a></div>
+      <span>標準答案:</span>
+      <span id="OK{{TE.Id}}"></span>
+      <div id="Standrad_And{{TE.Id}}">
 
-      <div style="padding-top: 20px;"><a class="btn btn-primary" href=# onclick="showCtx({{TE.Id}})">下一題</a></div>
+      </div>
+
+      <div id="NextB{{TE.Id}}" style="padding-top: 20px;display:none"><a class="btn btn-primary" href=# onclick="showCtx({{TE.Id}})">下一題</a></div>
       {% else %}
       <div><input class="btn btn-success" type="button" onclick="formSubmit({{TE.Id}})" value="提交試題"></div>
       {% endif %}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script>
+  $(document).ready(function () {
+    $('#formid').on('keyup keypress', function (e) {
+      var keyCode = e.keyCode || e.which;
+      if (keyCode === 13) {
+        e.preventDefault();
+        return false;
+      }
+    });
+  });
+  function MSTime() {
+    let d = new Date();
+    let m = d.getMinutes();
+    let s = d.getSeconds();
+    return (m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
+  }
+  function spend_Time(x) {
+    let a_=x.split(":")
+    let m_=Number(a_[0])
+    let s_=Number(a_[1])
+    let ms_=m_*60+s_
+    let d = new Date();
+    let m = d.getMinutes();
+    let s = d.getSeconds();
+    let ms=m*60+s
+    let c=ms-ms_;
+    if(c<0) c=c+3600
+    m=Math.floor(c / 60)
+    s=c % 60
+    return c;//(m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
+  }
+
+  function formSubmit(cid) {
+    var t = document.getElementById("T" + cid);
+    t.value=spend_Time(t.value)    
+    document.getElementById('formid').submit();
+  }
+  function showCtx(cid) {
+    var x = document.getElementById("content" + cid);
+    var t = document.getElementById("T" + cid);
+    t.value=spend_Time(t.value)
+    console.log(cid,t.value)
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+    for (let i = 1; i < 8; i++) {
+      t = document.getElementById("T" + (cid + i));  if(t !==null) t.value=MSTime()
+      x = document.getElementById("content" + (cid + i));
+      if (x !== null) {
+        if (x.style.display === "none") {
+          x.style.display = "block";
+        } else {
+          x.style.display = "none";
+        }
+      } else {
+        continue
+      }
+      break;
+    }
+  }
+</script>
+
+<h3>{{title}}</h3>
+{% set QID,TX,Name = title.split('.') %}
+<div>
+  {% for n in range(0,TX|int) %}
+  <a href="/trythisapps/{{title}}?Tx={{n}}"><button>題型{{n+1}}</button></a>
+  {% endfor %}
+  <p>
+    <h6>步驟：</h6>
+    <ul>
+      <li>1. 设置：(1) 選擇題型。</li>
+      <li>2. 做题：(1)【下一題】，(2) 做題并開始計時，(3) 填写答案。</li>
+      <li>3. 【確定】 --- 評判答案幷打分。</li>
+      <li>4. 【儲存答案】 --- 确認評分之后,儲存分數 。</li>
+    </ul>
+　　<h6>說明：</h6>
+　　<ul>
+　　   <li>1.  可以用紙筆計算，也可以用計算器輔助計算。</li>
+　　   <li>2. 单行分數写法如右，例如：𝑎/𝑏   写成  a / b  ----- 分数线用斜横。</li>
+　　   <li>3. 单行指数写法如右，例如： x2+1  写成  x^2+1  ----  用指数符"^"。</li>
+　　   <li>4. 单行根式写法如右，例如：√(𝑥+1)  写成  J(x+1)  ----  大写 J+ 括弧。</li>
+　　   <li>5. 每題10分。內設基準時間，提前完成加分，超時完成扣分。</li>
+       <li>6. 一次测验必须做滿10題，然後电脑自動填寫報表。</li>
+　　</ul>
+  </p>
+</div>
+
+{% endblock %}
