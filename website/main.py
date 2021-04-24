@@ -38,6 +38,31 @@ def create_app(config):
             books=lib.GetQList()
         )
 
+    @app.route("/trythisapps/<QID>/view", methods=['GET', 'POST'])
+    @login_required_auth
+    def MathViewPanel(QID):
+        #QIID = QID.split(".")[0]
+        return render_template("view.html",title=QID)
+
+##
+    # GET 顯示QAMT題QID相關算式
+    # POST 收集作答,並對比答案.
+    @app.route("/trythisapps/<QID>/TE/<id>", methods=['GET', 'POST'])
+    @login_required_auth
+    def MathCheckTEPanel(QID,id):
+        QIID = QID.split(".")[0]
+        # 取得題目及電腦標準答案 (NTE)
+        SID = request.form["SID"]
+        NTE_blob = NTE_Storage.get(SID,None)
+        NTE = pickle.loads(NTE_blob)
+        # 更新NTE中的 作答(Ans)㯗位資料.
+        lib.Post_Expr_UpdateAns(request.form, NTE)
+        # 檢查比對作答與電腦答案.
+        lib.Post_Expr_CheckAns(QIID, NTE)
+        # 清理Session空間.
+        return  json.dumps(NTE, separators=(',', ':')) 
+
+
     # GET 顯示QAMT題QID相關算式
     # POST 收集作答,並對比答案.
     @app.route("/trythisapps/<QID>", methods=['GET', 'POST'])
@@ -46,6 +71,7 @@ def create_app(config):
         Tx = int(request.args.get('Tx', "-1"))
         QIID = QID.split(".")[0]
         if request.method == 'POST':
+            fmt = request.args.get('fmt', "")
             # 取得題目及電腦標準答案 (NTE)
             SID = request.form["SID"]
             NTE_blob = NTE_Storage.get(SID,None)
@@ -55,8 +81,11 @@ def create_app(config):
             # 檢查比對作答與電腦答案.
             lib.Post_Expr_CheckAns(QIID, NTE)
             # 清理Session空間.
-            NTE_Storage.pop(SID, None)
-            return render_template("result.html", title=QID, NTE=NTE)
+            if fmt=="JSON":
+                return  json.dumps(NTE, separators=(',', ':')) 
+            else:
+                NTE_Storage.pop(SID, None)
+                return render_template("result.html", title=QID, NTE=NTE)
 
         # GET 顯示QAMT題QID相關算式
         NTE = lib.Get_Expr(QIID, QAMT, Tx)
@@ -64,8 +93,6 @@ def create_app(config):
             print(te["Val"])
         SID = lib.GetKey()
         NTE_blob = pickle.dumps(NTE)
-
-        
         NTE_Storage[SID] = NTE_blob
         return render_template("form.html", title=QID, NTE=NTE, sid=SID)
 

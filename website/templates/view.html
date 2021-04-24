@@ -12,17 +12,11 @@
       }
     });
   });
-  function MSTime(x=null) {
-    if(x==null){
-      let d = new Date();
-      let m = d.getMinutes();
-      let s = d.getSeconds();
-      return (m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
-    }else{
-      let m=Math.floor(x / 60);
-      let s=x%60;
-      return (m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
-    }
+  function MSTime() {
+    let d = new Date();
+    let m = d.getMinutes();
+    let s = d.getSeconds();
+    return (m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
   }
   function spend_Time(x) {
     let a_=x.split(":")
@@ -35,7 +29,9 @@
     let ms=m*60+s
     let c=ms-ms_;
     if(c<0) c=c+3600
-    return MSTime(c);
+    m=Math.floor(c / 60)
+    s=c % 60
+    return c;//(m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
   }
 
   function formSubmit(cid) {
@@ -44,7 +40,6 @@
     document.getElementById('formid').submit();
   }
   function showCtx(cid) {
-    CheckTE(cid);
     var x = document.getElementById("content" + cid);
     var t = document.getElementById("T" + cid);
     t.value=spend_Time(t.value)
@@ -69,15 +64,35 @@
       break;
     }
   }
-  function CheckTE(i){
-
-    $.post( "?fmt=JSON", $( "#formid" ).serialize(), function( data ) {
-       alert( "Data Loaded: " + data );
-    });
-  }
 </script>
 
-<div style="margin: auto;width: 50%;min-width: 350px;">
+<h3>{{title}}</h3>
+{% set QID,TX,Name = title.split('.') %}
+<div>
+  {% for n in range(0,TX|int) %}
+  <a href="/trythisapps/{{title}}?Tx={{n}}"><button>題型{{n+1}}</button></a>
+  {% endfor %}
+  <p>
+    <h6>步驟：</h6>
+    <ul>
+      <li>1. 设置：(1) 選擇題型。</li>
+      <li>2. 做题：(1)【下一題】，(2) 做題并開始計時，(3) 填写答案。</li>
+      <li>3. 【確定】 --- 評判答案幷打分。</li>
+      <li>4. 【儲存答案】 --- 确認評分之后,儲存分數 。</li>
+    </ul>
+　　<h6>說明：</h6>
+　　<ul>
+　　   <li>1.  可以用紙筆計算，也可以用計算器輔助計算。</li>
+　　   <li>2. 单行分數写法如右，例如：𝑎/𝑏   写成  a / b  ----- 分数线用斜横。</li>
+　　   <li>3. 单行指数写法如右，例如： x2+1  写成  x^2+1  ----  用指数符"^"。</li>
+　　   <li>4. 单行根式写法如右，例如：√(𝑥+1)  写成  J(x+1)  ----  大写 J+ 括弧。</li>
+　　   <li>5. 每題10分。內設基準時間，提前完成加分，超時完成扣分。</li>
+       <li>6. 一次测验必须做滿10題，然後电脑自動填寫報表。</li>
+　　</ul>
+  </p>
+</div>
+
+<div style="margin: auto;width: 30%;">
   <form method="POST" id="formid">
     <P>
       <input name="SID" type="hidden" value="{{sid}}">
@@ -89,17 +104,17 @@
     {% set display_style = "display:block" %}
     {% endif %}
     <div id="content{{TE.Id}}" style="{{display_style}}">
-      <div style="padding-bottom: 10px;">題目{{TE.Id+1}}:</div>
+      <span>題目{{TE.Id+1}}:</span>
       {% if TE.St is iterable and TE.St is not string %}
 
       {% for St1 in TE.St %}
-      <div> \({{St1|safe}}\)</div>
+      <div> \[{{St1|safe}}\]</div>
       {% endfor %}
 
       {% else %}
-      <div> \( \Large {{TE.St|safe}}\)</div>
+      <div> \[{{TE.St|safe}}\]</div>
       {% endif %}
-      <div style="padding-top: 10px;">{{TE.Tip}}</div>
+      <div>{{TE.Tip}}</div>
       {% if TE.Val is iterable and TE.Val is not string %}
       {% for Val1 in TE.Val %}
       <div>作答:<input name="{{TE.Id}}" autocomplete="off"></div>
@@ -112,20 +127,20 @@
       {% if TE.PlotImg %}
       <img src="/trythisapps/img/{{TE.PlotImg}}">
       {% else %}
-      
+      <p>.</p>
       {% endif %}
 
 
       {% if loop.nextitem is defined %}
 
-      <div style="padding-top: 20px;"><a class="btn btn-primary" href=# onclick="showCtx({{TE.Id}})">下一題</a></div>
+      <div><a class="btn btn-primary" href=# onclick="showCtx({{TE.Id}})">下一題</a></div>
       {% else %}
       <div><input class="btn btn-success" type="button" onclick="formSubmit({{TE.Id}})" value="提交試題"></div>
       {% endif %}
 
     </div>
     {% else %}
-    <p>No books found</p>
+    <p>No item found</p>
     {% endfor %}
 
   </form>
