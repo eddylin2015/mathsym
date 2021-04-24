@@ -73,11 +73,18 @@
 
     $.post( `?fmt=JSON&TEid=${i}`, $( "#formid" ).serialize(), function( data ) {
        let d=JSON.parse(data)
+       if(d.OK=="1")
+       {
+        $(`#OK${i}`).html('<span class="glyphicon glyphicon-ok"></span>');  
+       }
+       else{
+        $(`#OK${i}`).html('<span class="glyphicon glyphicon-remove"></span>');
+       }
        $(`#Standrad_And${i}`).html(d.Val);
        
     });
-    let x = document.getElementById("NextB" + i);
-    x.style.display = "block";
+    document.getElementById("btnNext" + i).style.display = "block";
+    document.getElementById("btnSubm" + i).style.display = "none";
   }
 </script>
 
@@ -121,14 +128,15 @@
 
 
       {% if loop.nextitem is defined %}
-      <div style="padding-top: 20px;"><a class="btn btn-primary" href=# onclick="CheckTE({{TE.Id}})">提交</a></div>
-      <span>標準答案:</span>
-      <span id="OK{{TE.Id}}"></span>
+      <div id="btnSubm{{TE.Id}}" style="padding-top: 20px;"><a class="btn btn-primary" href=# onclick="CheckTE({{TE.Id}})">提交</a></div>
+      <div>評核:</div>
+      <div id="OK{{TE.Id}}"></div>
+      <div>標準答案:</div>
       <div id="Standrad_And{{TE.Id}}">
 
       </div>
 
-      <div id="NextB{{TE.Id}}" style="padding-top: 20px;display:none"><a class="btn btn-primary" href=# onclick="showCtx({{TE.Id}})">下一題</a></div>
+      <div id="btnNext{{TE.Id}}" style="padding-top: 20px;display:none"><a class="btn btn-primary" href=# onclick="showCtx({{TE.Id}})">下一題</a></div>
       {% else %}
       <div><input class="btn btn-success" type="button" onclick="formSubmit({{TE.Id}})" value="提交試題"></div>
       {% endif %}
