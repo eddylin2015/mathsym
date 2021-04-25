@@ -36,6 +36,7 @@ def GetTE(Qid, St, Val, Tx=0):
     TE["Val"] = Val
     TE["Ans"] = ""
     TE["OK"] = 0
+    TE["Mark"] = 0
     TE["Minute"]= datetime.datetime.now().strftime("%M:%S")   #"%m-%d-%Y %H:%M:%S")
     TE["Tip"] = ""
     TE["PotImg"]=None
@@ -113,7 +114,7 @@ def Post_Expr_UpdateAns(ReqForm,NTE):
                     else:
                         TE["Ans"]=value
 
-def Post_Expr_CheckAns(QIID,NTE,TEid=-1):
+def Post_Expr_CheckAns(QIID,NTE,TEid=-1,MxMunites=6):
     for TE in NTE:
         if TEid > 0 and TE["Id"] != TEid:
             continue
@@ -142,6 +143,23 @@ def Post_Expr_CheckAns(QIID,NTE,TEid=-1):
         elif QIID=="PF305" : Put_Expr_V1(TE)  
         elif QIID=="PF306" : Put_Expr_V1(TE)
         else:  Put_Expr_V1(TE)
+        Get_Expr_CheckAnsMark(QIID,TE)
+
+def Get_Expr_CheckAnsMark(QIID,TE,MxMunites=6):
+    if TE["OK"]==1:
+        try:
+            stepM = MxMunites / 3 * 60
+            m,s=TE["Minute"].split(":")
+            m=int(m)
+            s=int(s)
+            m=m*6+s
+            if m<stepM : TE["Mark"]=12
+            elif m< stepM*2 : TE["Mark"]=10
+            elif m< stepM*8 : TE["Mark"]=8
+            else: TE["Mark"]=6
+        finally:
+            TE["Mark"]=8
+
                 
 def Put_Expr_V1(TE):
     ''' 檢查作答結果,比對Val == Ans, 對錯OK=[0/1] '''

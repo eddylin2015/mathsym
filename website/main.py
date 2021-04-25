@@ -68,7 +68,9 @@ def create_app(config):
 
             fmt = request.args.get('fmt', "")
             if fmt=="JSON":
-                return  json.dumps({"OK":str(NTE[TEid]["OK"]),"Val":str(NTE[TEid]["Val"])}, separators=(',', ':')) 
+                TE=NTE[TEid]
+                j={"OK":str(TE["OK"]),"Val":str(TE["Val"]),"Mark":str(TE["Mark"]),"Minute":TE["Minute"]}
+                return  json.dumps(j, separators=(',', ':')) 
             else:
                 NTE_Storage.pop(SID, None)
                 return render_template("result.html", title=QID, NTE=NTE)
