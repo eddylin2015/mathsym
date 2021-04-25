@@ -34,9 +34,12 @@ def create_app(config):
     # 使用模版list.html, 顯示列表
     @app.route("/trythisapps")
     def list():
+        items=lib.GetQList()
+        if request.args.get('s', "")=="P" :
+            items=["P301.1.两位数相乘","P302.1.两位数除"]
         return render_template(
             "list.html",
-            books=lib.GetQList()
+            books=items
         )
 
 
@@ -58,12 +61,14 @@ def create_app(config):
             # 取得題目及電腦標準答案 (NTE)
             SID = request.form["SID"]
             NTE_blob = NTE_Storage.get(SID,None)
+            if NTE_blob==None:
+                return "試題過期!"
             NTE = pickle.loads(NTE_blob)
             # 更新NTE中的 作答(Ans)㯗位資料.
             lib.Post_Expr_UpdateAns(request.form, NTE)
             # 檢查比對作答與電腦答案.
             TEid=int(request.args.get('TEid', "-1"))
-            lib.Post_Expr_CheckAns(QIID, NTE,TEid)
+            lib.Post_ExNTE_bpr_CheckAns(QIID, NTE,TEid)
             # 清理Session空間.
 
             fmt = request.args.get('fmt', "")
@@ -118,6 +123,11 @@ def create_app(config):
                  return redirect(config.IndexURL)
         username=records[random.choice([0,1])]["user"]
         return f'''
+        <html>
+        <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        </head>
+        <body>
             <div style="margin-top: 20%;margin-left:50%;margin-right:50%">
             <form method="post">
                 <p>USER:<input type=text name=username value="{username}">
@@ -125,6 +135,8 @@ def create_app(config):
                 <p><input type=submit value=Login>
             </form>
             </div>
+        </body>
+        </html>
         '''
 
     # 容錯處理

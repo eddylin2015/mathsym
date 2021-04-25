@@ -39,8 +39,8 @@
   }
 
   function formSubmit(cid) {
-    var t = document.getElementById("T" + cid);
-    t.value=spend_Time(t.value)    
+    //var t = document.getElementById("T" + cid);
+    //t.value=spend_Time(t.value)    
     document.getElementById('formid').submit();
   }
   function showCtx(cid) {
@@ -129,7 +129,7 @@
       {% endif %}
 
 
-      {% if loop.nextitem is defined %}
+      
       <div style="padding-top: 20px;">
       <button id="btnSubm{{TE.Id}}"  class="btn btn-primary" onclick="CheckTE({{TE.Id}})">提交</button>
       </div>
@@ -151,10 +151,10 @@
       <div id="Standrad_And{{TE.Id}}" style="font-size: 24px;">
 
       </div>
-
+      {% if loop.nextitem is defined %}
       <div id="btnNext{{TE.Id}}" style="padding-top: 20px;display:none"><a class="btn btn-primary" href=# onclick="showCtx({{TE.Id}})">下一題</a></div>
       {% else %}
-      <div><input class="btn btn-success" type="button" onclick="formSubmit({{TE.Id}})" value="提交試題"></div>
+      <div id="btnNext{{TE.Id}}" style="padding-top: 20px;display:none"><a class="btn btn-warning" href=# onclick="formSubmit({{TE.Id}})">預覽小結</a></div>      
       {% endif %}
 
     </div>

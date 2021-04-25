@@ -72,7 +72,9 @@ def GetQList():
 """
 def Get_Expr(QIID,QAMT,Tx=-1):
     NTE=None
-    if QIID=="PF101":    NTE=Get_PF101_Expr(QAMT,Tx)
+    if QIID=="P301":     NTE=Get_P301_Expr(QAMT,Tx)
+    elif QIID=="P302":   NTE=Get_P302_Expr(QAMT,Tx)    
+    elif QIID=="PF101":  NTE=Get_PF101_Expr(QAMT,Tx)
     elif QIID=="PF102" : NTE=Get_PF102_Expr(QAMT,Tx)
     elif QIID=="PF103" : NTE=Get_PF103_Expr(QAMT,Tx)
     elif QIID=="PF104" : NTE=Get_PF104_Expr(QAMT,Tx)
@@ -145,19 +147,21 @@ def Post_Expr_CheckAns(QIID,NTE,TEid=-1,MxMunites=6):
         else:  Put_Expr_V1(TE)
         Get_Expr_CheckAnsMark(QIID,TE)
 
-def Get_Expr_CheckAnsMark(QIID,TE,MxMunites=6):
+def Get_Expr_CheckAnsMark(QIID,TE,MxMunites=3):
     if TE["OK"]==1:
         try:
             stepM = MxMunites / 3 * 60
             m,s=TE["Minute"].split(":")
             m=int(m)
             s=int(s)
-            m=m*6+s
+            m=m*60+s
+            print(m)
+            print(stepM)
             if m<stepM : TE["Mark"]=12
             elif m< stepM*2 : TE["Mark"]=10
             elif m< stepM*8 : TE["Mark"]=8
             else: TE["Mark"]=6
-        finally:
+        except:
             TE["Mark"]=8
 
                 
@@ -171,6 +175,78 @@ def Put_Expr_V1(TE):
     except:
         pass
     return False
+
+
+"""
+P301
+""" 
+def Get_P301_Expr(QN,Tx=-1):
+    TxFlag=Tx==-1
+    sample_list0 = list(range(-39, 29))   # [-5,-4,-3,-2,-1,1,2,3,4,5]
+    sample_list1 = list(range(-39, 29))
+    sample_list1.remove(0)              # list1 為 非零數列
+    NTE = []
+    for Qid in range(0, QN):
+        if TxFlag:Tx = 0 if Qid < (QN//2) else 1  # Tx -半題型1 ,-半題型 2
+        if Tx == 1:
+            a = random.choice(sample_list1)  # 亂數a,b,c, 不為零
+            b = random.choice(sample_list1)
+            c = random.choice(sample_list1)
+            if a == b:
+                b = math.copysign(
+                    abs(b)+random.choice(range(1, 5)), b)   # a != b
+            qiz = sp.Add(sp.Rational(b, a), sp.Rational(c, a), evaluate=False)
+            St = sp.latex(qiz)  # 題目
+            Val = sp.simplify(qiz)  # 簡化算式,得出標準答案
+
+        else:
+            a = random.choice(sample_list0)  # 亂數a,b,c
+            b = random.choice(sample_list0)
+            c = random.choice(sample_list0)
+            qiz = sp.Add(sp.S(a), b, c, evaluate=False)
+            St = sp.latex(qiz)  # 題目
+            Val = sp.simplify(qiz)  # sympy.simplify簡化算式,得出標準答案
+
+
+        TE = GetTE(Qid, St, Val, Tx)
+        TE["Tip"] = "用分數表逹值: -(a/b)"
+        NTE.append(TE)
+    return NTE
+"""
+P302
+""" 
+def Get_P302_Expr(QN,Tx=-1):
+    TxFlag=Tx==-1
+    sample_list0 = list(range(-39, 29))   # [-5,-4,-3,-2,-1,1,2,3,4,5]
+    sample_list1 = list(range(-39, 29))
+    sample_list1.remove(0)              # list1 為 非零數列
+    NTE = []
+    for Qid in range(0, QN):
+        if TxFlag:Tx = 0 if Qid < (QN//2) else 1  # Tx -半題型1 ,-半題型 2
+        if Tx == 1:
+            a = random.choice(sample_list1)  # 亂數a,b,c, 不為零
+            b = random.choice(sample_list1)
+            c = random.choice(sample_list1)
+            if a == b:
+                b = math.copysign(
+                    abs(b)+random.choice(range(1, 5)), b)   # a != b
+            qiz = sp.Add(sp.Rational(b, a), sp.Rational(c, a), evaluate=False)
+            St = sp.latex(qiz)  # 題目
+            Val = sp.simplify(qiz)  # 簡化算式,得出標準答案
+
+        else:
+            a = random.choice(sample_list0)  # 亂數a,b,c
+            b = random.choice(sample_list0)
+            c = random.choice(sample_list0)
+            qiz = sp.Add(sp.S(a), b, c, evaluate=False)
+            St = sp.latex(qiz)  # 題目
+            Val = sp.simplify(qiz)  # sympy.simplify簡化算式,得出標準答案
+
+
+        TE = GetTE(Qid, St, Val, Tx)
+        TE["Tip"] = "用分數表逹值: -(a/b)"
+        NTE.append(TE)
+    return NTE
 
 """
 PF101有理數運算
