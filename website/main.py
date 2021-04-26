@@ -1,6 +1,7 @@
 from flask import current_app, Flask, redirect, request, render_template,send_file,\
      session,url_for
 import os
+import json
 import base64
 import pickle
 from io import BytesIO
@@ -33,34 +34,19 @@ def create_app(config):
     # 使用模版list.html, 顯示列表
     @app.route("/trythisapps")
     def list():
+        items=lib.GetQList()
+        if request.args.get('s', "")=="P" :
+            items=["P301.1.两位数相乘","P302.1.两位数除"]
         return render_template(
             "list.html",
-            books=lib.GetQList()
+            books=items
         )
+
 
     @app.route("/trythisapps/<QID>/view", methods=['GET', 'POST'])
     @login_required_auth
     def MathViewPanel(QID):
-        #QIID = QID.split(".")[0]
         return render_template("view.html",title=QID)
-
-##
-    # GET 顯示QAMT題QID相關算式
-    # POST 收集作答,並對比答案.
-    @app.route("/trythisapps/<QID>/TE/<id>", methods=['GET', 'POST'])
-    @login_required_auth
-    def MathCheckTEPanel(QID,id):
-        QIID = QID.split(".")[0]
-        # 取得題目及電腦標準答案 (NTE)
-        SID = request.form["SID"]
-        NTE_blob = NTE_Storage.get(SID,None)
-        NTE = pickle.loads(NTE_blob)
-        # 更新NTE中的 作答(Ans)㯗位資料.
-        lib.Post_Expr_UpdateAns(request.form, NTE)
-        # 檢查比對作答與電腦答案.
-        lib.Post_Expr_CheckAns(QIID, NTE)
-        # 清理Session空間.
-        return  json.dumps(NTE, separators=(',', ':')) 
 
 
     # GET 顯示QAMT題QID相關算式
@@ -69,28 +55,34 @@ def create_app(config):
     @login_required_auth
     def MathPanel(QID):
         Tx = int(request.args.get('Tx', "-1"))
+        
         QIID = QID.split(".")[0]
         if request.method == 'POST':
             fmt = request.args.get('fmt', "")
             # 取得題目及電腦標準答案 (NTE)
             SID = request.form["SID"]
             NTE_blob = NTE_Storage.get(SID,None)
+            if NTE_blob==None:
+                return "試題過期!"
             NTE = pickle.loads(NTE_blob)
             # 更新NTE中的 作答(Ans)㯗位資料.
             lib.Post_Expr_UpdateAns(request.form, NTE)
             # 檢查比對作答與電腦答案.
-            lib.Post_Expr_CheckAns(QIID, NTE)
+            TEid=int(request.args.get('TEid', "-1"))
+            lib.Post_ExNTE_bpr_CheckAns(QIID, NTE,TEid)
             # 清理Session空間.
+
+            fmt = request.args.get('fmt', "")
             if fmt=="JSON":
-                return  json.dumps(NTE, separators=(',', ':')) 
+                TE=NTE[TEid]
+                j={"OK":str(TE["OK"]),"Val":str(TE["Val"]),"Mark":str(TE["Mark"]),"Minute":TE["Minute"]}
+                return  json.dumps(j, separators=(',', ':')) 
             else:
                 NTE_Storage.pop(SID, None)
                 return render_template("result.html", title=QID, NTE=NTE)
 
         # GET 顯示QAMT題QID相關算式
         NTE = lib.Get_Expr(QIID, QAMT, Tx)
-        for te in NTE:
-            print(te["Val"])
         SID = lib.GetKey()
         NTE_blob = pickle.dumps(NTE)
         NTE_Storage[SID] = NTE_blob
@@ -132,6 +124,11 @@ def create_app(config):
                  return redirect(config.IndexURL)
         username=records[random.choice([0,1])]["user"]
         return f'''
+        <html>
+        <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        </head>
+        <body>
             <div style="margin-top: 20%;margin-left:50%;margin-right:50%">
             <form method="post">
                 <p>USER:<input type=text name=username value="{username}">
@@ -139,6 +136,8 @@ def create_app(config):
                 <p><input type=submit value=Login>
             </form>
             </div>
+        </body>
+        </html>
         '''
 
     # 容錯處理

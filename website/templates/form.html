@@ -39,21 +39,19 @@
   }
 
   function formSubmit(cid) {
-    var t = document.getElementById("T" + cid);
-    t.value=spend_Time(t.value)    
+    //var t = document.getElementById("T" + cid);
+    //t.value=spend_Time(t.value)    
     document.getElementById('formid').submit();
   }
   function showCtx(cid) {
-    CheckTE(cid);
+    
     var x = document.getElementById("content" + cid);
-    var t = document.getElementById("T" + cid);
-    t.value=spend_Time(t.value)
-    console.log(cid,t.value)
     if (x.style.display === "none") {
       x.style.display = "block";
     } else {
       x.style.display = "none";
     }
+    var t = document.getElementById("T" + cid);
     for (let i = 1; i < 8; i++) {
       t = document.getElementById("T" + (cid + i));  if(t !==null) t.value=MSTime()
       x = document.getElementById("content" + (cid + i));
@@ -70,10 +68,25 @@
     }
   }
   function CheckTE(i){
-
-    $.post( "?fmt=JSON", $( "#formid" ).serialize(), function( data ) {
-       alert( "Data Loaded: " + data );
+    var t = document.getElementById("T" + i);
+    t.value=spend_Time(t.value)
+    $.post( `?fmt=JSON&TEid=${i}`, $( "#formid" ).serialize(), function( data ) {
+       let d=JSON.parse(data)
+       if(d.OK=="1")
+       {
+        $(`#OK${i}`).html('<span class="glyphicon glyphicon-ok"></span>');  
+       }
+       else{
+        $(`#OK${i}`).html('<span class="glyphicon glyphicon-remove"></span>');
+       }
+       $(`#Mark${i}`).html(d.Mark);
+       $(`#SpendMinute${i}`).html(d.Minute);
+       $(`#Standrad_And${i}`).html(d.Val);
+       
     });
+    document.getElementById("btnNext" + i).style.display = "block";
+    //document.getElementById("btnSubm" + i).style.display = "none";
+    document.getElementById("btnSubm" + i).disabled = true;
   }
 </script>
 
@@ -116,18 +129,40 @@
       {% endif %}
 
 
-      {% if loop.nextitem is defined %}
+      
+      <div style="padding-top: 20px;">
+      <button id="btnSubm{{TE.Id}}"  class="btn btn-primary" onclick="CheckTE({{TE.Id}})">提交</button>
+      </div>
+      <div>評核:</div>
+      <table class="table">
+        <tr>
+          <td>對/錯</td>
+          <td>得分</td>
+          <td>耗時</td>          
+        </tr>
+        <tr>
+        <td><h4 id="OK{{TE.Id}}"></h4></td>  
+        <td><h4 id="Mark{{TE.Id}}"></h4></td>  
+        <td><h4 id="SpendMinute{{TE.Id}}"></h4></td>  
+        </tr>
+      </table>
+      
+      <div>標準答案:</div>
+      <div id="Standrad_And{{TE.Id}}" style="font-size: 24px;">
 
-      <div style="padding-top: 20px;"><a class="btn btn-primary" href=# onclick="showCtx({{TE.Id}})">下一題</a></div>
+      </div>
+      {% if loop.nextitem is defined %}
+      <div id="btnNext{{TE.Id}}" style="padding-top: 20px;display:none"><a class="btn btn-primary" href=# onclick="showCtx({{TE.Id}})">下一題</a></div>
       {% else %}
-      <div><input class="btn btn-success" type="button" onclick="formSubmit({{TE.Id}})" value="提交試題"></div>
+      <div id="btnNext{{TE.Id}}" style="padding-top: 20px;display:none"><a class="btn btn-warning" href=# onclick="formSubmit({{TE.Id}})">預覽小結</a></div>      
       {% endif %}
 
     </div>
     {% else %}
-    <p>No books found</p>
+    <p>No Item .</p>
     {% endfor %}
 
   </form>
+  
 </div>
 {% endblock %}

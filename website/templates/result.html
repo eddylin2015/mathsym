@@ -5,12 +5,12 @@
     td {padding-right:30px}
 </style>
 <h3>{{title}}</h3>
-<div style="  margin: auto;width: 80%;">
-    <table id="AnsMsgResTable">
+<div style="  margin: auto;max-width: 600px;">
+    <table id="AnsMsgResTable" class="table">
         <tr>
-            <td>題型</td>
-            <td>題號</td>
-            <td>對/錯"</td>
+            <td style="display: none;">題型</td>
+            <td style="display: none;">題號</td>
+            <td>對錯</td>
             <td>耗時</td>
             <td>得分</td>
             <td>命題</td>
@@ -19,14 +19,14 @@
 
         {% for TE in NTE %}
         <tr>
-            <td>{{TE.Tx}}</td>
-            <td>{{TE.Id}}</td>
+            <td style="display: none;">{{TE.Tx}}</td>
+            <td style="display: none;">{{TE.Id+1}}</td>
             <td>
                 <div>{{TE.OK}}</div>
             </td>
             <td>{{TE.Minute}}</td>
             <td>
-                <div>{{TE.OK}}</div>
+                <div>{{TE.Mark}}</div>
             </td>
             <td>
                 {% if TE.St is iterable and TE.St is not string  %}
