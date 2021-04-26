@@ -181,13 +181,11 @@ def Put_Expr_V1(TE):
 P301
 """ 
 def Get_P301_Expr(QN,Tx=-1):
-    TxFlag=Tx==-1
     sample_list0 = list(range(-39, 29))   # [-5,-4,-3,-2,-1,1,2,3,4,5]
     sample_list1 = list(range(-39, 29))
     sample_list1.remove(0)              # list1 為 非零數列
     NTE = []
     for Qid in range(0, QN):
-        if TxFlag:Tx = 0 if Qid < (QN//2) else 1  # Tx -半題型1 ,-半題型 2
         if Tx == 1:
             a = random.choice(sample_list1)  # 亂數a,b,c, 不為零
             b = random.choice(sample_list1)
@@ -195,14 +193,36 @@ def Get_P301_Expr(QN,Tx=-1):
             if a == b:
                 b = math.copysign(
                     abs(b)+random.choice(range(1, 5)), b)   # a != b
-            qiz = sp.Add(sp.Rational(b, a), sp.Rational(c, a), evaluate=False)
+            e1=sp.Rational(b, a)
+            e2=sp.Rational(c, a)
+            if e1+e2 <0:
+                e1=e1*-1
+                e2=e2*-1
+            qiz = sp.Add(e1,e2, evaluate=False)
             St = sp.latex(qiz)  # 題目
             Val = sp.simplify(qiz)  # 簡化算式,得出標準答案
+        elif Tx == 2:
+            print(Tx)
+            a = random.choice(range(10,50))  # 亂數a,b,c, 不為零
+            b = random.choice(range(10,100))
+            qiz = sp.Mul(a,b, evaluate=False)
+            St = r" %s \times %s "%(a,b)  # 題目
+            Val = sp.simplify(qiz)  # 簡化算式,得出標準答案
+        elif Tx == 3:
+            a = random.choice(range(2,10))  # 亂數a,b,c, 不為零
+            b = random.choice(range(10,100))
+            c = a *b
+            St = r" %s \div %s "%(c,a)  # 題目
+            Val = sp.S(c)/a
 
         else:
             a = random.choice(sample_list0)  # 亂數a,b,c
             b = random.choice(sample_list0)
             c = random.choice(sample_list0)
+            if a+b+c <0 :
+                a=a*-1
+                b=b*-1
+                c=c*-1
             qiz = sp.Add(sp.S(a), b, c, evaluate=False)
             St = sp.latex(qiz)  # 題目
             Val = sp.simplify(qiz)  # sympy.simplify簡化算式,得出標準答案

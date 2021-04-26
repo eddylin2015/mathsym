@@ -36,9 +36,10 @@ def create_app(config):
     def list():
         items=lib.GetQList()
         if request.args.get('s', "")=="P" :
-            items=["P301.1.有理數加減","P302.1.两位数除法","P304.0.两位数相乘"]
-            for i in range(3,28):
+            items=["P301.4.加減除法"]
+            for i in range(1,28):
                 items.append(".0.")
+
         return render_template(
             "list.html",
             books=items,
@@ -72,7 +73,7 @@ def create_app(config):
             lib.Post_Expr_UpdateAns(request.form, NTE)
             # 檢查比對作答與電腦答案.
             TEid=int(request.args.get('TEid', "-1"))
-            lib.Post_ExNTE_bpr_CheckAns(QIID, NTE,TEid)
+            lib.Post_Expr_CheckAns(QIID, NTE,TEid)
             # 清理Session空間.
 
             fmt = request.args.get('fmt', "")
