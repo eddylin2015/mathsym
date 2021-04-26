@@ -62,7 +62,6 @@ def create_app(config):
         
         QIID = QID.split(".")[0]
         if request.method == 'POST':
-            fmt = request.args.get('fmt', "")
             # 取得題目及電腦標準答案 (NTE)
             SID = request.form["SID"]
             NTE_blob = NTE_Storage.get(SID,None)

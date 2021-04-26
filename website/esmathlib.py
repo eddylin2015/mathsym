@@ -65,7 +65,7 @@ def GetQList():
         "PF303.4.解二元二次方程組",
         "PF304.4.二次函數圖像的性質",
         "PF305.4.解直角三角形",
-        "PF306.1.解直角三角形",]
+        "PF306.2.解直角三角形",]
 
 """
 算式
@@ -1741,13 +1741,11 @@ def Get_PF305_Expr(QN,Tx=-1):
 
 def Plot_RightTriangle(A,O,H,Path_):
     try:
-        
         #plt.close('all')
         # Triangle 1
         x=np.array([0,A,A,0])
         y=np.array([0,0,O,0])
         # Figure and Axes
-        
         fig1=Figure()
         fig1.set_figheight(3)
         fig1.set_figwidth(3)
@@ -1763,7 +1761,42 @@ def Plot_RightTriangle(A,O,H,Path_):
         ax1.text(A-0.25,O-0.35,'γ')
         ax1.text(A/2,-0.5,f'a={A}')
         ax1.text(A+0.5,O/2,f'b={O}')
-        ax1.text(A/2-1,O/2,f'c=${sp.latex(H)}$')
+        #ax1.text(A/2-1,O/2,f'c=${sp.latex(H)}$')
+        ax1.text(A/2-1,O/2,f'c')
+        fig1.savefig(os.getcwd()+"\\static\\"+Path_)
+        return Path_
+    except Exception as e:
+        print(e)
+        return None
+
+def Plot_RightTriangle2(A,O,H,r,Path_):
+    try:
+        #plt.close('all')
+        # Triangle 1
+        a=A.evalf()
+        o=O.evalf()
+        h=H.evalf()
+        x=np.array([0,a,a,0])
+        y=np.array([0,0,o,0])
+        # Figure and Axes
+        fig1=Figure()
+        fig1.set_figheight(3)
+        fig1.set_figwidth(3)
+        #ax1=fig1.add_subplot(111)
+        ax1=fig1.subplots()
+        ax1.axis('square')
+        ax1.plot(x,y)
+        # Axes Limits
+        ax1.set_xlim([-1,int(a)+2])
+        ax1.set_ylim([-1,int(o)+2])
+        ax1.text(0.5,0.25,'θ')
+        ax1.text(a-0.5,0.25,'90')
+        ax1.text(a-0.35,o-0.4,f'γ(${r}^o$)')
+        ax1.text(a/2,-0.5,f'a=${sp.latex(A)}$')
+        #ax1.text(A+0.5,O/2,f'b={O}')
+        ax1.text(a+0.5,o/2,f'b')
+        #ax1.text(A/2-1,O/2,f'c=${sp.latex(H)}$')
+        ax1.text(a/2-1,o/2,f'c')
         fig1.savefig(os.getcwd()+"\\static\\"+Path_)
         return Path_
     except Exception as e:
@@ -1772,41 +1805,78 @@ def Plot_RightTriangle(A,O,H,Path_):
         
     
 def Get_PF306_Expr(QN,Tx=-1):
-    TxFlag=Tx==-1       
-    x, y, z = sp.symbols('x,y,z')
-    sample_list0 = list(range(-10, 10))   # [-5,-4,-3,-2,-1,1,2,3,4,5]
-    sample_list1 = list(range(-10, 10))
-    sample_list1.remove(0)    # 非零數列
     NTE = []
     for Qid in range(0, QN):
-        A=random.choice([2,3,4,5,7])
-        O=random.choice([2,3,4,5,7])
-        H=sp.sqrt(A**2+O**2)
-        angle_=["theta","gamma"]
-        trig_=["sin","cos","tan"]
-        trig=random.choice(trig_)
-        ang=random.choice(angle_)
-        St=["設直角三角形:", r"a=%s,b=%s,c=%s, 求 %s \%s = ?"%(A,O,sp.latex(H) , trig,ang)]
-        Val = 1
-        if trig=="sin":
-            if ang=="theta":             
-                Val=O/H
-            if ang=="gamma":             
-                Val=A/H
-        if trig=="cos":
-            if ang=="theta":             
-                Val=A/H
-            if ang=="gamma":             
-                Val=O/H
-        if trig=="tan":
-            if ang=="theta":             
-                Val=sp.S(O)/A
-            if ang=="gamma":             
-                Val=sp.S(A)/O
-        
-        TE = GetTE(Qid, St, Val, Tx)
-        #TE["Tip"] = " y 隨 x 的增大而____  (  +1 表示 增大  或  -1 表示  減少 )"
-        TE["PlotImg"]=Plot_RightTriangle(A,O,H,"img"+GetKey()+str(Qid)+".png")
-        NTE.append(TE)
+        if Tx == 1:
+            x=random.choice([2,3,4,5])
+            theta = random.choice([30,45,60,37,53])
+            gamma=90-theta
+            if theta==30:
+                A=x*sp.sqrt(3)
+                O=sp.S(x)
+                H=sp.S(2*x)
+            elif theta==45:
+                A=sp.S(x)
+                O=sp.S(x)
+                H=x*sp.sqrt(2)
+            elif theta==60:
+                A=sp.S(x)
+                O=x*sp.sqrt(3)
+                H=sp.S(2*x)
+            elif theta==37:
+                A=sp.S(4*x)
+                O=sp.S(3*x)
+                H=sp.S(5*x)
+            elif theta==53:
+                A=sp.S(3*x)
+                O=sp.S(4*x)
+                H=sp.S(5*x)
+            bian_=["b","c"]
+            bian=random.choice(bian_)
+            trig_=["sin","cos","tan"]
+            trig=random.choice(trig_)
+
+            #St=["設直角三角形:", r"a=%s,b=%s,c=%s, 求 %s \%s = ?"%(A,O,sp.latex(H) , trig,ang)]
+            St=["設直角三角形:", r"a=%s, \gamma=%s^o, 求 %s  = ?"%(sp.latex(A),gamma, bian)]
+            Val = 1
+            if bian=="b":
+                Val=O
+            if bian=="c":
+                Val=H
+            TE = GetTE(Qid, St, Val, Tx)
+            TE["PlotImg"]=Plot_RightTriangle2(A,O,H,gamma,"img"+GetKey()+str(Qid)+".png")
+            NTE.append(TE)
+            
+        else:
+            A=random.choice([2,3,4,5,7])
+            O=random.choice([2,3,4,5,7])
+            H=sp.sqrt(A**2+O**2)
+            angle_=["theta","gamma"]
+            trig_=["sin","cos","tan"]
+            trig=random.choice(trig_)
+            ang=random.choice(angle_)
+            #St=["設直角三角形:", r"a=%s,b=%s,c=%s, 求 %s \%s = ?"%(A,O,sp.latex(H) , trig,ang)]
+            St=["設直角三角形:", r"a=%s, b=%s, 求 %s \%s = ?"%(A,O, trig,ang)]
+            Val = 1
+            if trig=="sin":
+                if ang=="theta":             
+                    Val=O/H
+                if ang=="gamma":             
+                    Val=A/H
+            if trig=="cos":
+                if ang=="theta":             
+                    Val=A/H
+                if ang=="gamma":             
+                    Val=O/H
+            if trig=="tan":
+                if ang=="theta":             
+                    Val=sp.S(O)/A
+                if ang=="gamma":             
+                    Val=sp.S(A)/O
+            
+            TE = GetTE(Qid, St, Val, Tx)
+            #TE["Tip"] = " y 隨 x 的增大而____  (  +1 表示 增大  或  -1 表示  減少 )"
+            TE["PlotImg"]=Plot_RightTriangle(A,O,H,"img"+GetKey()+str(Qid)+".png")
+            NTE.append(TE)
 
     return NTE
