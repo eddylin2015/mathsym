@@ -36,10 +36,13 @@ def create_app(config):
     def list():
         items=lib.GetQList()
         if request.args.get('s', "")=="P" :
-            items=["P301.1.两位数相乘","P302.1.两位数除"]
+            items=["P301.1.有理數加減","P302.1.两位数除法","P304.0.两位数相乘"]
+            for i in range(3,28):
+                items.append(".0.")
         return render_template(
             "list.html",
-            books=items
+            books=items,
+            s=request.args.get('s', "S")
         )
 
 

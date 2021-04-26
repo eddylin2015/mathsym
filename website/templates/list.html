@@ -10,7 +10,12 @@
 <tr><td>
 <div class="media">
   <a href="/trythisapps/{{book}}/view">
-    <h4>{{QID}}{{Name}}</h4>
+    <h4>
+      {% if s=="P" %}
+      <img src="//mail.mbc.edu.mo/images/mathicons/math_history_{{loop.index}}.png">
+      {% endif %}
+      {{QID}}{{Name}}
+    </h4>
   </a>
 </div>
 <div>
@@ -33,13 +38,10 @@
 </footer>
 
 <script>
-  console.log("xxx")
 $(document).ready(function(){
   $("#myInput").on("keyup", function() {
     var value = $(this).val().toLowerCase();
-    console.log(value)
     $("#desc tr").filter(function() {
-      console.log($(this).text().toLowerCase());
       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
   });
