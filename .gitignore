@@ -24,3 +24,4 @@ web/flask_session/
 website/static/
 lesson/kw_data.xlsx
 website/config.py
+website/bookshelf.db

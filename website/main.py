@@ -18,6 +18,12 @@ records = [
   { "id":500,"user":"圓周率","Pass":"3.14","Name":"祖沖之","Classno":"南北朝","Seat":"500","Role":"9", "displayName":"Zu Chongzhi"},
   { "id":295,"user":"圓周率","Pass":"3.14","Name":"劉徽","Classno":"三國","Seat":"295","Role":"9", "displayName":"Liu Hui"},
 ]
+
+def get_model():
+    from . import model_cloudsql
+    model = model_cloudsql
+    return model
+
 def create_app(config):
     # Flask 框架實例 app
     app = Flask(__name__)
@@ -50,7 +56,13 @@ def create_app(config):
     @app.route("/trythisapps/<QID>/view", methods=['GET', 'POST'])
     @login_required_auth
     def MathViewPanel(QID):
-        return render_template("view.html",title=QID)
+        QIID=QID.split(".")[0]
+        book = get_model().QIZTXReadByGid(QIID)
+        if book==None:
+            return render_template("view.html",title=QID)
+        else:
+            return render_template("view2.html",title=QID,book=book)
+
 
 
     # GET 顯示QAMT題QID相關算式
