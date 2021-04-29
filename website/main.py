@@ -15,10 +15,7 @@ import config
 import model_cloudsql as model
 QAMT = 6  # 出題數目
 NTE_Storage = {}
-records = [
-  { "id":500,"user":"圓周率","Pass":"3.14","Name":"祖沖之","Classno":"南北朝","Seat":"500","Role":"9", "displayName":"Zu Chongzhi"},
-  { "id":295,"user":"圓周率","Pass":"3.14","Name":"劉徽","Classno":"三國","Seat":"295","Role":"9", "displayName":"Liu Hui"},
-]
+
 
 def get_model():
     
@@ -34,6 +31,8 @@ def create_app(config):
     with app.app_context():
         model = get_model()
         model.init_app(app)
+    import qiztxitem.crud as qizlib
+    #app.register_blueprint(qizlib.qiztxitemcrud, url_prefix='/item')        
         
     # 根路由
     @app.route("/")
@@ -132,7 +131,7 @@ def create_app(config):
 
     @app.route('/trythisapps/login', methods=['GET', 'POST'])
     def login():
-
+        records =config.records
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
