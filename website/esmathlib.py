@@ -718,7 +718,7 @@ def Put_PF107_Expr(TE):
             for aa_ in a2:
                 a_.append(sp.parse_expr(aa_))
             Flag = reduce_rational_inequalities([[a_[0], a_[1]]], x) == Val
-        elif ans == '0':
+        elif ans == '0'  or ans=='False' or ans=="false":
             if str(Val) == "False":
                 Flag = True
         else:
@@ -836,7 +836,7 @@ def Get_PF107_Expr(QN,Tx=-1):
             St=r"\left\{\begin{array}\\ %s  \\  %s  \\  \end{array}\right."%(sp.latex(fx1),sp.latex(fx2))  
             Val= reduce_rational_inequalities([[fx1,fx2]],x)   # and
         TE = GetTE(Qid, St, Val, Tx)
-        TE["Tip"] = "請作答 空集輸入 0; 等於某值  Ne(x,0) "
+        TE["Tip"] = "請作答 空集輸入 false;  "
         NTE.append(TE)
     return NTE
 

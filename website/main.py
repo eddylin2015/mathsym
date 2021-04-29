@@ -12,6 +12,7 @@ from functools import wraps
 from flask_session import Session
 import random
 import config
+import model_cloudsql as model
 QAMT = 6  # 出題數目
 NTE_Storage = {}
 records = [
@@ -20,8 +21,8 @@ records = [
 ]
 
 def get_model():
-    from . import model_cloudsql
-    model = model_cloudsql
+    
+    #model = model_cloudsql
     return model
 
 def create_app(config):
@@ -30,7 +31,10 @@ def create_app(config):
     app.config.from_object(config)
     app.secret_key = app.config["SECRET_KEY"]      
     Session(app)
-
+    with app.app_context():
+        model = get_model()
+        model.init_app(app)
+        
     # 根路由
     @app.route("/")
     def index():
