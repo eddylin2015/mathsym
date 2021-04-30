@@ -88,7 +88,7 @@ def QIZTXList_by_user(user_id, limit=10, cursor=None):
              .offset(cursor))
     qiztx = builtin_list(map(from_sql, query.all()))
     next_page = cursor + limit if len(qiztx) == limit else None
-    return (lessons, next_page)
+    return (qiztx, next_page)
 # [END list_by_user]
 
 def QIZTXRead(id):

@@ -2,7 +2,7 @@
 # Copyright 2015  Inc.
 #}
 
-{% extends "base.html" %}
+{% extends "qizitem/base.html" %}
 
 {% block content %}
 
@@ -19,55 +19,12 @@
   </a>
 </div>
 {% endif %}
-<div class="media">
-  <div class="media-left">
-    {% if book.imageUrl %}
-      <img class="book-image" src="{{book.imageUrl}}">
-    {% else %}
-    {% endif %}
-  </div>
-
-</div>
 <div class="media-body">
   <h4 class="book-title">
-    {{book.Title}}
-    <small>{{book.logDate}}</small>
+    {{book.qtitle}}
   </h4>
-  <div>{{book.Descr|safe }} </div>
-  <small class="book-added-by">for {{book.Classno}} created by userid( {{book.get('createdById')|default('Anonymous', True)}})</small>
+  <div>{{book.qnote|safe }} </div>
+  <small class="book-added-by">created by userid( {{book.get('createbyid')|default('Anonymous', True)}})</small>
 </div>
-<h4>Lecture:</h4>
-{% for file in lecturesfile %}
-<div class="media">
-  <a href="/trythisapps/qizitem/{{book.id}}/downloadlecture/{{file.f}}">
-    <span>{{file.n}}</span>
-  </a>
-</div>
-{% else %}
-<p>No files found</p>
-{% endfor %}
-<h4>Classwork:</h4>
-{% for file in filenames %}
-<div>
-  <a href="/trythisapps/qizitem/{{book.id}}/download/{{file.f}}">
-    <span>{{file.n}}</span>
-  </a>
-</div>
-{% else %}
-<p>No files found</p>
-{% endfor %}
-{% if session.profile and uploadFlag %}
-<form method="post" action="/trythisapps/qizitem/{{book.id}}/upload" enctype="multipart/form-data">
-  <dl>
-  <p>
-    <input type="file" name="files[]" multiple="true" autocomplete="off" required>
-  </p>
-  </dl>
-  <p>
-  <input type="submit" style="color:black" value="提交功課"">
-  <span>MAX_CONTENT_LENGTH = 8 * 1024 * 1024</span>
-</p>
-</form>
-{% endif %}
 {% endblock %}
 

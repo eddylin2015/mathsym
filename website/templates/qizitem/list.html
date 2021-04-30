@@ -5,22 +5,14 @@
 <h4>Lessons</h4>
 <a href="/trythisapps/qizitem/add" class="btn btn-success btn-sm">
   <i class="glyphicon glyphicon-plus"></i>
-  Add lesson
+  Add Qiz
 </a>
 {% endif %}
 {% for book in books %}
 <div class="media">
   <a href="/trythisapps/qizitem/{{book.id}}">
-    <div class="media-left">
-      {% if book.imageUrl %}
-        <img style="max-width:200px" src="{{book.imageUrl}}">
-      {% else %}
-      {% endif %}
-    </div>
     <div class="media-body">
-         
-      <h4>{{book.id}} {{book.Title}}</h4>
-      <p>{{book.Classno}}</p>
+      <h4>{{book.id}} {{book.qtitle}}</h4>
     </div>
   </a>
 </div>
