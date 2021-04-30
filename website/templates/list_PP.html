@@ -5,7 +5,6 @@
 <input class="form-control" id="myInput" type="text" placeholder="Search..">
 <table id="desc" class="table">
 {% for book in books %}
-{{book.qtitle}}
 {% if book.qtitle[:2]==s  %}
 {% set QID,TX,Name = book.qtitle.split('.') %}
 <tr><td>
