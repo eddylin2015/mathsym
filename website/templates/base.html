@@ -36,13 +36,38 @@
 
           <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">設定<span class="caret">
             <ul class="dropdown-menu">
-              <li><a href="/trythisapps?s=P">Primary</a></li>
+              <li><a href="/trythisapps?s=PP">Primary</a></li>
+              {% if session.profile and session.profile.Role == "1" %}
+              <li><a href="/trythisapps/qizitem">Qiz Item</a></li>        
+              {% endif %}
+
             </ul>
           </li>
         </ul>
-        </div>
-      </div>
+
+
+      {# [START profile] #}
+      <p class="navbar-text navbar-right">
+      {% if session.profile %}
+        <a href="#">🙋🏻‍♂️</a>
+        <span>|</span>
+        <a href="/trythisapps/logout">
+          {% if session.profile.image %}
+            <img class="img-circle" src="{{session.profile.image.url}}" width="24">
+          {% endif %}
+          {{session.profile.user}}
+          {{session.profile.username}}
+        </a>
+      {% else %}
+        <a href="/trythisapps/login">Sign in</a>
+      {% endif %}
+      </p>
+      {# [END profile] #}
+    </div>      
+    </div>  
     </div>
+
+
     <div class="container">
       {% block content %}{% endblock %}
     </div>

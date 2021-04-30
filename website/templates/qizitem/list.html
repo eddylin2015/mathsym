@@ -1,20 +1,16 @@
-{#
-# Copyright 2020 Inc.
-#}
-
-{% extends "base.html" %}
+{% extends "qizitem/base.html" %}
 
 {% block content %}
 {% if session.profile and session.profile.Role == "1" %}
 <h4>Lessons</h4>
-<a href="/classwork/add" class="btn btn-success btn-sm">
+<a href="/trythisapps/qizitem/add" class="btn btn-success btn-sm">
   <i class="glyphicon glyphicon-plus"></i>
   Add lesson
 </a>
 {% endif %}
 {% for book in books %}
 <div class="media">
-  <a href="/classwork/{{book.id}}">
+  <a href="/trythisapps/qizitem/{{book.id}}">
     <div class="media-left">
       {% if book.imageUrl %}
         <img style="max-width:200px" src="{{book.imageUrl}}">
@@ -23,7 +19,7 @@
     </div>
     <div class="media-body">
          
-      <h4>{{book.Lesson}} {{book.Title}}</h4>
+      <h4>{{book.id}} {{book.Title}}</h4>
       <p>{{book.Classno}}</p>
     </div>
   </a>

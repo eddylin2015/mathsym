@@ -9,19 +9,11 @@
 <h4>{{book.Lesson}} {{book.Title}}</h4>
 {% if session.profile and session.profile.Role < "8" %}
 <div class="btn-group">
-  <a onclick="window.location.href ='/classwork/{{book.id}}/downloadall?{{ range(1, 100) | random }}'+Math.random()" class="btn btn-primary btn-sm">
-    <i class="glyphicon glyphicon-edit"></i>
-    Zip Lesson
-  </a>  
-  <a href="/classwork/{{book.id}}/edit" class="btn btn-primary btn-sm">
+  <a href="/trythisapps/qizitem/{{book.id}}/edit" class="btn btn-primary btn-sm">
     <i class="glyphicon glyphicon-edit"></i>
     Edit Lesson
   </a>
-  <a href="/classwork/{{book.id}}/cleanclasswork" class="btn btn-danger btn-sm">
-    <i class="glyphicon glyphicon-trash"></i>
-    clean classwork
-  </a>
-  <a href="/classwork/{{book.id}}/delete" class="btn btn-danger btn-sm">
+  <a href="/trythisapps/qizitem/{{book.id}}/delete" class="btn btn-danger btn-sm">
     <i class="glyphicon glyphicon-trash"></i>
     Delete Lesson
   </a>
@@ -47,7 +39,7 @@
 <h4>Lecture:</h4>
 {% for file in lecturesfile %}
 <div class="media">
-  <a href="/classwork/{{book.id}}/downloadlecture/{{file.f}}">
+  <a href="/trythisapps/qizitem/{{book.id}}/downloadlecture/{{file.f}}">
     <span>{{file.n}}</span>
   </a>
 </div>
@@ -57,7 +49,7 @@
 <h4>Classwork:</h4>
 {% for file in filenames %}
 <div>
-  <a href="/classwork/{{book.id}}/download/{{file.f}}">
+  <a href="/trythisapps/qizitem/{{book.id}}/download/{{file.f}}">
     <span>{{file.n}}</span>
   </a>
 </div>
@@ -65,7 +57,7 @@
 <p>No files found</p>
 {% endfor %}
 {% if session.profile and uploadFlag %}
-<form method="post" action="/classwork/{{book.id}}/upload" enctype="multipart/form-data">
+<form method="post" action="/trythisapps/qizitem/{{book.id}}/upload" enctype="multipart/form-data">
   <dl>
   <p>
     <input type="file" name="files[]" multiple="true" autocomplete="off" required>

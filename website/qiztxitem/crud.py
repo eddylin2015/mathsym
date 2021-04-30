@@ -1,4 +1,4 @@
-from main import get_model,login_required_auth
+from esapp import get_model,login_required_auth
 from flask import flash,Blueprint, current_app, redirect, render_template, request, \
     session, url_for,send_file,Flask,send_from_directory
 import os
@@ -6,16 +6,16 @@ import zipfile
 
 from urllib.parse import quote
 
-qiztxitemcrud = Blueprint('qiztxitem', __name__) 
+qiztxitemcrud = Blueprint('qizitem', __name__) 
 
 @qiztxitemcrud.route("/")
 def list():
     token = request.args.get('page_token', None)
     if token:
         token = token.encode('utf-8')
-    books, next_page_token = get_model().list(cursor=token)
+    books, next_page_token = get_model().QIZTXList(cursor=token)
     return render_template(
-        "list.html",
+        "qizitem/list.html",
         books=books,
         next_page_token=next_page_token)
 
@@ -26,67 +26,58 @@ def list_mine():
     token = request.args.get('page_token', None)
     if token:
         token = token.encode('utf-8')
-    books, next_page_token = get_model().list_by_user(
+    books, next_page_token = get_model().QIZTXList_by_user(
         user_id=session['profile']['id'],
         cursor=token)
     return render_template(
-        "list.html",
+        "qizitem/list.html",
         books=books,
         next_page_token=next_page_token)
 # [END list_mine]
 
 @qiztxitemcrud.route('/<id>')
+@login_required_auth
 def view(id):
-    uploadFlag=False
-    book = get_model().read(id)
-    crspath=book["Path"]
-    crsclassno=book["Classno"]
-    lecturesfile=[]    
-    filenames=[]
-    path = current_app.config['HW_UPLOAD_FOLDER']
-    LECTURE_FOLDER = os.path.join(path, crspath+"LECTURE")
-    if not os.path.isdir(LECTURE_FOLDER):
-        os.mkdir(LECTURE_FOLDER)
-    for root,dirs, files in os.walk(LECTURE_FOLDER):
-        for file in files:
-            basename, extension = file.rsplit('.', 1)
-            _file=basename.split('-_')[0]+"."+extension
-            lecturesfile.append({"f":quote(str(file)),"n":_file})    
+    book = get_model().QIZTXRead(id)
+    return render_template("qizitem/view.html", book=book)
 
-    if session=={}:
-        pass
-    elif session.get('profile') is None :
-        pass
-    elif session.get('profile') == {} :
-        pass        
+# [START add]
+@qiztxitemcrud.route('/add', methods=['GET', 'POST'])
+@login_required_auth
+def add():
+    if request.method == 'POST':
+        data = request.form.to_dict(flat=True)
+        # If the user is logged in, associate their profile with the new book.
+        if 'profile' in session:
+            data['createbyid'] = session['profile']['id']
+        book = get_model().QIZTXCreate(data)
+        return redirect(url_for('.view', id=book['id']))
+    return render_template("qizitem/form.html", action="Add", book={})
+# [END add]
+
+@qiztxitemcrud.route('/<id>/edit', methods=['GET', 'POST'])
+@login_required_auth
+def edit(id):
+    book = get_model().QIZTXRead(id)
+    if (book["createbyid"]==str(session['profile']['id'])) :        
+        if request.method == 'POST':
+            data = request.form.to_dict(flat=True)
+            book = get_model().QIZTXUpdate(data, id)
+            return redirect(url_for('.view', id=book['id']))
+        return render_template("qizitem/form.html", action="Edit", book=book)
     else:
-        seat=session['profile'].get('Seat')
-        classno=session['profile']['Classno']
-        classno_seat=f"{classno}{seat}"
+        return redirect("/trythisapps/qizitem/")    
 
-        if crsclassno==classno :uploadFlag=True
-        if session['profile']['Role']=="1": uploadFlag=True
 
-        #if (book["createdById"]==str(session['profile']['id'])) or (crsclassno==classno) :
-        UPLOAD_FOLDER = os.path.join(path, crspath)
-        if not os.path.isdir(UPLOAD_FOLDER):
-            os.mkdir(UPLOAD_FOLDER)  
-        for root,dirs, files in os.walk(UPLOAD_FOLDER):
-            for file in files:
-                basename, extension = file.rsplit('.', 1)
-                bn=basename.split('-_')
-                _file=bn[0]+"."+extension
-                fseat=""
-                if len(bn)>1 : fseat=bn[1][:5]
-                if  session['profile']['Role']=="1":
-                    filenames.append({"f":quote(str(file)),"n":f"{_file} {fseat}"})
-                elif classno_seat in file:
-                    filenames.append({"f":quote(str(file)),"n":_file})
-                else:
-                    filenames.append({"f":"#","n":_file})    
-    return render_template("view.html", book=book,lecturesfile=lecturesfile,filenames=filenames, uploadFlag=uploadFlag)
+@qiztxitemcrud.route('/<id>/delete')
+@login_required_auth
+def delete(id):
+    get_model().QIZTXDelete(id)        
+    return redirect(url_for('.list'))
+
     
 @qiztxitemcrud.route('/<id>/downloadall')
+@login_required_auth
 def download_all(id):
     book = get_model().read(id)
     crspath=book["Path"]
@@ -112,6 +103,7 @@ def download_all(id):
     os.remove(ZipFilePath)
 
 @qiztxitemcrud.route('/<id>/download/<filename>')
+@login_required_auth
 def download_file(id,filename):
     book = get_model().read(id)
     crspath=book["Path"]
@@ -131,6 +123,7 @@ def download_file(id,filename):
     # Delete the zip file if not needed
 
 @qiztxitemcrud.route('/<id>/downloadlecture/<filename>')
+@login_required_auth
 def download_lecturefile(id,filename):
     book = get_model().read(id)
     crspath=book["Path"]
@@ -161,6 +154,7 @@ def showimage(id,filename):
     # Delete the zip file if not needed
 
 @qiztxitemcrud.route('/<id>/upload', methods=['GET', 'POST'])
+@login_required_auth
 def uploadfiles(id):
     book = get_model().read(id)
     crspath=book["Path"]
@@ -188,71 +182,13 @@ def uploadfiles(id):
 
 
 
-# [START add]
-@qiztxitemcrud.route('/add', methods=['GET', 'POST'])
-@login_required_auth
-def add():
-    if request.method == 'POST':
-        data = request.form.to_dict(flat=True)
-
-        # If an image was uploaded, update the data to point to the new image.
-        path = current_app.config['HW_UPLOAD_FOLDER']
-        image_url = upload_image_file(request.files.get('image'),path)
-
-        if image_url:
-            data['imageUrl'] = image_url
-
-        # If the user is logged in, associate their profile with the new book.
-        if 'profile' in session:
-            data['createdById'] = session['profile']['id']
-
-        book = get_model().create(data)
-
-        return redirect(url_for('.view', id=book['id']))
-
-    return render_template("form.html", action="Add", book={})
-# [END add]
-
-
-@qiztxitemcrud.route('/<id>/edit', methods=['GET', 'POST'])
-@login_required_auth
-def edit(id):
-    book = get_model().read(id)
-    if (book["createdById"]==str(session['profile']['id'])) :        
-        if request.method == 'POST':
-            data = request.form.to_dict(flat=True)
-            path = current_app.config['HW_UPLOAD_FOLDER']
-            image_url = upload_image_file(request.files.get('image'),path)
-            if image_url:
-                data['imageUrl'] = image_url
-            book = get_model().update(data, id)
-            return redirect(url_for('.view', id=book['id']))
-    
-        return render_template("form.html", action="Edit", book=book)
-    else:
-        return redirect("/classwork/")    
-
-
-@qiztxitemcrud.route('/<id>/delete')
-@login_required_auth
-def delete(id):
-    book = get_model().read(id)
-    crspath=book["Path"]
-    if (book["createdById"]==str(session['profile']['id']))  :
-        path = current_app.config['HW_UPLOAD_FOLDER']
-        UPLOAD_FOLDER = os.path.join(path, crspath)
-        for root,dirs, files in os.walk(UPLOAD_FOLDER):
-           for file in files:      
-               os.remove(UPLOAD_FOLDER+"/"+file)
-        get_model().delete(id)        
-    return redirect(url_for('.list'))
 
 @qiztxitemcrud.route('/<id>/cleanclasswork')
 @login_required_auth
 def cleanclasswork(id):
     book = get_model().read(id)
     crspath=book["Path"]
-    if (book["createdById"]==str(session['profile']['id']))  :
+    if (book["createbyid"]==str(session['profile']['id']))  :
         path = current_app.config['HW_UPLOAD_FOLDER']
         UPLOAD_FOLDER = os.path.join(path, crspath)
         for root,dirs, files in os.walk(UPLOAD_FOLDER):

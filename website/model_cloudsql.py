@@ -53,23 +53,43 @@ class QIZTX(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     gid = db.Column(db.String(255), unique=True)
     qtitle= db.Column(db.String(255))
+    tx=db.Column(db.Integer)
     qnote= db.Column(db.Text)
-    def __init__(self, id=None, gid=None):
+    createbyid=db.Column(db.String(255))
+    def __init__(self, id=None, gid=None,qtitle=None,tx=None,qnote=None,createbyid=None):
         self.id= id
         self.gid =gid
+        self.qtitle =qtitle
+        self.tx =tx
+        self.qnote =qnote
+        self.createbyid =createbyid
     def __repr__(self):
         return "<QIZTX(KEY='%s')" % (self.id)
 
 def QIZTXList(limit=10, cursor=None):
     cursor = int(cursor) if cursor else 0
     query = (QIZTX.query
-             .filter_by(Open=1)
+             #.filter_by(Open=1)
              .order_by(QIZTX.id)
              .limit(limit)
              .offset(cursor))
     qiztx = builtin_list(map(from_sql, query.all()))
     next_page = cursor + limit if len(qiztx) == limit else None
     return (qiztx, next_page)
+
+
+# [START list_by_user]
+def QIZTXList_by_user(user_id, limit=10, cursor=None):
+    cursor = int(cursor) if cursor else 0
+    query = (QIZTX.query
+             .filter_by(createbyid=user_id)
+             .order_by(QIZTX.id)
+             .limit(limit)
+             .offset(cursor))
+    qiztx = builtin_list(map(from_sql, query.all()))
+    next_page = cursor + limit if len(qiztx) == limit else None
+    return (lessons, next_page)
+# [END list_by_user]
 
 def QIZTXRead(id):
     result = QIZTX.query.get(id)
@@ -82,6 +102,24 @@ def QIZTXReadByGid(gid):
     if not result:
         return None
     return from_sql(result)
+
+def QIZTXCreate(data):
+    print(data)
+    lesson = QIZTX(**data)
+    db.session.add(lesson)
+    db.session.commit()
+    return from_sql(lesson)
+
+def QIZTXUpdate(data, id):
+    lesson = QIZTX.query.get(id)
+    for k, v in data.items():
+        setattr(lesson, k, v)
+    db.session.commit()
+    return from_sql(lesson)
+
+def QIZTXDelete(id):
+    QIZTX.query.filter_by(id=id).delete()
+    db.session.commit()
 
 ## NTEXPR
 class NTEXPR(db.Model):

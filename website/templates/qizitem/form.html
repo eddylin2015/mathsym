@@ -1,0 +1,43 @@
+{#
+# Copyright 2020  Inc.
+#
+#}
+
+{% extends "base.html" %}
+
+{% block content %}
+<h3>{{action}} book</h3>
+<script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
+<form method="POST" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="id">id</label>
+    <input type="text" name="id" id="id" value="{{book.id}}" class="form-control"/>
+  </div>
+  <div class="form-group">
+    <label for="gid">gid</label>
+    <input type="text" name="gid" id="gid" value="{{book.gid}}" class="form-control"/>
+  </div>  
+  <div class="form-group">
+    <label for="qtitle">qtitle</label>
+    <input type="text" name="qtitle" id="qtitle" value="{{book.qtitle}}" class="form-control"/>
+  </div>
+  <div class="form-group">
+    <label for="tx">tx</label>
+    <input type="text" name="tx" id="tx" value="{{book.tx}}" class="form-control"/>
+  </div>
+  <div class="form-group">
+    <label for="qnote">qnote</label>
+    <textarea name="qnote" id="qnote" class="form-control">{{book.qnote}}</textarea>
+    <script>
+      CKEDITOR.replace( 'qnote' );
+    </script>
+  </div>
+  <div class="form-group hidden">
+    <label for="createbyid">Created by ID</label>
+    <input type="text" name="createbyid" id="createbyid" value="{{book.createbyid}}" class="form-control"/>
+  </div>
+
+  <button type="submit" class="btn btn-success">Save</button>
+</form>
+
+{% endblock %}

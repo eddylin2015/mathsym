@@ -5,11 +5,12 @@
 <input class="form-control" id="myInput" type="text" placeholder="Search..">
 <table id="desc" class="table">
 {% for book in books %}
-{% if book[:2]==s  %}
-{% set QID,TX,Name = book.split('.') %}
+{{book.qtitle}}
+{% if book.qtitle[:2]==s  %}
+{% set QID,TX,Name = book.qtitle.split('.') %}
 <tr><td>
 <div class="media">
-  <a href="/trythisapps/{{book}}/view">
+  <a href="/trythisapps/{{book.qtitle}}/view">
     <h4>
       {% if s=="PP" %}
       <img src="//mail.mbc.edu.mo/images/mathicons/math_history_{{loop.index}}.png">
@@ -20,7 +21,7 @@
 </div>
 <div>
   {% for n in range(0,TX|int) %}
-  <a href="/trythisapps/{{book}}?Tx={{n}}"><button>題型{{n+1}}</button></a>
+  <a href="/trythisapps/{{book.qtitle}}?Tx={{n}}"><button>題型{{n+1}}</button></a>
   {% endfor %}
 </div>
 </td>  

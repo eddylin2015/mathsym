@@ -72,7 +72,7 @@ def GetQList():
 """
 def Get_Expr(QIID,QAMT,Tx=-1):
     NTE=None
-    if QIID=="P301":     NTE=Get_P301_Expr(QAMT,Tx)
+    if QIID=="PP301":     NTE=Get_P301_Expr(QAMT,Tx)
     elif QIID=="P302":   NTE=Get_P302_Expr(QAMT,Tx)    
     elif QIID=="PF101":  NTE=Get_PF101_Expr(QAMT,Tx)
     elif QIID=="PF102" : NTE=Get_PF102_Expr(QAMT,Tx)

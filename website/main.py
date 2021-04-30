@@ -1,5 +1,5 @@
 from flask import current_app, Flask, redirect, request, render_template,send_file,\
-     session,url_for
+     session,url_for,Blueprint
 import os
 import json
 import base64
@@ -12,15 +12,10 @@ from functools import wraps
 from flask_session import Session
 import random
 import config
-import model_cloudsql as model
+from esapp import login_required_auth, get_model
+
 QAMT = 6  # 出題數目
 NTE_Storage = {}
-
-
-def get_model():
-    
-    #model = model_cloudsql
-    return model
 
 def create_app(config):
     # Flask 框架實例 app
@@ -31,8 +26,8 @@ def create_app(config):
     with app.app_context():
         model = get_model()
         model.init_app(app)
-    import qiztxitem.crud as qizlib
-    #app.register_blueprint(qizlib.qiztxitemcrud, url_prefix='/item')        
+    from  qiztxitem.crud import qiztxitemcrud
+    app.register_blueprint(qiztxitemcrud, url_prefix='/trythisapps/qizitem')        
         
     # 根路由
     @app.route("/")
@@ -44,17 +39,24 @@ def create_app(config):
     @app.route("/trythisapps")
     def list():
         items=lib.GetQList()
-        if request.args.get('s', "")=="P" :
-            items=["P301.4.加減除法"]
-            for i in range(1,28):
-                items.append(".0.")
-
-        return render_template(
-            "list.html",
-            books=items,
-            s=request.args.get('s', "S")
-        )
-
+        if request.args.get('s', "")=="PP" :
+            token = request.args.get('page_token', None)
+            if token:
+                token = token.encode('utf-8')
+            books, next_page_token = get_model().QIZTXList(cursor=token)
+            print(books)
+            return render_template(
+                "list_PP.html",
+                books=books,
+                s=request.args.get('s', "PF"),
+                next_page_token=next_page_token)
+            #items=["PP301.4.加減除法"]
+        else:
+            return render_template(
+                "list.html",
+                books=items,
+                s=request.args.get('s', "PF")
+            )
 
     @app.route("/trythisapps/<QID>/view", methods=['GET', 'POST'])
     @login_required_auth
@@ -66,15 +68,12 @@ def create_app(config):
         else:
             return render_template("view2.html",title=QID,book=book)
 
-
-
     # GET 顯示QAMT題QID相關算式
     # POST 收集作答,並對比答案.
     @app.route("/trythisapps/<QID>", methods=['GET', 'POST'])
     @login_required_auth
     def MathPanel(QID):
         Tx = int(request.args.get('Tx', "-1"))
-        
         QIID = QID.split(".")[0]
         if request.method == 'POST':
             # 取得題目及電腦標準答案 (NTE)
@@ -89,7 +88,6 @@ def create_app(config):
             TEid=int(request.args.get('TEid', "-1"))
             lib.Post_Expr_CheckAns(QIID, NTE,TEid)
             # 清理Session空間.
-
             fmt = request.args.get('fmt', "")
             if fmt=="JSON":
                 TE=NTE[TEid]
@@ -129,6 +127,12 @@ def create_app(config):
         return f"<img src='data:image/png;base64,{data}'/>"
     # [END CODE]
 
+    @app.route('/trythisapps/logout', methods=['GET', 'POST'])
+    def logout():
+        session['profile'] =  None
+        return redirect('/trythisapps')
+
+
     @app.route('/trythisapps/login', methods=['GET', 'POST'])
     def login():
         records =config.records
@@ -166,14 +170,6 @@ def create_app(config):
         """.format(e), 500
 
     return app
-
-def login_required_auth(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if session.get('profile') is None:
-            return redirect(url_for('login', next=request.url))
-        return f(*args, **kwargs)
-    return decorated_function  
 
 app = create_app(config)
 
