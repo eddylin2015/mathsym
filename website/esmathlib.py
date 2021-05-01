@@ -14,7 +14,8 @@ from matplotlib.figure import Figure
 import re
 import esutils as lib
 import os
-
+from sympy.geometry import Point, Circle, Triangle, Segment, Line, RegularPolygon
+import matplotlib.pyplot as plt
 """
 基本數據結構
 TE 單條題目記錄: St題目, Val電腦答案, Ans作答,OK檢查1/0, Tip提示
@@ -1739,144 +1740,144 @@ def Get_PF305_Expr(QN,Tx=-1):
 
 #######################
 
-def Plot_RightTriangle(A,O,H,Path_):
-    try:
-        #plt.close('all')
-        # Triangle 1
-        x=np.array([0,A,A,0])
-        y=np.array([0,0,O,0])
-        # Figure and Axes
-        fig1=Figure()
-        fig1.set_figheight(3)
-        fig1.set_figwidth(3)
-        #ax1=fig1.add_subplot(111)
-        ax1=fig1.subplots()
-        ax1.axis('square')
-        ax1.plot(x,y)
-        # Axes Limits
-        ax1.set_xlim([-1,A+2])
-        ax1.set_ylim([-1,O+2])
-        ax1.text(0.5,0.25,'θ')
-        ax1.text(A-0.5,0.25,'90')
-        ax1.text(A-0.25,O-0.35,'γ')
-        ax1.text(A/2,-0.5,f'a={A}')
-        ax1.text(A+0.5,O/2,f'b={O}')
-        #ax1.text(A/2-1,O/2,f'c=${sp.latex(H)}$')
-        ax1.text(A/2-1,O/2,f'c')
-        fig1.savefig(os.getcwd()+"\\static\\"+Path_)
-        return Path_
-    except Exception as e:
-        print(e)
-        return None
 
-def Plot_RightTriangle2(A,O,H,r,Path_):
-    try:
-        #plt.close('all')
-        # Triangle 1
-        a=A.evalf()
-        o=O.evalf()
-        h=H.evalf()
-        x=np.array([0,a,a,0])
-        y=np.array([0,0,o,0])
-        # Figure and Axes
-        fig1=Figure()
-        fig1.set_figheight(3)
-        fig1.set_figwidth(3)
-        #ax1=fig1.add_subplot(111)
-        ax1=fig1.subplots()
-        ax1.axis('square')
-        ax1.plot(x,y)
-        # Axes Limits
-        ax1.set_xlim([-1,int(a)+2])
-        ax1.set_ylim([-1,int(o)+2])
-        ax1.text(0.5,0.25,'θ')
-        ax1.text(a-0.5,0.25,'90')
-        ax1.text(a-0.35,o-0.4,f'γ(${r}^o$)')
-        ax1.text(a/2,-0.5,f'a=${sp.latex(A)}$')
-        #ax1.text(A+0.5,O/2,f'b={O}')
-        ax1.text(a+0.5,o/2,f'b')
-        #ax1.text(A/2-1,O/2,f'c=${sp.latex(H)}$')
-        ax1.text(a/2-1,o/2,f'c')
-        fig1.savefig(os.getcwd()+"\\static\\"+Path_)
-        return Path_
-    except Exception as e:
-        print(e)
-        return None
-        
+def plotTriangle(t,BAngle,li,Path_):
+    B, C, A = t.vertices #頂点
+    AB, BC, CA = Segment(A, B), Segment(B, C), Segment(C, A) #辺の設定 右辺は ABC.sidesと同等
+    a, b, c = BC.length, CA.length, AB.length #辺の長さ
+    opposides = { #頂点に対する対辺(opposite side)
+        A: BC,
+        B: CA,
+        C: AB
+    } #print(AB,BC,CA)#  print(*t.sides)    
+    # Figure and Axes
+    fig=Figure()
+    fig.set_figheight(3)
+    fig.set_figwidth(3)
+    ax=fig.subplots()    
+    #plt.close('all')
+    #fig = plt.figure()
+    #ax = fig.add_subplot(1, 1, 1)
+    ax.set_aspect('equal')      #ax.grid()
+    ax.set_axis_off() #軸の非表示
+    ax.add_patch(plt.Polygon(t.vertices, fill=False))  
+    ax.plot(*zip(*t.vertices), 'o') #'ro'
+    ax.text(*B, '$\mathrm{B}$', ha='right', va='top') 
+    ax.text(*C, '$\mathrm{C}$', ha='left', va='top')
+    ax.text(*A, '$\mathrm{A}$', ha='left', va='bottom')
+    squar_side_len=(a / 10)
+    c1=Point(C[0],C[1]+squar_side_len)
+    c2=Point(C[0]-squar_side_len,C[1]+squar_side_len)
+    c3=Point(C[0]-squar_side_len,C[1])
+    ax.add_patch(plt.Polygon([C,c1,c2,c3], fill=False))
+    if "a" in li:
+        ax.text(*BC.midpoint, r'$\mathrm{a}=%s$'%sp.latex(a), ha='right', va='top')
+    else:
+        ax.text(*BC.midpoint, '$\mathrm{a } $', ha='right', va='top')
+    if "b" in li:    
+        ax.text(*CA.midpoint, r'$\mathrm{b }=%s $'%sp.latex(b), ha='left', va='top')
+    else:
+        ax.text(*CA.midpoint, '$\mathrm{b } $', ha='left', va='top')
+    if "c" in li:
+        ax.text(*AB.midpoint, r'$\mathrm{c }=%s $'%sp.latex(c), ha='left', va='bottom')      
+    else:
+        ax.text(*AB.midpoint, '$\mathrm{c } $', ha='left', va='bottom')  
+    #Arc Plot
+    if BAngle != None:
+        d=np.arange(start=0,stop=BAngle,step=1)
+        rad=np.deg2rad(d)
+        r=(a/10)
+        xc = r*np.cos(rad)
+        yc = r*np.sin(rad)
+        ax.plot(xc,yc,color=[20/255,20/255,20/255],linestyle='-')   
+        ax.text(B[0]+r,B[1]+0.04,f'${BAngle}^o$')
+    #plt.show()
+    fig.savefig(os.getcwd()+"\\static\\"+Path_) 
+    return Path_       
     
 def Get_PF306_Expr(QN,Tx=-1):
     NTE = []
     for Qid in range(0, QN):
+        x=random.choice([2,3,4,5])
+        theta = random.choice([30,45,60,37,53])
+        gamma=90-theta
+        if theta==30:
+            A=x*sp.sqrt(3)
+            O=sp.S(x)
+            H=sp.S(2*x)
+        elif theta==45:
+            A=sp.S(x)
+            O=sp.S(x)
+            H=x*sp.sqrt(2)
+        elif theta==60:
+            A=sp.S(x)
+            O=x*sp.sqrt(3)
+            H=sp.S(2*x)
+        elif theta==37:
+            A=sp.S(4*x)
+            O=sp.S(3*x)
+            H=sp.S(5*x)
+        elif theta==53:
+            A=sp.S(3*x)
+            O=sp.S(4*x)
+            H=sp.S(5*x)        
         if Tx == 1:
-            x=random.choice([2,3,4,5])
-            theta = random.choice([30,45,60,37,53])
-            gamma=90-theta
-            if theta==30:
-                A=x*sp.sqrt(3)
-                O=sp.S(x)
-                H=sp.S(2*x)
-            elif theta==45:
-                A=sp.S(x)
-                O=sp.S(x)
-                H=x*sp.sqrt(2)
-            elif theta==60:
-                A=sp.S(x)
-                O=x*sp.sqrt(3)
-                H=sp.S(2*x)
-            elif theta==37:
-                A=sp.S(4*x)
-                O=sp.S(3*x)
-                H=sp.S(5*x)
-            elif theta==53:
-                A=sp.S(3*x)
-                O=sp.S(4*x)
-                H=sp.S(5*x)
-            bian_=["b","c"]
-            bian=random.choice(bian_)
-            trig_=["sin","cos","tan"]
-            trig=random.choice(trig_)
-
-            #St=["設直角三角形:", r"a=%s,b=%s,c=%s, 求 %s \%s = ?"%(A,O,sp.latex(H) , trig,ang)]
-            St=["設直角三角形:", r"a=%s, \gamma=%s^o, 求 %s  = ?"%(sp.latex(A),gamma, bian)]
-            Val = 1
-            if bian=="b":
-                Val=O
-            if bian=="c":
-                Val=H
+            b_f=["a","b","c"]
+            b_v=[A,O,H]
+            b_idx=random.choice([0,1,2])
+            b_a=(random.choice([1,2])+b_idx)% 3
+            St=[r"如下圖, 在Rt\triangle ABC中, \angle C = 90^o,", r"\angle B =%s^o, %s=%s,  求 %s  = ?"%(theta, b_f[b_idx],sp.latex(b_v[b_idx]),b_f[b_a])]
+            if theta==53 or theta==37:
+                anglesfilter=""
+                St=[r"如下圖, 在Rt\triangle ABC中, \angle C = 90^o,"]
+                for b_ in range(0,3):
+                    if b_f[b_] != b_f[b_a]:
+                        anglesfilter+=r" %s  = %s ,"% (b_f[b_],sp.latex(b_v[b_]))
+                St.append(   anglesfilter)     
+                St.append(r"求 %s  = ?"% (b_f[b_a]))
+            Val = b_v[b_a]
             TE = GetTE(Qid, St, Val, Tx)
-            TE["PlotImg"]=Plot_RightTriangle2(A,O,H,gamma,"img"+GetKey()+str(Qid)+".png")
+            if theta==53 or theta==37:
+                t = Triangle(sss=(A, O,H)) #sss, sas, or asa
+                anglesfilter=""
+                for b_ in b_f:
+                    if b_ != b_f[b_a]:
+                        anglesfilter+=b_
+                TE["PlotImg"]=plotTriangle(t,None,anglesfilter,"img"+GetKey()+str(Qid)+".png")
+            else:
+                t = Triangle(sas=(H, theta ,A)) #sss, sas, or asa
+                TE["PlotImg"]=plotTriangle(t,theta,b_f[b_idx],"img"+GetKey()+str(Qid)+".png")
+
+            
             NTE.append(TE)
             
         else:
-            A=random.choice([2,3,4,5,7])
-            O=random.choice([2,3,4,5,7])
-            H=sp.sqrt(A**2+O**2)
-            angle_=["theta","gamma"]
+            angle_=["A","B"]
             trig_=["sin","cos","tan"]
             trig=random.choice(trig_)
             ang=random.choice(angle_)
             #St=["設直角三角形:", r"a=%s,b=%s,c=%s, 求 %s \%s = ?"%(A,O,sp.latex(H) , trig,ang)]
-            St=["設直角三角形:", r"a=%s, b=%s, 求 %s \%s = ?"%(A,O, trig,ang)]
+            St=[r"如下圖, 在Rt\triangle ABC中, \angle C = 90^o,", r"a=%s, b=%s, 求 %s (%s) = ?"%(sp.latex(A),sp.latex(O), trig,ang)]
             Val = 1
             if trig=="sin":
-                if ang=="theta":             
+                if ang=="A":             
                     Val=O/H
-                if ang=="gamma":             
+                if ang=="B":             
                     Val=A/H
             if trig=="cos":
-                if ang=="theta":             
+                if ang=="A":             
                     Val=A/H
-                if ang=="gamma":             
+                if ang=="B":             
                     Val=O/H
             if trig=="tan":
-                if ang=="theta":             
+                if ang=="A":             
                     Val=sp.S(O)/A
-                if ang=="gamma":             
+                if ang=="B":             
                     Val=sp.S(A)/O
             
             TE = GetTE(Qid, St, Val, Tx)
-            #TE["Tip"] = " y 隨 x 的增大而____  (  +1 表示 增大  或  -1 表示  減少 )"
-            TE["PlotImg"]=Plot_RightTriangle(A,O,H,"img"+GetKey()+str(Qid)+".png")
+            t = Triangle(sss=(A, O,H)) #sss, sas, or asa
+            TE["PlotImg"]=plotTriangle(t,None,"ab","img"+GetKey()+str(Qid)+".png")
             NTE.append(TE)
 
     return NTE
