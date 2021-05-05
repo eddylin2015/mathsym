@@ -178,6 +178,54 @@ def Put_Expr_V1(TE):
         pass
     return False
 
+def Put_Expr_InequV1(TE):
+    ''' 檢查作答結果,比對Val == Ans, 對錯OK=[0/1] '''
+    x = sp.symbols('x')
+    Val = TE["Val"]
+    Flag = False
+    ans = TE["Ans"]
+    ans = lib.Text2Inqu(TE["Ans"])
+    ans = re.sub(r"[<][ ]*x[ ]*[<]", r"<x & x<", ans)
+    ans = re.sub(r"[>][ ]*x[ ]*[>]", r">x & x>", ans)        
+    if ans == "": ans = "(-oo < x) & (x < oo)"
+    a1 = ans.split("|")
+    a2 = ans.split("&")
+    try:
+        if len(a1) > 1:
+            a_ = []
+            for aa_ in a1:
+                a_.append(sp.solve(aa_))
+            Flag = (a_[0] | a_[1]) == Val
+        elif len(a2) > 1:
+            a_ = []
+            for aa_ in a2:
+                a_.append(sp.parse_expr(aa_))
+            Flag = reduce_rational_inequalities([[a_[0], a_[1]]], x) == Val
+        elif ans == '0'  or ans=='False' or ans=="false":
+            if str(Val) == "False":
+                Flag = True
+        else:
+            Flag = sp.solve(ans) == Val
+        if Flag:  # 比對答案:
+            TE["OK"] = 1
+        else:  # 不則
+            TE["OK"] = 0
+    except:
+        pass
+
+def Put_Expr_X1(TE):
+    x=sp.Symbol('x')
+    Val=TE["Val"]
+    ans=TE["Ans"]
+    if ans.strip() == "": ans = "3.1415926"
+    ans=lib.Text2St(ans)
+    try:
+        if parse_expr(ans).subs({x:7})==Val.subs({x:7}):                   #比對答案:
+            TE["OK"]=1
+        else:                                      #不則
+            TE["OK"]=0
+    except:
+        pass
 
 """
 P301
