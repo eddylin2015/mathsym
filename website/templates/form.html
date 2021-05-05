@@ -110,7 +110,7 @@
       {% endfor %}
 
       {% else %}
-      <div> \( \Large {{TE.St|safe}}\)</div>
+          <div> \( \Large {{TE.St|safe}}\)</div>
       {% endif %}
       <div style="padding-top: 10px;">{{TE.Tip}}</div>
       {% if TE.Val is iterable and TE.Val is not string %}

@@ -67,7 +67,10 @@ def GetQList():
         "PF303.4.解二元二次方程組",
         "PF304.4.二次函數圖像的性質",
         "PF305.4.解直角三角形",
-        "PF306.2.解直角三角形",]
+        "PF306.2.解直角三角形",
+        "PF401.4.解一元二次不等式",
+        "PF501.4.高次不等式及分式不等式",
+        "PF601.4.餘式定理",]
 
 """
 算式
@@ -100,6 +103,9 @@ def Get_Expr(QIID,QAMT,Tx=-1):
     elif QIID=="PF304" : NTE=Get_PF304_Expr(QAMT,Tx)
     elif QIID=="PF305" : NTE=Get_PF305_Expr(QAMT,Tx)
     elif QIID=="PF306" : NTE=Get_PF306_Expr(QAMT,Tx)
+    elif QIID=="PF401" : NTE=Get_PF401_Expr(QAMT,Tx)
+    elif QIID=="PF501" : NTE=Get_PF501_Expr(QAMT,Tx)
+    elif QIID=="PF601" : NTE=Get_PF601_Expr(QAMT,Tx)
     else:
         return None
     return NTE
@@ -146,6 +152,9 @@ def Post_Expr_CheckAns(QIID,NTE,TEid=-1,MxMunites=6):
         elif QIID=="PF304" : Put_PF304_Expr(TE)
         elif QIID=="PF305" : Put_Expr_V1(TE)  
         elif QIID=="PF306" : Put_Expr_V1(TE)
+        elif QIID=="PF401" : Put_Expr_InequV1(TE)
+        elif QIID=="PF501" : Put_Expr_InequV1(TE)
+        elif QIID=="PF601" : Put_Expr_X1(TE)
         else:  Put_Expr_V1(TE)
         Get_Expr_CheckAnsMark(QIID,TE)
 
@@ -184,7 +193,7 @@ def Put_Expr_InequV1(TE):
     Val = TE["Val"]
     Flag = False
     ans = TE["Ans"]
-    ans = lib.Text2Inqu(TE["Ans"])
+    ans = lib.Text2Inequ(TE["Ans"])
     ans = re.sub(r"[<][ ]*x[ ]*[<]", r"<x & x<", ans)
     ans = re.sub(r"[>][ ]*x[ ]*[>]", r">x & x>", ans)        
     if ans == "": ans = "(-oo < x) & (x < oo)"
@@ -1930,3 +1939,158 @@ def Get_PF306_Expr(QN,Tx=-1):
             NTE.append(TE)
 
     return NTE
+
+
+def Get_PF401_Expr(QN,Tx=-1):
+    x=sp.symbols('x')
+    NTE=[]
+    for i in range(0,QN):
+        ai=np.random.choice(range(-7,7),4)
+        if Tx==0:
+            op=random.choice([">","<"])
+            express_str=f" ({ai[0]}*x + {ai[1]})*  ({ai[2]}*x + {ai[3]}) {op} 0 "       # f(x)= ax + b > c
+            fx=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
+            St=fx
+            Val=solve_univariate_inequality(fx,x)      #solve_univariate_inequality 解不等式   
+        elif Tx==1:
+            op=random.choice([">","<"])
+            express_str=f" {ai[0]}*x**2 + {ai[1]} {op} 0 "       # f(x)= ax + b > c
+            fx=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
+            St=fx
+            Val=solve_univariate_inequality(fx,x)      #solve_univariate_inequality 解不等式   
+        elif Tx==2:
+            op=random.choice([">","<"])
+            express_str=f" ({ai[0]}*x + {ai[1]})*  ({ai[2]}*x + {ai[3]}) "       # f(x)= ax + b > c
+            fx=parse_expr(express_str, evaluate=True) #字串解釋為可運算式子 expression 
+            St=fx.apart() 
+            if op==">":
+                St=St>0
+                Val=solve_univariate_inequality(fx > 0, x)      #solve_univariate_inequality 解不等式   
+            else:
+                St=St<0
+                Val=solve_univariate_inequality(fx < 0, x)      #solve_univariate_inequality 解不等式   
+                
+        elif Tx==3:
+            op=random.choice([">","<"])
+            express_str=f" {ai[0]}*x**2 + {ai[1]}*x+{ai[2]} {op} 0 "       # f(x)= ax + b > c
+            fx=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
+            St=fx
+            Val=solve_univariate_inequality(fx,x)      #solve_univariate_inequality 解不等式   
+        else:
+            op=random.choice([">","<"])
+            express_str=f" {ai[0]}*x**2 + {ai[1]} {op} 0 "       # f(x)= ax + b > c
+            fx=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
+            St=fx
+            Val=solve_univariate_inequality(fx,x)      #solve_univariate_inequality 解不等式   
+        
+        TE=GetTE(i,sp.latex(St),Val)        
+        NTE.append(TE)    
+    return NTE
+
+
+
+def Get_PF501_Expr(QN,Tx=-1):
+    x=sp.symbols('x')
+    NTE=[]
+    for i in range(0,QN):
+        ai=np.random.choice(range(-4,4),12)
+        if Tx==0:
+            op=random.choice([">","<"])
+            express_str=f" ({ai[0]}*x + {ai[1]}) * ({ai[2]}*x + {ai[3]}) * ({ai[4]}*x + {ai[5]}) {op} 0 "       # f(x)= ax + b > c
+            fx=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
+            St=fx
+            Val=solve_univariate_inequality(fx,x)      #solve_univariate_inequality 解不等式   
+        elif Tx==1:
+            op=random.choice([">","<"])
+            express_str=f" ({ai[0]}*x + {ai[1]}) * ({ai[2]}*x + {ai[3]}) * ({ai[4]}*x + {ai[5]}) * ({ai[6]}*x + {ai[7]}) {op} 0 "       # f(x)= ax + b > c
+            fx=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
+            St=fx
+            Val=solve_univariate_inequality(fx,x)      #solve_univariate_inequality 解不等式   
+        elif Tx==2:
+            op=random.choice([">","<"])
+            express_str=f" ((x + {ai[0]})*( x + {ai[1]}) ) / ( (x+ {ai[2]})*(x + {ai[3]})) "       # f(x)= ax + b > c
+            fx=parse_expr(express_str, evaluate=True) #字串解釋為可運算式子 expression 
+            display(fx)
+            St=fx #.apart() 
+            if op==">":
+                St=St>0
+                Val=solve_univariate_inequality(fx > 0, x)      #solve_univariate_inequality 解不等式   
+            else:
+                St=St<0
+                Val=solve_univariate_inequality(fx < 0, x)      #solve_univariate_inequality 解不等式   
+                
+        elif Tx==3:
+            op=random.choice([">","<"])
+            express_str=f" ((x + {ai[0]})*( x + {ai[1]}) ) / ( (x+ {ai[2]})*(x + {ai[3]})) "       # f(x)= ax + b > c
+            fx=parse_expr(express_str, evaluate=True) #字串解釋為可運算式子 expression 
+            display(fx)
+            St=fx #.apart() 
+            if op==">":
+                St=St>0
+                Val=solve_univariate_inequality(fx > ai[4], x)      #solve_univariate_inequality 解不等式   
+            else:
+                St=St<0
+                Val=solve_univariate_inequality(fx <  ai[4], x)      #solve_univariate_inequality 解不等式   
+        else:
+            op=random.choice([">","<"])
+            express_str=f" {ai[0]}*x**2 + {ai[1]} {op} 0 "       # f(x)= ax + b > c
+            fx=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
+            St=fx
+            Val=solve_univariate_inequality(fx,x)      #solve_univariate_inequality 解不等式   
+        
+        TE=GetTE(i,sp.latex(St),Val)        
+        NTE.append(TE)    
+    return NTE
+
+def Get_PF601_Expr(QN,Tx=-1):
+    x=sp.symbols('x')
+    NTE=[]
+    for i in range(0,QN):
+        ai = np.random.choice(range(-6,7), 5)
+        a= random.choice(range(-3,4));
+        if a==0 : a=1
+        b= random.choice(range(-8,9));
+        c= random.choice(range(-3,4));
+        d= random.choice(range(-6,7));        
+        if Tx==0:
+            express_str=f" {ai[0]}+{ai[1]}*x + {ai[2]}* x**2 +  {ai[3]}* x**3 " # f(x)= ax + b > c
+            f1=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
+            f2=parse_expr(f"{a}*x+{b}", evaluate=False) #字串解釋為可運算式子 expression 
+            St=r"求多項式  %s  除以  %s  之餘式" %(sp.latex(f1),sp.latex(f2))
+            Val=sp.rem(f1,f2,domain=sp.QQ)     #solve_univariate_inequality 解不等式   
+
+        elif Tx==1:
+            express_str=f" {ai[0]}+{ai[1]}*x + {ai[2]}* x**2 +  {ai[3]}* x**3  +  {ai[4]}* x**4" # f(x)= ax + b > c
+            f1=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
+            f2=parse_expr(f"{a}*x+{b}", evaluate=False) #字串解釋為可運算式子 expression 
+            St=r"求多項式  %s  除以  %s  之餘式" %(sp.latex(f1),sp.latex(f2))
+            Val=sp.rem(f1,f2,domain=sp.QQ)     #solve_univariate_inequality 解不等式        elif Tx==3:
+            
+        elif Tx==2:
+            b= random.choice(range(-6,7));
+            express_str=f" {ai[0]}+{ai[1]}*x + {ai[2]}* x**2 +  {ai[3]}* x**3 " # f(x)= ax + b > c
+            f1=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
+            f2=parse_expr(f"(x+{a})*(x+{b})", evaluate=False) #字串解釋為可運算式子 expression 
+            St=r"求多項式  %s  除以  %s  之餘式" %(sp.latex(f1),sp.latex(f2))
+            Val=sp.rem(f1,f2,domain=sp.QQ)     #solve_univariate_inequality 解不等式        else:
+            
+        else:
+            ai = np.random.choice(range(-4,5), 5)
+            a= random.choice(range(-2,3));
+            if a==0 : a=1
+            b= random.choice(range(-4,5));
+            c= random.choice(range(-2,3));
+            d= random.choice(range(-4,5));        
+            express_str=f" {ai[0]}+{ai[1]}*x + {ai[2]}* x**2 +  {ai[3]}* x**3 +  {ai[4]}* x**4" # f(x)= ax + b > c
+            f1=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
+            f2=parse_expr(f"({a}*x+{b})*({c}*x+{d})", evaluate=False) #字串解釋為可運算式子 expression 
+            St=r"求多項式  %s  除以  %s  之餘式" %(sp.latex(f1),sp.latex(f2))
+            Val=sp.rem(f1,f2,domain=sp.QQ)     #solve_univariate_inequality 解不等式
+        #display(Latex(St))
+        #display(Val)
+            
+        TE=GetTE(i,St,Val)    
+        TE["PlainText"]=1
+        NTE.append(TE)    
+    return NTE
+
