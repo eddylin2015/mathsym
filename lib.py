@@ -42,7 +42,7 @@ def Text2St(ans):
     return ans
 
 def GetTE(i, St, Val, Tx=-1):#記錄:Id號,St題,Val值,Ans答,OK檢查,Tx,題型,Tip提示'''    
-    return {"Id": i,"St": St,"Val": Val,"Ans": "","OK": 0,"Tx":Tx,"Tip":""}
+    return {"Id": i,"St": St,"Val": Val,"Ans": "","OK": 0,"Tx":Tx,"Tip":"","PlainText":0}
 
 def NTE2TBL(t):
     return '號|題|值|答|檢查|題型|提示\n--|--|--|--|--|--|--\n{}'.format(

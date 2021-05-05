@@ -41,6 +41,7 @@ def GetTE(Qid, St, Val, Tx=0):
     TE["Minute"]= datetime.datetime.now().strftime("%M:%S")   #"%m-%d-%Y %H:%M:%S")
     TE["Tip"] = ""
     TE["PotImg"]=None
+    TE["PlainText"]=0
     return TE
 
 def GetQList():
