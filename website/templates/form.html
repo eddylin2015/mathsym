@@ -105,7 +105,7 @@
     });
     document.getElementById("btnNext" + i).style.display = "block";
     document.getElementById("btnSubm" + i).style.display = "none";
-    document.getElementById("btnSubm" + i).disabled = true;
+    for(let in_ of document.getElementsByName("" + i)){in_.disabled  = true;}
 
   }
 </script>
@@ -165,7 +165,7 @@
           <td><span id="Mark{{TE.Id}}"></span></td>
           <td><span id="SpendMinute{{TE.Id}}"></span></td>
           <td><span id="Ans{{TE.Id}}"></span></td>
-          <td><span id="Standrad_And{{TE.Id}}"></span></td>
+          <td><div id="Standrad_And{{TE.Id}}"></div></td>
         </tr>
       </table>
 

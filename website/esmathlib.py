@@ -626,8 +626,6 @@ def Put_PF105_Expr(TE):
             TE["OK"] = 0
     except:
         pass
-    TE["Val"] = r"\( {} \)".format(sp.latex(Val))
-
 
 def Get_PF105_Expr(QN,Tx=-1):
     TxFlag=Tx==-1    
@@ -642,9 +640,10 @@ def Get_PF105_Expr(QN,Tx=-1):
         n = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
         eq1 = sp.Eq(a*x+b*y, m)
         eq2 = sp.Eq(c*x+d*y, n)
-        St = [eq1, eq2]
-        Val = (sp.solve([eq1, eq2], [x, y]))
-        TE = GetTE(Qid, sp.latex(St), Val)
+        #St = [eq1, eq2]
+        St=r"\left\{\begin{array}\\ %s  \\  %s  \\  \end{array}\right."%(sp.latex(eq1),sp.latex(eq2))  
+        Val = sp.solve([eq1, eq2], [x, y])
+        TE = GetTE(Qid, St, Val)
         TE["Tip"] = "求x ,y ?"
         if Val == []:
             pass
@@ -1093,7 +1092,7 @@ def Put_PF203_Expr(TE):
             TE["OK"]=1
     except:
         pass
-    TE["Val"] = r"\( %s \)" % sp.latex(Val)
+    #TE["Val"] = r"\( %s \)" % sp.latex(Val)
 
 
 def Get_PF203_Expr(QN,Tx=-1):
@@ -1135,7 +1134,7 @@ def Put_PF204_Expr(TE):
             TE["OK"]=0
     except:
         pass
-    TE["Val"] = r"\( %s \)" % sp.latex(Val)
+    #TE["Val"] = r"\( %s \)" % sp.latex(Val)
 
 
 def Get_PF204_Expr(QN,Tx=-1):
@@ -1196,7 +1195,7 @@ def Put_PF205_Expr(TE):
             TE["OK"]=0
     except:
         pass
-    TE["Val"] = r"\(%s\)" % sp.latex(Val)
+    #TE["Val"] = r"\(%s\)" % sp.latex(Val)
 
 
 def Get_PF205_Expr(QN,Tx=-1):
