@@ -2,6 +2,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div>支援 chrome 瀏覽器.</div>
 <input class="form-control" id="myInput" type="text" placeholder="Search..">
 <table id="desc" class="table">
 {% for book in books %}
@@ -14,8 +15,10 @@
       {% if s=="PP" %}
       <img src="//mail.mbc.edu.mo/images/mathicons/math_history_{{loop.index}}.png">
       {% endif %}
-      {{QID}}{{Name}}
+      {{loop.index}}. {{Name}}      
+      
     </h4>
+    <small>{{QID}}{{Name}}</small>
   </a>
 </div>
 <div>

@@ -12,29 +12,33 @@
       }
     });
   });
-  function MSTime(x=null) {
-    if(x==null){
+  function MSTime(x = null) {
+    if (x == null) {
       let d = new Date();
       let m = d.getMinutes();
       let s = d.getSeconds();
       return (m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
-    }else{
-      let m=Math.floor(x / 60);
-      let s=x%60;
+    } else {
+      let m = Math.floor(x / 60);
+      let s = x % 60;
       return (m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
     }
   }
   function spend_Time(x) {
-    let a_=x.split(":")
-    let m_=Number(a_[0])
-    let s_=Number(a_[1])
-    let ms_=m_*60+s_
+    let a_ = x.split(":")
+    let m_ = Number(a_[0])
+    let s_ = Number(a_[1])
+    let ms_ = m_ * 60 + s_
     let d = new Date();
     let m = d.getMinutes();
     let s = d.getSeconds();
-    let ms=m*60+s
-    let c=ms-ms_;
-    if(c<0) c=c+3600
+    if(m_==m && (s < s_)) s=s_
+    let ms = m * 60 + s
+    let c = ms - ms_;
+    console.log(m_,s_,m,s)
+    console.log(c,ms,ms_)
+    
+    if (c < 0) c = c + 3600
     return MSTime(c);
   }
 
@@ -44,7 +48,7 @@
     document.getElementById('formid').submit();
   }
   function showCtx(cid) {
-    
+
     var x = document.getElementById("content" + cid);
     if (x.style.display === "none") {
       x.style.display = "block";
@@ -53,7 +57,7 @@
     }
     var t = document.getElementById("T" + cid);
     for (let i = 1; i < 8; i++) {
-      t = document.getElementById("T" + (cid + i));  if(t !==null) t.value=MSTime()
+      t = document.getElementById("T" + (cid + i)); if (t !== null) t.value = MSTime()
       x = document.getElementById("content" + (cid + i));
       if (x !== null) {
         if (x.style.display === "none") {
@@ -67,26 +71,42 @@
       break;
     }
   }
-  function CheckTE(i){
+  function CheckTE(i) {
     var t = document.getElementById("T" + i);
-    t.value=spend_Time(t.value)
-    $.post( `?fmt=JSON&TEid=${i}`, $( "#formid" ).serialize(), function( data ) {
-       let d=JSON.parse(data)
-       if(d.OK=="1")
-       {
-        $(`#OK${i}`).html('<span class="glyphicon glyphicon-ok"></span>');  
-       }
-       else{
+    t.value = spend_Time(t.value)
+    $.post(`?fmt=JSON&TEid=${i}`, $("#formid").serialize(), function (data) {
+      let d = JSON.parse(data)
+      if (d.OK == "1") {
+        $(`#OK${i}`).html('<span class="glyphicon glyphicon-ok"></span>');
+      }
+      else {
         $(`#OK${i}`).html('<span class="glyphicon glyphicon-remove"></span>');
-       }
-       $(`#Mark${i}`).html(d.Mark);
-       $(`#SpendMinute${i}`).html(d.Minute);
-       $(`#Standrad_And${i}`).html(d.Val);
-       
+      }
+      $(`#Mark${i}`).html(d.Mark);
+      $(`#SpendMinute${i}`).html(d.Minute);
+      $(`#Ans${i}`).html(d.Ans);
+      let dVal = d.Val
+      if (dVal == "(-oo < x) & (x < oo)") {
+      } else {
+        for (l_ of ["& (-oo < x)", "(x < oo) &", "(-oo < x) &", "& (x < oo)", "(x > -oo ) &",]) {
+          dVal = dVal.replace(l_, "")
+        }
+      }
+      $(`#Standrad_And${i}`).html(dVal);
+      let rec_history=document.getElementById("rec_history")
+      let row =rec_history.insertRow();
+      row.style="font-size:12px;"
+      row.insertCell().innerHTML =d.OK
+      row.insertCell().innerHTML =d.Mark
+      row.insertCell().innerHTML =d.Minute
+      row.insertCell().innerHTML =d.Ans
+      row.insertCell().innerHTML =dVal
+
     });
     document.getElementById("btnNext" + i).style.display = "block";
-    //document.getElementById("btnSubm" + i).style.display = "none";
+    document.getElementById("btnSubm" + i).style.display = "none";
     document.getElementById("btnSubm" + i).disabled = true;
+
   }
 </script>
 
@@ -110,7 +130,7 @@
       {% endfor %}
 
       {% else %}
-          <div> \( \Large {{TE.St|safe}}\)</div>
+      <div> \( \Large {{TE.St|safe}}\)</div>
       {% endif %}
       <div style="padding-top: 10px;">{{TE.Tip}}</div>
       {% if TE.Val is iterable and TE.Val is not string %}
@@ -125,36 +145,38 @@
       {% if TE.PlotImg %}
       <img src="/trythisapps/img/{{TE.PlotImg}}">
       {% else %}
-      
+
       {% endif %}
 
-
-      
       <div style="padding-top: 20px;">
-      <a id="btnSubm{{TE.Id}}"  class="btn btn-primary" onclick="CheckTE({{TE.Id}})">提交</a>
+        <a id="btnSubm{{TE.Id}}" class="btn btn-primary" onclick="CheckTE({{TE.Id}})">提交</a>
       </div>
-      <div>評核:</div>
-      <table class="table">
+      
+      <table class="table table-condensed">
         <tr>
-          <td>對/錯</td>
-          <td>得分</td>
-          <td>耗時</td>          
+          <td><small>對錯</small></td>
+          <td><small>得分</small></td>
+          <td><small>耗時</small></td>
+          <td><small>作答</small></td>          
+          <td><small>標準答案</small></td>
         </tr>
-        <tr>
-        <td><h4 id="OK{{TE.Id}}"></h4></td>  
-        <td><h4 id="Mark{{TE.Id}}"></h4></td>  
-        <td><h4 id="SpendMinute{{TE.Id}}"></h4></td>  
+        <tr style="font-size:12px">
+          <td><span id="OK{{TE.Id}}"></span></td>
+          <td><span id="Mark{{TE.Id}}"></span></td>
+          <td><span id="SpendMinute{{TE.Id}}"></span></td>
+          <td><span id="Ans{{TE.Id}}"></span></td>
+          <td><span id="Standrad_And{{TE.Id}}"></span></td>
         </tr>
       </table>
-      
-      <div>標準答案:</div>
-      <div id="Standrad_And{{TE.Id}}" style="font-size: 24px;">
 
-      </div>
+      
+      
       {% if loop.nextitem is defined %}
-      <div id="btnNext{{TE.Id}}" style="padding-top: 20px;display:none"><a class="btn btn-primary" href=# onclick="showCtx({{TE.Id}})">下一題</a></div>
+      <div id="btnNext{{TE.Id}}" style="display:none"><a class="btn btn-primary" href=#
+          onclick="showCtx({{TE.Id}})">下一題</a></div>
       {% else %}
-      <div id="btnNext{{TE.Id}}" style="padding-top: 20px;display:none"><a class="btn btn-warning" href=# onclick="formSubmit({{TE.Id}})">預覽小結</a></div>      
+      <div id="btnNext{{TE.Id}}" style="display:none"><a class="btn btn-warning" href=#
+          onclick="formSubmit({{TE.Id}})">預覽小結</a></div>
       {% endif %}
 
     </div>
@@ -163,6 +185,15 @@
     {% endfor %}
 
   </form>
-  
+  <div>紀錄:</div>
+  <table class="table table-condensed" id="rec_history">
+    <tr>
+      <td><small>對錯</small></td>
+      <td><small>得分</small></td>
+      <td><small>耗時</small></td>
+      <td><small>作答</small></td>
+      <td><small>標準答案</small></td>
+    </tr>
+  </div>
 </div>
 {% endblock %}

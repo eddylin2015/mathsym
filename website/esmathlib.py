@@ -41,7 +41,7 @@ def GetTE(Qid, St, Val, Tx=0):
     TE["Minute"]= datetime.datetime.now().strftime("%M:%S")   #"%m-%d-%Y %H:%M:%S")
     TE["Tip"] = ""
     TE["PotImg"]=None
-    TE["PlainText"]=0
+    TE["PlainText"]=None
     return TE
 
 def GetQList():
@@ -2010,7 +2010,6 @@ def Get_PF501_Expr(QN,Tx=-1):
             op=random.choice([">","<"])
             express_str=f" ((x + {ai[0]})*( x + {ai[1]}) ) / ( (x+ {ai[2]})*(x + {ai[3]})) "       # f(x)= ax + b > c
             fx=parse_expr(express_str, evaluate=True) #字串解釋為可運算式子 expression 
-            display(fx)
             St=fx #.apart() 
             if op==">":
                 St=St>0
@@ -2023,7 +2022,6 @@ def Get_PF501_Expr(QN,Tx=-1):
             op=random.choice([">","<"])
             express_str=f" ((x + {ai[0]})*( x + {ai[1]}) ) / ( (x+ {ai[2]})*(x + {ai[3]})) "       # f(x)= ax + b > c
             fx=parse_expr(express_str, evaluate=True) #字串解釋為可運算式子 expression 
-            display(fx)
             St=fx #.apart() 
             if op==">":
                 St=St>0
@@ -2047,50 +2045,47 @@ def Get_PF601_Expr(QN,Tx=-1):
     NTE=[]
     for i in range(0,QN):
         ai = np.random.choice(range(-6,7), 5)
-        a= random.choice(range(-3,4));
+        a= random.choice(range(-3,4))
         if a==0 : a=1
-        b= random.choice(range(-8,9));
-        c= random.choice(range(-3,4));
-        d= random.choice(range(-6,7));        
-        if Tx==0:
-            express_str=f" {ai[0]}+{ai[1]}*x + {ai[2]}* x**2 +  {ai[3]}* x**3 " # f(x)= ax + b > c
-            f1=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
-            f2=parse_expr(f"{a}*x+{b}", evaluate=False) #字串解釋為可運算式子 expression 
-            St=r"求多項式  %s  除以  %s  之餘式" %(sp.latex(f1),sp.latex(f2))
-            Val=sp.rem(f1,f2,domain=sp.QQ)     #solve_univariate_inequality 解不等式   
-
-        elif Tx==1:
-            express_str=f" {ai[0]}+{ai[1]}*x + {ai[2]}* x**2 +  {ai[3]}* x**3  +  {ai[4]}* x**4" # f(x)= ax + b > c
-            f1=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
-            f2=parse_expr(f"{a}*x+{b}", evaluate=False) #字串解釋為可運算式子 expression 
-            St=r"求多項式  %s  除以  %s  之餘式" %(sp.latex(f1),sp.latex(f2))
-            Val=sp.rem(f1,f2,domain=sp.QQ)     #solve_univariate_inequality 解不等式        elif Tx==3:
-            
-        elif Tx==2:
-            b= random.choice(range(-6,7));
-            express_str=f" {ai[0]}+{ai[1]}*x + {ai[2]}* x**2 +  {ai[3]}* x**3 " # f(x)= ax + b > c
-            f1=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
-            f2=parse_expr(f"(x+{a})*(x+{b})", evaluate=False) #字串解釋為可運算式子 expression 
-            St=r"求多項式  %s  除以  %s  之餘式" %(sp.latex(f1),sp.latex(f2))
-            Val=sp.rem(f1,f2,domain=sp.QQ)     #solve_univariate_inequality 解不等式        else:
-            
-        else:
-            ai = np.random.choice(range(-4,5), 5)
-            a= random.choice(range(-2,3));
-            if a==0 : a=1
-            b= random.choice(range(-4,5));
-            c= random.choice(range(-2,3));
-            d= random.choice(range(-4,5));        
-            express_str=f" {ai[0]}+{ai[1]}*x + {ai[2]}* x**2 +  {ai[3]}* x**3 +  {ai[4]}* x**4" # f(x)= ax + b > c
-            f1=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
-            f2=parse_expr(f"({a}*x+{b})*({c}*x+{d})", evaluate=False) #字串解釋為可運算式子 expression 
-            St=r"求多項式  %s  除以  %s  之餘式" %(sp.latex(f1),sp.latex(f2))
-            Val=sp.rem(f1,f2,domain=sp.QQ)     #solve_univariate_inequality 解不等式
-        #display(Latex(St))
-        #display(Val)
-            
-        TE=GetTE(i,St,Val)    
-        TE["PlainText"]=1
-        NTE.append(TE)    
+        b= random.choice(range(-8,9))
+        c= random.choice(range(-3,4))
+        d= random.choice(range(-6,7))  
+        try:      
+            if Tx==0:
+                express_str=f" {ai[0]}+{ai[1]}*x + {ai[2]}* x**2 +  {ai[3]}* x**3 " # f(x)= ax + b > c
+                f1=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
+                f2=parse_expr(f"{a}*x+{b}", evaluate=False) #字串解釋為可運算式子 expression 
+                St=[r"多項式%s"%sp.latex(f1),r" 除以  %s  之餘式" %(sp.latex(f2))]
+                Val=sp.rem(f1,f2,domain=sp.QQ)     #solve_univariate_inequality 解不等式   
+            elif Tx==1:
+                express_str=f" {ai[0]}+{ai[1]}*x + {ai[2]}* x**2 +  {ai[3]}* x**3  +  {ai[4]}* x**4" # f(x)= ax + b > c
+                f1=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
+                f2=parse_expr(f"{a}*x+{b}", evaluate=False) #字串解釋為可運算式子 expression 
+                St=[r"多項式%s"%sp.latex(f1),r" 除以  %s  之餘式" %(sp.latex(f2))]
+                Val=sp.rem(f1,f2,domain=sp.QQ)     #solve_univariate_inequality 解不等式        elif Tx==3:
+            elif Tx==2:
+                b= random.choice(range(-6,7))
+                express_str=f" {ai[0]}+{ai[1]}*x + {ai[2]}* x**2 +  {ai[3]}* x**3 " # f(x)= ax + b > c
+                f1=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
+                f2=parse_expr(f"(x+{a})*(x+{b})", evaluate=False) #字串解釋為可運算式子 expression 
+                St=[r"多項式%s"%sp.latex(f1),r" 除以  %s  之餘式" %(sp.latex(f2))]
+                Val=sp.rem(f1,f2,domain=sp.QQ)     #solve_univariate_inequality 解不等式        else:
+            else:
+                ai = np.random.choice(range(-4,5), 5)
+                a= random.choice(range(-2,3))
+                if a==0 : a=1
+                b= random.choice(range(-4,5))
+                c= random.choice(range(-2,3))
+                d= random.choice(range(-4,5))        
+                express_str=f" {ai[0]}+{ai[1]}*x + {ai[2]}* x**2 +  {ai[3]}* x**3 +  {ai[4]}* x**4" # f(x)= ax + b > c
+                f1=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
+                f2=parse_expr(f"({a}*x+{b})*({c}*x+{d})", evaluate=False) #字串解釋為可運算式子 expression 
+                St=[r"多項式%s"%sp.latex(f1),r" 除以  %s  之餘式" %(sp.latex(f2))]
+                Val=sp.rem(f1,f2,domain=sp.QQ)     #solve_univariate_inequality 解不等式
+            TE=GetTE(i,St,Val)    
+            TE["PlainText"]=1
+            NTE.append(TE)    
+        except:
+            pass
     return NTE
 

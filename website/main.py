@@ -91,7 +91,7 @@ def create_app(config):
             fmt = request.args.get('fmt', "")
             if fmt=="JSON":
                 TE=NTE[TEid]
-                j={"OK":str(TE["OK"]),"Val":str(TE["Val"]),"Mark":str(TE["Mark"]),"Minute":TE["Minute"]}
+                j={"OK":str(TE["OK"]),"Val":str(TE["Val"]),"Mark":str(TE["Mark"]),"Minute":TE["Minute"],"Ans":str(TE["Ans"])}
                 return  json.dumps(j, separators=(',', ':')) 
             else:
                 NTE_Storage.pop(SID, None)
