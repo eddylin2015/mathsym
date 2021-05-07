@@ -1676,9 +1676,10 @@ def Get_PF303_Expr(QN,Tx=-1):
         St = [eq1, eq2]
         Val = sp.solve([eq1, eq2], x, y)
         #Val=sp.solve([x+y+f,x*y+l],x,y)
-        St = [sp.latex(eq1), sp.latex(eq2)]  # 題目
+        #St = [sp.latex(eq1), sp.latex(eq2)]  # 題目
+        St=r"\left\{\begin{array}\\ %s  \\  %s  \\  \end{array}\right."%(sp.latex(eq1),sp.latex(eq2))  
         TE = GetTE(Qid, St, Val, Tx)
-        TE["Tip"] = "分別給出,x 和 y 值"
+        TE["Tip"] = "分別給出:  x1,y1 及 x2,y2 值"
         NTE.append(TE)
     return NTE
 
