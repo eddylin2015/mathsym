@@ -196,7 +196,7 @@ def Put_Expr_InequV1(TE):
     ans = lib.Text2Inequ(TE["Ans"])
     ans = re.sub(r"[<][ ]*x[ ]*[<]", r"<x & x<", ans)
     ans = re.sub(r"[>][ ]*x[ ]*[>]", r">x & x>", ans)        
-    if ans == "": ans = "(-oo < x) & (x < oo)"
+    if ans == "" or  ans == "R" or ans == "r": ans = "(-oo < x) & (x < oo)"
     a1 = ans.split("|")
     a2 = ans.split("&")
     try:
@@ -210,7 +210,7 @@ def Put_Expr_InequV1(TE):
             for aa_ in a2:
                 a_.append(sp.parse_expr(aa_))
             Flag = reduce_rational_inequalities([[a_[0], a_[1]]], x) == Val
-        elif ans == '0'  or ans=='False' or ans=="false":
+        elif ans == '空集' or ans == '0'  or ans=='False' or ans=="false":
             if str(Val) == "False":
                 Flag = True
         else:
@@ -1946,6 +1946,8 @@ def Get_PF401_Expr(QN,Tx=-1):
     NTE=[]
     for i in range(0,QN):
         ai=np.random.choice(range(-7,7),4)
+        for i_, a_ in enumerate(ai):
+            if a_ ==0 : ai[i_]=1            
         if Tx==0:
             op=random.choice([">","<"])
             express_str=f" ({ai[0]}*x + {ai[1]})*  ({ai[2]}*x + {ai[3]}) {op} 0 "       # f(x)= ax + b > c
@@ -1993,7 +1995,16 @@ def Get_PF501_Expr(QN,Tx=-1):
     x=sp.symbols('x')
     NTE=[]
     for i in range(0,QN):
+        bi=[]
+        for i_ in range(0,6):
+            r=random.choice([1,2,3])
+            if r==1 :
+                 bi.append("")
+            else:
+                 bi.append(f"**{r}")
         ai=np.random.choice(range(-4,4),12)
+        for i_, a_ in enumerate(ai):
+            if a_ ==0 : ai[i_]=1        
         if Tx==0:
             op=random.choice([">","<"])
             express_str=f" ({ai[0]}*x + {ai[1]}) * ({ai[2]}*x + {ai[3]}) * ({ai[4]}*x + {ai[5]}) {op} 0 "       # f(x)= ax + b > c
@@ -2002,7 +2013,8 @@ def Get_PF501_Expr(QN,Tx=-1):
             Val=solve_univariate_inequality(fx,x)      #solve_univariate_inequality 解不等式   
         elif Tx==1:
             op=random.choice([">","<"])
-            express_str=f" ({ai[0]}*x + {ai[1]}) * ({ai[2]}*x + {ai[3]}) * ({ai[4]}*x + {ai[5]}) * ({ai[6]}*x + {ai[7]}) {op} 0 "       # f(x)= ax + b > c
+            
+            express_str=f" ({ai[0]}*x + {ai[1]}){bi[1]} * ({ai[2]}*x + {ai[3]}){bi[2]}  * ({ai[4]}*x + {ai[5]}){bi[3]}  * ({ai[6]}*x + {ai[7]}) {bi[4]} {op} 0 "       # f(x)= ax + b > c
             fx=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression 
             St=fx
             Val=solve_univariate_inequality(fx,x)      #solve_univariate_inequality 解不等式   
