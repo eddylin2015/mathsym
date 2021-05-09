@@ -3,6 +3,60 @@
 {% block content %}
 
 <script>
+  function showkeyboard() {
+    x=document.getElementById('math_keyboard')
+    x.style.display = x.style.display=="block"?"none":"block";
+    //var obj = document.getElementsByName(InputElmId)[0]
+    //obj.readOnly=x.style.display=="block"
+  }
+  var browser =
+    (navigator.appName.indexOf('Microsoft') != -1) ? 1 :
+      (navigator.appName.indexOf('Netscape') != -1) ? 2 :
+        (navigator.appName.indexOf('Opera') != -1) ? 3 : 4;
+  if (browser == 2 && navigator.userAgent.indexOf('Safari') != -1) browser = 5;
+  var InputElmId = 0;
+  function SendStr(elmid, s) {
+    if (elmid == null) elmid = InputElmId;
+    if (s == "") { return }
+    switch (browser) {
+      case 1: // IE
+        var r = document.selection.createRange();
+        r.text = s;
+        r.select();
+        break;
+      case 2: // Gecko      
+      case 5: // chrome
+        /* -simulate keypress
+           *simulate scroll
+           -change outputString
+           -use createRange, setStart, setEnd
+        */
+        try {
+          var obj = document.getElementsByName(elmid)[0]
+          var selectionStart = obj.selectionStart;
+          var selectionEnd = obj.selectionEnd;
+          var oldScrollTop = obj.scrollTop;
+          var oldScrollHeight = obj.scrollHeight;
+          var oldLen = obj.value.length;
+          obj.value = obj.value.substring(0, selectionStart) + s + obj.value.substring(selectionEnd);
+          obj.selectionStart = obj.selectionEnd = selectionStart + s.length;
+          if (obj.value.length == oldLen) {
+            obj.scrollTop = obj.scrollHeight;
+          } else if (obj.scrollHeight > oldScrollHeight) {
+            obj.scrollTop = oldScrollTop + obj.scrollHeight - oldScrollHeight;
+          } else {
+            obj.scrollTop = oldScrollTop;
+          }
+        } catch (e) {
+          //Nothing
+        }
+        break;
+      default:
+        var obj = document.getElementsByName(elmid)[0]
+        obj.value += s;
+    }
+  }
+
   $(document).ready(function () {
     $('#formid').on('keyup keypress', function (e) {
       var keyCode = e.keyCode || e.which;
@@ -12,6 +66,7 @@
       }
     });
   });
+
   function MSTime(x = null) {
     if (x == null) {
       let d = new Date();
@@ -24,6 +79,7 @@
       return (m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
     }
   }
+
   function spend_Time(x) {
     let a_ = x.split(":")
     let m_ = Number(a_[0])
@@ -32,23 +88,24 @@
     let d = new Date();
     let m = d.getMinutes();
     let s = d.getSeconds();
-    if(m_==m && (s < s_)) s=s_
+    if (m_ == m && (s < s_)) s = s_
     let ms = m * 60 + s
     let c = ms - ms_;
-    console.log(m_,s_,m,s)
-    console.log(c,ms,ms_)
-    
     if (c < 0) c = c + 3600
     return MSTime(c);
   }
 
   function formSubmit(cid) {
-    //var t = document.getElementById("T" + cid);
-    //t.value=spend_Time(t.value)    
+    for (let i = 0; i < 10; i++) {
+      let elm = document.getElementsByName("" + i);
+      console.log(elm)
+      if (elm[0]) { elm[0].disabled = false; }
+    }
     document.getElementById('formid').submit();
   }
-  function showCtx(cid) {
 
+  function showCtx(cid) {
+    InputElmId = Number(cid) + 1
     var x = document.getElementById("content" + cid);
     if (x.style.display === "none") {
       x.style.display = "block";
@@ -93,20 +150,18 @@
         }
       }
       $(`#Standrad_And${i}`).html(dVal);
-      let rec_history=document.getElementById("rec_history")
-      let row =rec_history.insertRow();
-      row.style="font-size:12px;"
-      row.insertCell().innerHTML =d.OK
-      row.insertCell().innerHTML =d.Mark
-      row.insertCell().innerHTML =d.Minute
-      row.insertCell().innerHTML =d.Ans
-      row.insertCell().innerHTML =dVal
-
+      let rec_history = document.getElementById("rec_history")
+      let row = rec_history.insertRow();
+      row.style = "font-size:12px;"
+      row.insertCell().innerHTML = d.OK
+      row.insertCell().innerHTML = d.Mark
+      row.insertCell().innerHTML = d.Minute
+      row.insertCell().innerHTML = d.Ans
+      row.insertCell().innerHTML = dVal
     });
     document.getElementById("btnNext" + i).style.display = "block";
     document.getElementById("btnSubm" + i).style.display = "none";
-    for(let in_ of document.getElementsByName("" + i)){in_.disabled  = true;}
-
+    for (let in_ of document.getElementsByName("" + i)) { in_.disabled = true; }
   }
 </script>
 
@@ -136,9 +191,10 @@
       {% if TE.Val is iterable and TE.Val is not string %}
       {% for Val1 in TE.Val %}
       <div>作答:<input name="{{TE.Id}}" autocomplete="off"></div>
+      <a href=# onclick="SendStr('{{TE.Id}}','abc');">abc</a>
       {% endfor %}
       {% else %}
-      <div>作答:<input name="{{TE.Id}}" autocomplete="off"></div>
+      <div>作答:<a href=# onclick="showkeyboard()">⌨</a> <input type="text" value="" name="{{TE.Id}}" autocomplete="off"></div>
       {% endif %}
 
       <input style="display:none" name="{{TE.Id+1000}}" id="T{{TE.Id}}" value="{{TE.Minute}}">
@@ -151,13 +207,13 @@
       <div style="padding-top: 20px;">
         <a id="btnSubm{{TE.Id}}" class="btn btn-primary" onclick="CheckTE({{TE.Id}})">提交</a>
       </div>
-      
+
       <table class="table table-condensed">
         <tr>
           <td><small>對錯</small></td>
           <td><small>得分</small></td>
           <td><small>耗時</small></td>
-          <td><small>作答</small></td>          
+          <td><small>作答</small></td>
           <td><small>標準答案</small></td>
         </tr>
         <tr style="font-size:12px">
@@ -165,12 +221,14 @@
           <td><span id="Mark{{TE.Id}}"></span></td>
           <td><span id="SpendMinute{{TE.Id}}"></span></td>
           <td><span id="Ans{{TE.Id}}"></span></td>
-          <td><div id="Standrad_And{{TE.Id}}"></div></td>
+          <td>
+            <div id="Standrad_And{{TE.Id}}"></div>
+          </td>
         </tr>
       </table>
 
-      
-      
+
+
       {% if loop.nextitem is defined %}
       <div id="btnNext{{TE.Id}}" style="display:none"><a class="btn btn-primary" href=#
           onclick="showCtx({{TE.Id}})">下一題</a></div>
@@ -194,6 +252,13 @@
       <td><small>作答</small></td>
       <td><small>標準答案</small></td>
     </tr>
-  </div>
+  </table>    
+</div>
+
+<div id="math_keyboard" style="display: none;margin: auto;width: 50%;min-width: 350px;;">
+  <button onclick="SendStr(null,'≠');">≠ 不等於</button>
+  <button onclick="SendStr(null,'R');">R 實數集合</button>
+  <button onclick="SendStr(null,'空集');">空集</button>
+  <button onclick="SendStr(null,'J()');">J開方</button>
 </div>
 {% endblock %}
