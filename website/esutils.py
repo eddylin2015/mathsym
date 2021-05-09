@@ -40,6 +40,12 @@ def Text2St(ans):
 
 def Text2Inequ(ans):
     ans = re.sub(r",", r"|", ans)
+    
+    r3=re.findall('x[ ]*[≠][ ]*[-]?\d+[ ]*[/]?[ ]*\d*', ans)
+    for l_ in r3:
+        s_="Ne(%s)" % l_.replace('≠',",")
+        ans=ans.replace(l_,s_)
+    
     ans = re.sub(r"[<][ ]*x[ ]*[<]", r"<x & x<", ans)
     ans = re.sub(r"[>][ ]*x[ ]*[>]", r">x & x>", ans)
     if ans.strip() == "": return "(-oo < x) & (x < oo)"

@@ -3,11 +3,16 @@
 {% block content %}
 
 <script>
+  function InputEdit(x){
+    x.readOnly=false;
+    x=document.getElementById('math_keyboard')
+    x.style.display = "none";
+  }
   function showkeyboard() {
     x=document.getElementById('math_keyboard')
     x.style.display = x.style.display=="block"?"none":"block";
-    //var obj = document.getElementsByName(InputElmId)[0]
-    //obj.readOnly=x.style.display=="block"
+    var obj = document.getElementsByName(InputElmId)[0]
+    obj.readOnly=x.style.display=="block"
   }
   var browser =
     (navigator.appName.indexOf('Microsoft') != -1) ? 1 :
@@ -194,7 +199,7 @@
       <a href=# onclick="SendStr('{{TE.Id}}','abc');">abc</a>
       {% endfor %}
       {% else %}
-      <div>作答:<a href=# onclick="showkeyboard()">⌨</a> <input type="text" value="" name="{{TE.Id}}" autocomplete="off"></div>
+      <div>作答:<a href=# onclick="showkeyboard()">⌨</a> <input type="text" value="" name="{{TE.Id}}" autocomplete="off" onclick="InputEdit(this);"></div>
       {% endif %}
 
       <input style="display:none" name="{{TE.Id+1000}}" id="T{{TE.Id}}" value="{{TE.Minute}}">
@@ -243,6 +248,14 @@
     {% endfor %}
 
   </form>
+
+  <div id="math_keyboard" style="display: none;margin: auto;width: 50%;min-width: 350px;;">
+    <button onclick="SendStr(null,'≠');">≠不等於</button>
+    <button onclick="SendStr(null,'R');">R集合</button>
+    <button onclick="SendStr(null,'空集');">空集</button>
+    <button onclick="SendStr(null,'J()');">J開方</button>
+  </div>
+  
   <div>紀錄:</div>
   <table class="table table-condensed" id="rec_history">
     <tr>
@@ -253,12 +266,5 @@
       <td><small>標準答案</small></td>
     </tr>
   </table>    
-</div>
-
-<div id="math_keyboard" style="display: none;margin: auto;width: 50%;min-width: 350px;;">
-  <button onclick="SendStr(null,'≠');">≠ 不等於</button>
-  <button onclick="SendStr(null,'R');">R 實數集合</button>
-  <button onclick="SendStr(null,'空集');">空集</button>
-  <button onclick="SendStr(null,'J()');">J開方</button>
 </div>
 {% endblock %}
