@@ -53,7 +53,7 @@
   }
 
   function showCtx(cid) {
-    offkeyboard()
+
     InputElmId = Number(cid) + 1
     var x = document.getElementById("content" + cid);
     if (x.style.display === "none") {
@@ -78,6 +78,7 @@
     }
   }
   function CheckTE(i) {
+    offkeyboard();    
     var t = document.getElementById("T" + i);
     t.value = spend_Time(t.value)
     $.post(`?fmt=JSON&TEid=${i}`, $("#formid").serialize(), function (data) {
@@ -114,7 +115,7 @@
   }
 </script>
 
-<div style="margin: auto;width: 50%;min-width: 350px;">
+<div style="margin-left: auto;margin-right: auto;width: 50%;min-width: 350px;">
   <form method="POST" id="formid">
     <P>
       <input name="SID" type="hidden" value="{{sid}}">
@@ -126,7 +127,7 @@
     {% set display_style = "display:block" %}
     {% endif %}
     <div id="content{{TE.Id}}" style="{{display_style}}">
-      <div style="padding-bottom: 10px;">題目{{TE.Id+1}}:</div>
+      <small>第{{TE.Id+1}}題:</small>
       {% if TE.St is iterable and TE.St is not string %}
 
       {% for St1 in TE.St %}
