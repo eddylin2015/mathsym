@@ -40,7 +40,7 @@ def Text2St(ans):
 
 def Text2Inequ(ans):
     ans = re.sub(r",", r"|", ans)
-    
+    if ans == "R" : return "(-oo < x) & (x < oo)"  
     r3=re.findall('x[ ]*[≠][ ]*[-]?\d+[ ]*[/]?[ ]*\d*', ans)
     for l_ in r3:
         s_="Ne(%s)" % l_.replace('≠',",")

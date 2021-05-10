@@ -188,15 +188,14 @@ def Put_Expr_V1(TE):
     return False
 
 def Put_Expr_InequV1(TE):
-    ''' 檢查作答結果,比對Val == Ans, 對錯OK=[0/1] '''
     x = sp.symbols('x')
     Val = TE["Val"]
     Flag = False
     ans = TE["Ans"]
     ans = lib.Text2Inequ(TE["Ans"])
-    ans = re.sub(r"[<][ ]*x[ ]*[<]", r"<x & x<", ans)
-    ans = re.sub(r"[>][ ]*x[ ]*[>]", r">x & x>", ans)        
-    if ans == "" or  ans == "R" or ans == "r": ans = "(-oo < x) & (x < oo)"
+    #ans = re.sub(r"[<][ ]*x[ ]*[<]", r"<x & x<", ans)
+    #ans = re.sub(r"[>][ ]*x[ ]*[>]", r">x & x>", ans)        
+    #if ans == "" or  ans == "R" or ans == "r": ans = "(-oo < x) & (x < oo)"
     a1 = ans.split("|")
     a2 = ans.split("&")
     try:

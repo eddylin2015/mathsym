@@ -91,7 +91,7 @@
       }
       $(`#Mark${i}`).html(d.Mark);
       $(`#SpendMinute${i}`).html(d.Minute);
-      $(`#Ans${i}`).html(d.Ans);
+      $(`#Ans${i}`).html(htmlEntities(d.Ans));
       let dVal = d.Val
       if (dVal == "(-oo < x) & (x < oo)") {
       } else {
@@ -106,7 +106,7 @@
       row.insertCell().innerHTML = d.OK
       row.insertCell().innerHTML = d.Mark
       row.insertCell().innerHTML = d.Minute
-      row.insertCell().innerHTML = d.Ans
+      row.insertCell().innerHTML = htmlEntities( d.Ans)
       row.insertCell().innerHTML = dVal
     });
     document.getElementById("btnNext" + i).style.display = "block";
