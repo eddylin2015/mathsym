@@ -53,6 +53,7 @@
   }
 
   function showCtx(cid) {
+    offkeyboard()
     InputElmId = Number(cid) + 1
     var x = document.getElementById("content" + cid);
     if (x.style.display === "none") {

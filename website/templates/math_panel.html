@@ -4,8 +4,9 @@
         margin: auto;
         /*width: 30%; */
         min-width: 350px;
-        float: right;
-        position: absolute; bottom: 8px; 
+        /*float: right;*/
+        position: absolute; 
+        bottom: 8px; 
         right: 0px; 
         font-size: 18px; 
         background-color: #F5F5F5;
@@ -24,6 +25,10 @@
       x=document.getElementById('math_keyboard')
       x.style.display = "none";
     }
+    function offkeyboard() {
+      x=document.getElementById('math_keyboard')
+      x.style.display = "none";
+    }    
     function showkeyboard() {
       x=document.getElementById('math_keyboard')
       x.style.display = x.style.display=="block"?"none":"block";
