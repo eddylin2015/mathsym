@@ -1,67 +1,10 @@
 {% extends "base.html" %}
-
 {% block content %}
-
 <script>
-  function InputEdit(x){
-    x.readOnly=false;
-    x=document.getElementById('math_keyboard')
-    x.style.display = "none";
-  }
-  function showkeyboard() {
-    x=document.getElementById('math_keyboard')
-    x.style.display = x.style.display=="block"?"none":"block";
-    var obj = document.getElementsByName(InputElmId)[0]
-    obj.readOnly=x.style.display=="block"
-  }
-  var browser =
-    (navigator.appName.indexOf('Microsoft') != -1) ? 1 :
-      (navigator.appName.indexOf('Netscape') != -1) ? 2 :
-        (navigator.appName.indexOf('Opera') != -1) ? 3 : 4;
-  if (browser == 2 && navigator.userAgent.indexOf('Safari') != -1) browser = 5;
   var InputElmId = 0;
-  function SendStr(elmid, s) {
-    if (elmid == null) elmid = InputElmId;
-    if (s == "") { return }
-    switch (browser) {
-      case 1: // IE
-        var r = document.selection.createRange();
-        r.text = s;
-        r.select();
-        break;
-      case 2: // Gecko      
-      case 5: // chrome
-        /* -simulate keypress
-           *simulate scroll
-           -change outputString
-           -use createRange, setStart, setEnd
-        */
-        try {
-          var obj = document.getElementsByName(elmid)[0]
-          var selectionStart = obj.selectionStart;
-          var selectionEnd = obj.selectionEnd;
-          var oldScrollTop = obj.scrollTop;
-          var oldScrollHeight = obj.scrollHeight;
-          var oldLen = obj.value.length;
-          obj.value = obj.value.substring(0, selectionStart) + s + obj.value.substring(selectionEnd);
-          obj.selectionStart = obj.selectionEnd = selectionStart + s.length;
-          if (obj.value.length == oldLen) {
-            obj.scrollTop = obj.scrollHeight;
-          } else if (obj.scrollHeight > oldScrollHeight) {
-            obj.scrollTop = oldScrollTop + obj.scrollHeight - oldScrollHeight;
-          } else {
-            obj.scrollTop = oldScrollTop;
-          }
-        } catch (e) {
-          //Nothing
-        }
-        break;
-      default:
-        var obj = document.getElementsByName(elmid)[0]
-        obj.value += s;
-    }
-  }
-
+</script>
+{% include "math_panel.html" %}
+<script>
   $(document).ready(function () {
     $('#formid').on('keyup keypress', function (e) {
       var keyCode = e.keyCode || e.which;
@@ -199,7 +142,7 @@
       <a href=# onclick="SendStr('{{TE.Id}}','abc');">abc</a>
       {% endfor %}
       {% else %}
-      <div>作答:<a href=# onclick="showkeyboard()">⌨</a> <input type="text" value="" name="{{TE.Id}}" autocomplete="off" onclick="InputEdit(this);"></div>
+      <div>作答:<a onclick="showkeyboard()">⌨</a> <input type="text" value="" name="{{TE.Id}}" autocomplete="off" onclick="InputEdit(this);"></div>
       {% endif %}
 
       <input style="display:none" name="{{TE.Id+1000}}" id="T{{TE.Id}}" value="{{TE.Minute}}">
@@ -248,14 +191,7 @@
     {% endfor %}
 
   </form>
-
-  <div id="math_keyboard" style="display: none;margin: auto;width: 50%;min-width: 350px;;">
-    <button onclick="SendStr(null,'≠');">≠不等於</button>
-    <button onclick="SendStr(null,'R');">R集合</button>
-    <button onclick="SendStr(null,'空集');">空集</button>
-    <button onclick="SendStr(null,'J()');">J開方</button>
-  </div>
-  
+ 
   <div>紀錄:</div>
   <table class="table table-condensed" id="rec_history">
     <tr>

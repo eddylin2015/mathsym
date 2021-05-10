@@ -45,6 +45,10 @@ def Text2Inequ(ans):
     for l_ in r3:
         s_="Ne(%s)" % l_.replace('≠',",")
         ans=ans.replace(l_,s_)
+    r3=re.findall('x[ ]*[!][=][ ]*[-]?\d+[ ]*[/]?[ ]*\d*', ans)
+    for l_ in r3:
+        s_="Ne(%s)" % l_.replace('!=',",")
+        ans=ans.replace(l_,s_)
     
     ans = re.sub(r"[<][ ]*x[ ]*[<]", r"<x & x<", ans)
     ans = re.sub(r"[>][ ]*x[ ]*[>]", r">x & x>", ans)
