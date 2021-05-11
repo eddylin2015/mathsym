@@ -1941,6 +1941,7 @@ def Get_PF306_Expr(QN,Tx=-1):
 
 
 def Get_PF401_Expr(QN,Tx=-1):
+    QN=5
     x=sp.symbols('x')
     NTE=[]
     for i in range(0,QN):
@@ -1991,6 +1992,7 @@ def Get_PF401_Expr(QN,Tx=-1):
 
 
 def Get_PF501_Expr(QN,Tx=-1):
+    QN=5
     x=sp.symbols('x')
     NTE=[]
     for i in range(0,QN):
@@ -2052,10 +2054,13 @@ def Get_PF501_Expr(QN,Tx=-1):
     return NTE
 
 def Get_PF601_Expr(QN,Tx=-1):
+    QN=5
     x=sp.symbols('x')
     NTE=[]
     for i in range(0,QN):
         ai = np.random.choice(range(-6,7), 5)
+        for i_, a_ in enumerate(ai):
+            if a_ ==0 : ai[i_]=1           
         a= random.choice(range(-3,4))
         if a==0 : a=1
         b= random.choice(range(-8,9))
