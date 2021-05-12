@@ -21,17 +21,18 @@
     }
 </style>
 
+
 <div id="math_keyboard" class="math_keyboard">
-    <a onclick="showkeyboard()">⌨</a><input id="math_keyboard_input" type=text readonly style="background-color: #F5F5F5;">
+    <a onclick="showkeyboard_page(this)"><small>1</small>⌨</a><input id="math_keyboard_input" type=text readonly style="background-color: #F5F5F5;">
     <button onclick="SendStr(null,'backspace');"> 🔙 </button>
     <button onclick="SendStr(null,'EnterKey');">⤶</button>
-    <br>
+    <div id="m_k_page1" style="display: block;">
     <button class='math_key'  onclick="SendStr(null,'x');">x</button>
     <button class='math_key'  onclick="SendStr(null,'y');">y</button>
     <button class='math_key'  onclick="SendStr(null,'!=');">≠</button>
     <button class='math_key'  onclick="SendStr(null,'R');">R集</button>
     
-    <button class='math_key'  onclick="SendStr(null,'空集');">空集</button>
+    <button class='math_key'  onclick="SendStr(null,'空集');">∅集</button>
     <button class='math_key'  onclick="SendStr(null,'J()');">開方</button><br>
     <button class='math_key'  onclick="SendStr(null,'(');"> ( </button>
     <button class='math_key'  onclick="SendStr(null,')');"> ) </button>
@@ -59,12 +60,48 @@
     <button class='math_key'  onclick="SendStr(null,',');"> , </button>
     <button class='math_key'  onclick="SendStr(null,'0');"> 0 </button>
     <button class='math_key'  onclick="SendStr(null,'.');"> . </button>
+  </div>
+  <div id="m_k_page2" style="display: none;">
+    <button class='math_key'  onclick="SendStr(null,'x');">x</button>
+    <button class='math_key'  onclick="SendStr(null,'y');">y</button>
+    <button class='math_key'  onclick="SendStr(null,'!=');">≠</button>
+    <button class='math_key'  onclick="SendStr(null,'R');">R集</button>
+    
+    <button class='math_key'  onclick="SendStr(null,'空集');">∅集</button>
+    <button class='math_key'  onclick="SendStr(null,'J()');">開方</button><br>
+    <button class='math_key'  onclick="SendStr(null,'(');"> ( </button>
+    <button class='math_key'  onclick="SendStr(null,')');"> ) </button>
+    <button class='math_key'  onclick="SendStr(null,'-');"> - </button>
+    <button class='math_key'  onclick="SendStr(null,'1');"> 1 </button>
+    <button class='math_key'  onclick="SendStr(null,'2');"> 2 </button>
+    <button class='math_key'  onclick="SendStr(null,'3');"> 3 </button><br>
+    <button class='math_key'  onclick="SendStr(null,'<');"> &lt; </button>
+    <button class='math_key'  onclick="SendStr(null,'>');"> &gt; </button>
+    <button class='math_key'  onclick="SendStr(null,'+');"> + </button>
+    <button class='math_key'  onclick="SendStr(null,'4');"> 4 </button>
+    <button class='math_key'  onclick="SendStr(null,'5');"> 5 </button>
+    <button class='math_key'  onclick="SendStr(null,'6');"> 6 </button><br>
+    <button class='math_key'  onclick="SendStr(null,'**');"> ** </button>
+    <button class='math_key'  onclick="SendStr(null,'=');"> = </button>
+
+    <button class='math_key'  onclick="SendStr(null,'/');"> / </button>
+    <button class='math_key'  onclick="SendStr(null,'7');"> 7 </button>
+    <button class='math_key'  onclick="SendStr(null,'8');"> 8 </button>
+    <button class='math_key'  onclick="SendStr(null,'9');"> 9 </button><br>
+    <button class='math_key'  onclick="SendStr(null,'&');"> & </button>
+    <button class='math_key'  onclick="SendStr(null,'|');"> | </button>
+
+    <button class='math_key'  onclick="SendStr(null,'*');"> * </button>
+    <button class='math_key'  onclick="SendStr(null,',');"> , </button>
+    <button class='math_key'  onclick="SendStr(null,'0');"> 0 </button>
+    <button class='math_key'  onclick="SendStr(null,'.');"> . </button>
+  </div>  
 </div>
 <script>
   var math_keyboard_input=document.getElementById('math_keyboard_input');
   math_keyboard_input.addEventListener('keyup', (e) => {
      console.log(`Key "${e.key}" released  [event: keyup]`);
-     if("0123456789.()<>xy!=|&".indexOf(e.key)>-1){
+     if("0123456789.,()<>xy+-*/Jlog!=|&".indexOf(e.key)>-1){
       SendStr(null, e.key);
      }else if(e.key=='Backspace' ||e.key=='Enter'  ){
       SendStr(null, e.key);
@@ -80,6 +117,15 @@
     x=document.getElementById('math_keyboard')
     x.style.display = "none";
   }    
+  function showkeyboard_page(x){
+    let i=Number(x.text[0])
+
+    //x=document.getElementById('math_keyboard')
+    //x.style.display = x.style.display=="block"?"none":"block";
+    
+    console.log(i);
+    math_keyboard_input.focus()
+  }
   function showkeyboard() {
     x=document.getElementById('math_keyboard')
     x.style.display = x.style.display=="block"?"none":"block";
