@@ -62,6 +62,14 @@
 </div>
 <script>
   var math_keyboard_input=document.getElementById('math_keyboard_input');
+  math_keyboard_input.addEventListener('keyup', (e) => {
+     console.log(`Key "${e.key}" released  [event: keyup]`);
+     if("0123456789.()<>xy!=|&".indexOf(e.key)>-1){
+      SendStr(null, e.key);
+     }else if(e.key=='Backspace' ||e.key=='Enter'  ){
+      SendStr(null, e.key);
+     }
+  });
   console.log(math_keyboard_input)
   function InputEdit(x){
     x.readOnly=false;
@@ -78,6 +86,7 @@
     var obj = document.getElementsByName(InputElmId)[0]
     obj.readOnly=x.style.display=="block"
     math_keyboard_input.value=obj.value;
+    math_keyboard_input.focus()
   }
   var browser =
     (navigator.appName.indexOf('Microsoft') != -1) ? 1 :
@@ -90,9 +99,10 @@
     var obj = document.getElementsByName(elmid)[0]
     
     if(obj.disabled) return
+    math_keyboard_input.focus()
     if (s == "") { return }
-    if(s=="EnterKey"){ offkeyboard();return}
-    if (s == "backspace") { 
+    if(s=="EnterKey" || s=="Enter" ){ offkeyboard();return}
+    if (s == "backspace"||s == "Backspace") { 
       switch (browser) {
       case 1: // IE
       default:
@@ -143,5 +153,5 @@
 
   function htmlEntities(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}  
+  }  
 </script>
