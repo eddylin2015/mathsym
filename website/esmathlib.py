@@ -3,6 +3,7 @@ import random  # 亂數
 import math  # math 內置數學函數
 import numpy as np  # 數字矩陣
 import sympy as sp  # sympy 簡易別名 sp
+from sympy import I, pi, E
 from sympy.parsing.sympy_parser import parse_expr  # 文字字串, 解釋成, Sympy 運算式
 from sympy.plotting import plot  # 繪圖表
 import json  # JSON 結構化資料

@@ -23,17 +23,17 @@
 
 
 <div id="math_keyboard" class="math_keyboard">
-    <a onclick="showkeyboard_page(this)"><small>1</small>⌨</a><input id="math_keyboard_input" type=text readonly style="background-color: #F5F5F5;">
+    <a onclick="showkeyboard_page(this)"><small>0</small>⌨</a><input id="math_keyboard_input" type=text readonly style="background-color: #F5F5F5;">
     <button onclick="SendStr(null,'backspace');"> 🔙 </button>
     <button onclick="SendStr(null,'EnterKey');">⤶</button>
-    <div id="m_k_page1" style="display: block;">
+    <div id="math_keyboard_page0" style="display: block;">
     <button class='math_key'  onclick="SendStr(null,'x');">x</button>
     <button class='math_key'  onclick="SendStr(null,'y');">y</button>
     <button class='math_key'  onclick="SendStr(null,'!=');">≠</button>
     <button class='math_key'  onclick="SendStr(null,'R');">R集</button>
     
     <button class='math_key'  onclick="SendStr(null,'空集');">∅集</button>
-    <button class='math_key'  onclick="SendStr(null,'J()');">開方</button><br>
+    <button class='math_key'  onclick="SendStr(null,'J()');">\(\sqrt{a}\)</button><br>
     <button class='math_key'  onclick="SendStr(null,'(');"> ( </button>
     <button class='math_key'  onclick="SendStr(null,')');"> ) </button>
     <button class='math_key'  onclick="SendStr(null,'-');"> - </button>
@@ -61,22 +61,25 @@
     <button class='math_key'  onclick="SendStr(null,'0');"> 0 </button>
     <button class='math_key'  onclick="SendStr(null,'.');"> . </button>
   </div>
-  <div id="m_k_page2" style="display: none;">
-    <button class='math_key'  onclick="SendStr(null,'x');">x</button>
-    <button class='math_key'  onclick="SendStr(null,'y');">y</button>
-    <button class='math_key'  onclick="SendStr(null,'!=');">≠</button>
-    <button class='math_key'  onclick="SendStr(null,'R');">R集</button>
-    
-    <button class='math_key'  onclick="SendStr(null,'空集');">∅集</button>
-    <button class='math_key'  onclick="SendStr(null,'J()');">開方</button><br>
-    <button class='math_key'  onclick="SendStr(null,'(');"> ( </button>
-    <button class='math_key'  onclick="SendStr(null,')');"> ) </button>
+  <div id="math_keyboard_page1" style="display: none;">
+    <button class='math_key'  onclick="SendStr(null,'log(x,a)');">\(\log_{a}{X}\)</button>
+    <button class='math_key'  onclick="SendStr(null,'log(X,10)');">\(\lg X\)</button>
+    <button class='math_key'  onclick="SendStr(null,'ln(x)');">\(\ln X\)</button>
+    <button class='math_key'  onclick="SendStr(null,'E');">E</button>
+    <button class='math_key'  onclick="SendStr(null,'pi');">\(\pi\)</button>
+    <button class='math_key'  onclick="SendStr(null,'I');">I</button>
+        
+    <br>
+    <button class='math_key'  onclick="SendStr(null,'J()');">\(\sqrt{a}\)</button>
+    <button class='math_key'  onclick="SendStr(null,'exp(x)');"> exp </button>
+
     <button class='math_key'  onclick="SendStr(null,'-');"> - </button>
     <button class='math_key'  onclick="SendStr(null,'1');"> 1 </button>
     <button class='math_key'  onclick="SendStr(null,'2');"> 2 </button>
     <button class='math_key'  onclick="SendStr(null,'3');"> 3 </button><br>
-    <button class='math_key'  onclick="SendStr(null,'<');"> &lt; </button>
-    <button class='math_key'  onclick="SendStr(null,'>');"> &gt; </button>
+    <button class='math_key'  onclick="SendStr(null,'(');"> ( </button>
+    <button class='math_key'  onclick="SendStr(null,')');"> ) </button>
+
     <button class='math_key'  onclick="SendStr(null,'+');"> + </button>
     <button class='math_key'  onclick="SendStr(null,'4');"> 4 </button>
     <button class='math_key'  onclick="SendStr(null,'5');"> 5 </button>
@@ -88,8 +91,8 @@
     <button class='math_key'  onclick="SendStr(null,'7');"> 7 </button>
     <button class='math_key'  onclick="SendStr(null,'8');"> 8 </button>
     <button class='math_key'  onclick="SendStr(null,'9');"> 9 </button><br>
-    <button class='math_key'  onclick="SendStr(null,'&');"> & </button>
-    <button class='math_key'  onclick="SendStr(null,'|');"> | </button>
+    <button class='math_key'  onclick="SendStr(null,'x');">x</button>
+    <button class='math_key'  onclick="SendStr(null,'y');">y</button>
 
     <button class='math_key'  onclick="SendStr(null,'*');"> * </button>
     <button class='math_key'  onclick="SendStr(null,',');"> , </button>
@@ -119,11 +122,9 @@
   }    
   function showkeyboard_page(x){
     let i=Number(x.text[0])
-
-    //x=document.getElementById('math_keyboard')
-    //x.style.display = x.style.display=="block"?"none":"block";
-    
-    console.log(i);
+    document.getElementById(`math_keyboard_page${i}`).style.display="none";
+    document.getElementById(`math_keyboard_page${(i+1)%2}`).style.display="block";
+    x.text=x.text.replace(i,(i+1)%2)
     math_keyboard_input.focus()
   }
   function showkeyboard() {
