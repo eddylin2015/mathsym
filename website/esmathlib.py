@@ -70,6 +70,9 @@ def GetQList():
         "PF305.4.解直角三角形",
         "PF306.2.解直角三角形",
         "PF401.4.解一元二次不等式",
+        "PF402.4.等差數列之和",
+        "PF403.4.等比數列之和",
+        "PF404.4.對數運算基礎",
         "PF501.4.高次不等式及分式不等式",
         "PF601.4.餘式定理",]
 
@@ -104,9 +107,12 @@ def Get_Expr(QIID,QAMT,Tx=-1):
     elif QIID=="PF304" : NTE=Get_PF304_Expr(QAMT,Tx)
     elif QIID=="PF305" : NTE=Get_PF305_Expr(QAMT,Tx)
     elif QIID=="PF306" : NTE=Get_PF306_Expr(QAMT,Tx)
-    elif QIID=="PF401" : NTE=Get_PF401_Expr(QAMT,Tx)
-    elif QIID=="PF501" : NTE=Get_PF501_Expr(QAMT,Tx)
-    elif QIID=="PF601" : NTE=Get_PF601_Expr(QAMT,Tx)
+    elif QIID=="PF401" : NTE=Get_PF401_Expr(5,Tx)
+    elif QIID=="PF402" : NTE=Get_PF402_Expr(5,Tx)
+    elif QIID=="PF403" : NTE=Get_PF403_Expr(5,Tx)
+    elif QIID=="PF404" : NTE=Get_PF404_Expr(5,Tx)
+    elif QIID=="PF501" : NTE=Get_PF501_Expr(5,Tx)
+    elif QIID=="PF601" : NTE=Get_PF601_Expr(5,Tx)
     else:
         return None
     return NTE
@@ -1942,7 +1948,6 @@ def Get_PF306_Expr(QN,Tx=-1):
 
 
 def Get_PF401_Expr(QN,Tx=-1):
-    QN=5
     x=sp.symbols('x')
     NTE=[]
     for i in range(0,QN):
@@ -1991,9 +1996,198 @@ def Get_PF401_Expr(QN,Tx=-1):
     return NTE
 
 
+def Get_PF402_Expr(QN,Tx=-1):
+    x=sp.symbols('x')
+    n= sp.symbols('n')
+    NTE=[]
+    a1=random.sample(range(-9,10), k=10)
+    for i in range(0,QN):
+        if Tx==0:
+            a2=random.randrange(10) +1 
+            a3=(a2+random.choice(range(4,7)) )% 11 ;a3=a3 if a3>0 else 1;
+            d=a1[i]; d= d if d!=0 else 1
+            expre= n*d
+            expr_func= sp.lambdify(n,expre)
+            a=expr_func(np.arange(12))
+            St=r"己知 a_{%s}={%s},d=%s,求a_{%s}?"%(a2,a[a2],d,a3)
+            Val=a[a3]
+        elif Tx==1:
+            a2=random.randrange(10) +1 
+            a3=(a2+random.choice(range(4,7)) )% 11 ;a3=a3 if a3>0 else 1;
+            d=a1[i]; d= d if d!=0 else 1
+            expre= n*d
+            expr_func= sp.lambdify(n,expre)
+            a=expr_func(np.arange(21))
+            St=r"己知 a_{%s}=%s,a_{%s}=%s,求?d"%(a2,a[a2],a3,a[a3])
+            Val=d
+
+            pass
+        elif Tx==2:
+            a2=random.randrange(6) + 6 
+            a3=(a2+random.choice(range(4,7)) )% 11 ;a3=a3 if a3>0 else 1;
+            d=a1[i]; d= d if d!=0 else 1
+            expre= n*d
+            expr_func= sp.lambdify(n,expre)
+            a=expr_func(np.arange(18))
+            print(a)
+            tem_=""
+            for i,a_ in enumerate(a):
+                if i>0 and i<4  :
+                    tem_ = tem_+str(a_ )+"、"
+            St=r'己知 {}...{}, S_{} ?'.format(tem_,a[a2],a2)
+            Val=sp.summation(expre, (n, 1, a2))
+            pass
+        elif Tx==3:
+            a2=random.randrange(6) + 6 
+            a3=(a2+random.choice(range(4,7)) )% 11 ;a3=a3 if a3>0 else 1;
+            d=a1[i]; d= d if d!=0 else 1
+            expre= n*d
+            expr_func= sp.lambdify(n,expre)
+            a=expr_func(np.arange(18))
+            St=r'己知 a1={},d={}, S_{} ?'.format(a[1],d,a2)
+            Val=sp.summation(expre, (n, 1, a2))
+            pass
+        TE=GetTE(i,St,Val)        
+        NTE.append(TE)    
+    return NTE
+
+
+def Get_PF403_Expr(QN,Tx=-1):
+    x=sp.symbols('x')
+    n= sp.symbols('n')
+    NTE=[]
+    a1=random.sample([sp.S(-4),-3,-2,sp.Rational(-1,2),sp.Rational(-1,3),sp.Rational(-1,4),1,2,3,4], k=5)
+    for i in range(0,QN):
+        if Tx==0:
+            a2=random.randrange(3) +1 
+            a3=(a2+random.choice(range(2,5)) )% 8 ;a3=a3 if a3>0 else 1;
+            q=a1[i]; 
+            if q==0 :q=2
+            if q==1 :q=2
+            expre= q**n
+            a=[]
+            for j in range(12):
+                a.append(expre.subs(n,j))
+            St=r"己知 a_{%s}={%s},q=%s,求a_{%s}?" % (a2,a[a2],q,a3)
+            Val=a[a3]
+        elif Tx==1:
+            a2=random.randrange(3) +1 
+            a3=(a2+random.choice(range(2,5)) )% 8 ;a3=a3 if a3>0 else 1;
+            q=a1[i]; 
+            if q==0 :q=2
+            if q==1 :q=2
+            expre= q**n
+            a=[]
+            for j in range(12):
+                a.append(expre.subs(n,j))
+            St=r"己知 a_{%s}=%s,a_{%s}=%s,求?q" %(a2,a[a2],a3,a[a3])
+            Val=q
+        elif Tx==2:
+            a2=random.randrange(3) +5
+            a3=(a2+random.choice(range(2,5)) )% 8 ;a3=a3 if a3>0 else 1;
+            q=a1[i]; 
+            if q==0 :q=2
+            if q==1 :q=2
+            expre= q**n
+            a=[]
+            for j in range(12):
+                a.append(expre.subs(n,j))
+            tem_=""
+            for i,a_ in enumerate(a):
+                if i>0 and i<4  :
+                    tem_ = tem_+str(a_ )+"、"
+            St=r'己知 {}...、{}, S_{} ?'.format(tem_,a[a2],a2)
+            Val=sp.summation(expre, (n, 1, a2))
+            pass
+        elif Tx==3:
+            a2=random.randrange(3) +4 
+            a3=(a2+random.choice(range(2,5)) )% 8 ;a3=a3 if a3>0 else 1;
+            q=a1[i]; 
+            if q==0 :q=2
+            if q==1 :q=2
+            expre= q**n
+            a=[]
+            for j in range(12):
+                a.append(expre.subs(n,j))
+            St=r'己知 a_1={},q={}, S_{} ?'.format(a[1],q,a2)
+            Val=sp.summation(expre, (n, 1, a2))
+            pass
+        TE=GetTE(i,St,Val)        
+        NTE.append(TE)    
+    return NTE
+
+
+def Get_PF404_Expr(QN,Tx=-1):
+    base_=[2,3,4,5,10]
+    val_=[2,3,4,5,sp.Rational(1,2),sp.Rational(1,3),sp.Rational(1,4),sp.Rational(1,5)]
+    NTE=[]
+    for i in range(0,QN):
+        if Tx==0:
+            b=random.choice(base_)
+            c=random.choice(val_)
+            d=b**c
+            St=r"\log_{%s}{%s}" %(b,sp.latex(d))
+            Val=c
+            SSt=sp.log(d,b)  
+        elif Tx==1:
+            b=random.choice(base_)
+            c1=random.choice([1,2,3])
+            c2=random.choice(val_)
+            c3=random.choice(val_)
+            d=b**c1*c2*c3
+            St=r"\log_{%s}{%s}" %(b,d)  #Val=c1+sp.log(c2,b)+sp.log(c3,b)
+            SSt=sp.log(d,b)  # display(SSt)
+            Val=sp.expand_log(SSt,force=True)     #display(sp.logcombine(SSt,force=True))
+        elif Tx==2:
+            logNum=[]
+            logNum_s=[]
+            b=random.choice(base_)
+            for j in range(3):
+                c1=random.choice([1,2,3])
+                c2=random.choice(val_)
+                c3=random.choice(val_)
+                d=b**c1*c2*c3
+                logNum.append(sp.log(d,b))
+                logNum_s.append(r"\log_{%s}{%s}" %(b,d))
+            St=logNum_s[0]
+            SSt=logNum[0]
+            for j in range(1):
+                op=random.choice(["-","+"])
+                St=St+op+logNum_s[j+1]
+                if op=="-":
+                    SSt=SSt-logNum[j+1]
+                else:
+                    SSt=SSt+logNum[j+1]
+            Val=sp.expand_log(SSt,force=True)     #display(sp.logcombine(SSt,force=True))
+        elif Tx==3:
+            logNum=[]
+            logNum_s=[]
+            b=random.choice(base_)
+            for j in range(3):
+                c1=random.choice([1,2,3])
+                c2=random.choice(val_)
+                c3=random.choice(val_)
+                d=b**c1*c2*c3
+                logNum.append(sp.log(d,b))
+                logNum_s.append(r"\log_{%s}{%s}" %(b,d))
+            St=logNum_s[0]
+            SSt=logNum[0]
+            for j in range(2):
+                op=random.choice(["-","+"])
+                St=St+op+logNum_s[j+1]
+                if op=="-":
+                    SSt=SSt-logNum[j+1]
+                else:
+                    SSt=SSt+logNum[j+1]
+            Val=sp.expand_log(SSt,force=True)     #display(sp.logcombine(SSt,force=True))
+        TE=GetTE(i,St,Val)        
+        NTE.append(TE)    
+    return NTE
+
+
+
 
 def Get_PF501_Expr(QN,Tx=-1):
-    QN=5
     x=sp.symbols('x')
     NTE=[]
     for i in range(0,QN):
@@ -2055,7 +2249,6 @@ def Get_PF501_Expr(QN,Tx=-1):
     return NTE
 
 def Get_PF601_Expr(QN,Tx=-1):
-    QN=5
     x=sp.symbols('x')
     NTE=[]
     for i in range(0,QN):
