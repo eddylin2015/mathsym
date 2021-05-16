@@ -2118,7 +2118,7 @@ def Get_PF403_Expr(QN,Tx=-1):
 
 
 def Get_PF404_Expr(QN,Tx=-1):
-    base_=[2,3,4,5,10]
+    base_=[2,3,5,10]
     val_=[2,3,4,5,sp.Rational(1,2),sp.Rational(1,3),sp.Rational(1,4),sp.Rational(1,5)]
     NTE=[]
     for i in range(0,QN):
@@ -2130,10 +2130,11 @@ def Get_PF404_Expr(QN,Tx=-1):
             Val=c
             SSt=sp.log(d,b)  
         elif Tx==1:
+            val__=[2,3,4,5,6,7,8]
             b=random.choice(base_)
             c1=random.choice([1,2,3])
-            c2=random.choice(val_)
-            c3=random.choice(val_)
+            c2=random.choice(val__)
+            c3=random.choice(val__)
             d=b**c1*c2*c3
             St=r"\log_{%s}{%s}" %(b,d)  #Val=c1+sp.log(c2,b)+sp.log(c3,b)
             SSt=sp.log(d,b)  # display(SSt)
@@ -2142,10 +2143,11 @@ def Get_PF404_Expr(QN,Tx=-1):
             logNum=[]
             logNum_s=[]
             b=random.choice(base_)
+            val__=[2,3,4]
             for j in range(3):
                 c1=random.choice([1,2,3])
-                c2=random.choice(val_)
-                c3=random.choice(val_)
+                c2=random.choice(val__)
+                c3=random.choice(val__)
                 d=b**c1*c2*c3
                 logNum.append(sp.log(d,b))
                 logNum_s.append(r"\log_{%s}{%s}" %(b,d))
@@ -2163,10 +2165,11 @@ def Get_PF404_Expr(QN,Tx=-1):
             logNum=[]
             logNum_s=[]
             b=random.choice(base_)
+            val__=[2,3,4]
             for j in range(3):
                 c1=random.choice([1,2,3])
-                c2=random.choice(val_)
-                c3=random.choice(val_)
+                c2=random.choice(val__)
+                c3=random.choice(val__)
                 d=b**c1*c2*c3
                 logNum.append(sp.log(d,b))
                 logNum_s.append(r"\log_{%s}{%s}" %(b,d))
