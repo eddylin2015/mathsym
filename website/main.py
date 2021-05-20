@@ -100,9 +100,12 @@ def create_app(config):
                 TE=NTE[TEid]
                 j={"OK":str(TE["OK"]),"Val":str(TE["Val"]),"Mark":str(TE["Mark"]),"Minute":TE["Minute"],"Ans":str(TE["Ans"])}
                 return  json.dumps(j, separators=(',', ':')) 
+            elif fmt=="REMI":    
+                NTE_Storage.pop(SID, None)
+                return render_template("result_remi.html", title=QID, NTE=NTE)
             else:
                 NTE_Storage.pop(SID, None)
-                return render_template("result.html", title=QID, NTE=NTE)
+                return render_template("result2.html", title=QID, NTE=NTE)
 
         # GET 顯示QAMT題QID相關算式
         NTE = lib.Get_Expr(QIID, QAMT, Tx)

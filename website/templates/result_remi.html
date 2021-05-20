@@ -1,0 +1,42 @@
+[
+[
+"題型",
+"題號",
+"對錯",
+"耗時",
+"得分",
+"命題",
+"解題",
+"標準答案"
+]
+{% for TE in NTE %}
+,[
+"{{TE.Tx}}",
+"{{TE.Id+1}}",
+"{{TE.OK}}",
+"{{TE.Minute}}",
+"{{TE.Mark}}",
+"
+{% if TE.St is iterable and TE.St is not string  %}
+    {% for St1 in TE.St %}
+    {{St1|safe}}
+    {% endfor %}
+{% else %}
+     {{TE.St|safe}}
+{% endif %}
+",
+"{{TE.Ans}}",
+"
+    {% if TE.Val is iterable and TE.Val is not string  %}
+    {% for Val1 in TE.Val %}
+    {{Val1}}
+    {% endfor %}
+    {% else %}
+    {{TE.Val}}
+    {% endif %}
+"
+]
+{% endfor %}
+]
+ 
+

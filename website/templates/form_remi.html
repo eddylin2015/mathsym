@@ -57,13 +57,63 @@
     });
   });
   /* formsubit action*/
-  function formSubmit(cid) {
+  function formSubmit_(cid) {
     for (let i = 0; i < 10; i++) {
       let elm = document.getElementsByName("" + i);
       if (elm[0]) { elm[0].disabled = false; }
     }
     document.getElementById('formid').submit();
   }
+
+    function show_AnsMsgbox() {
+
+        var table = document.getElementById("AnsMsgResTable");
+        alert("上載成績.處理中..請等待..!");
+        let tabData = [];
+        for (var i = 0, row_; row_ = table.rows[i]; i++) {
+            tabData[i] = [];
+            for (var j = 0, col_; col_ = row_.cells[j]; j++) {
+                tabData[i][j] = col_.innerText
+            }
+        }
+        ft = document.getElementById("title").innerHTML.split(".")[0];
+        let d = new Date();
+        let yy = d.getFullYear(); let mm = d.getMonth() + 1; let dd = d.getDate();
+        let HH = d.getHours(); let MM = d.getMinutes(); let SS = d.getSeconds();
+        let md = `${yy}${mm < 10 ? "0" : ""}${mm}${dd < 10 ? "0" : ""}${dd}${HH < 10 ? "0" : ""}${HH}${MM < 10 ? "0" : ""}${MM}${SS < 10 ? "0" : ""}${SS}`;
+        tabData = JSON.stringify(tabData);
+        $.post("/internal/TMS/AddTMSQF", { "fn": "" + ft + "_0_" + md, "data": tabData },  //"fileid": "$('#FileId').val()",
+            function (data) {
+                alert(data);
+                onoff("post_btn");
+                onoff("return_btn");
+            });
+    }      
+
+  function formSubmit(cid) {
+    for (let i = 0; i < 10; i++) {
+      let elm = document.getElementsByName("" + i);
+      if (elm[0]) { elm[0].disabled = false; }
+    }
+    $.post(`?fmt=REMI&TEid=-1`, $("#formid").serialize(), function (data) {
+      console.log(data)
+      /*
+      let d = JSON.parse(data)
+      let ok_or_not_span = d.OK == "1" ? '<span>√</span>' : '<span>X</span>';
+      let dVal = Val2OutStr(d.Val)
+      $(`#Standrad_And${i}`).html(dVal);
+      let rec_history = document.getElementById("rec_history")
+      let row = rec_history.insertRow(); row.style = "font-size:12px;"
+      row.insertCell().innerHTML = i + 1
+      row.insertCell().innerHTML = ok_or_not_span // d.OK
+      row.insertCell().innerHTML = d.Minute
+      row.insertCell().innerHTML = d.Mark
+      */
+    });
+
+    //document.getElementById('formid').submit();
+  }
+
   /* showCtx: show next Tx */
   function showCtx(cid) {
     if (cid == -1) {
@@ -115,6 +165,17 @@
     width: 60px;
     height: 25px;
   }
+  div.msgcenter {
+       position: fixed;
+       bottom: 0;   left: 0;   width:90%;   height:10%;
+       border: 3px solid red;
+       padding: 3px;
+       background-color: black;       
+       font-size: 30px;
+  }
+  div.msgboxclosebtn{	
+    position: absolute;top: 0; right: 0;
+  }    
 </style>
 
 <body class="BODY remi-main">
@@ -265,7 +326,10 @@
           </tr>
         </table>
       </div>
-
+      <div id=msgbox class="msgcenter" style="display: none;">
+        <div id=msgbox_txt></div>
+        <div class="msgboxclosebtn"><button onclick="close_msgbox('msgbox')">x</button></div>  
+      </div>
       {% include "mathsym/math_panel.html" %}
 </body>
 
