@@ -1,0 +1,9 @@
+https://www.youtube.com/watch?v=HrN-R0d_8m8
+
+https://github.com/flakas/burrito-bison-bot
+
+https://github.com/Wildog/flask-file-server/blob/master/file_server.py#L20
+
+https://github.com/scenerycm/flask-fileServer
+
+https://www.tautvidas.com/blog/2018/02/automating-basic-tasks-in-games-with-opencv-and-python/
