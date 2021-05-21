@@ -1,42 +1,39 @@
-[
-[
-"題型",
-"題號",
-"對錯",
-"耗時",
-"得分",
-"命題",
-"解題",
-"標準答案"
-]
+<tr>
+    <td>題型</td>
+    <td>題號</td>
+    <td>對錯"</td>
+    <td>耗時</td>
+    <td>得分</td>
+    <td>命題</td>
+    <td>解題</td>
+    <td>標準答案</td>
+</tr>
 {% for TE in NTE %}
-,[
-"{{TE.Tx}}",
-"{{TE.Id+1}}",
-"{{TE.OK}}",
-"{{TE.Minute}}",
-"{{TE.Mark}}",
-"
-{% if TE.St is iterable and TE.St is not string  %}
-    {% for St1 in TE.St %}
-    {{St1|safe}}
-    {% endfor %}
-{% else %}
-     {{TE.St|safe}}
-{% endif %}
-",
-"{{TE.Ans}}",
-"
-    {% if TE.Val is iterable and TE.Val is not string  %}
-    {% for Val1 in TE.Val %}
-    {{Val1}}
-    {% endfor %}
-    {% else %}
-    {{TE.Val}}
-    {% endif %}
-"
-]
-{% endfor %}
-]
- 
+<tr>
+    <td>{{TE.Tx + 1}}</td>
+    <td>{{TE.Id + 1}}</td>
+    <td>
+        <div>{{TE.OK}}</div>
+    </td>
+    <td>{{TE.Minute}}</td>
+    <td>
+        <div>{{TE.Mark}}</div>
+    </td>
+    <td>
+        {% if TE.St is iterable and TE.St is not string %}
+        {% for St1 in TE.St %}
+        <div> {{St1|string|safe}}</div>
+        {% endfor %}
 
+        {% else %}
+        <div> {{TE.St|string|safe}}</div>
+        {% endif %}
+    </td>
+    <td>
+        <div>{{TE.Ans}}</div>
+    </td>
+    <td>
+        <div>{{TE.Val}}</div>
+    </td>
+</tr>
+{% endfor %}

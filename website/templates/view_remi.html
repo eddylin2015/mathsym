@@ -1,3 +1,5 @@
+{% set remi_baseurl="/trythisapps" %}
+{% set remi_posturl="/internal/TMS/AddTMSQF" %}
 <!DOCTYPE html>
 <html lang="zh-Hant">
 
@@ -109,7 +111,7 @@
   function choiceTx(i) {
     let cno=encodeURI(document.getElementById('std_classno').value)
     let name=encodeURI(document.getElementById('std_name').value)
-    window.location.replace(`/trythisapps/{{title}}?Tx=${i}&cno=${cno}&name=${name}`);
+    window.location.replace(`{{remi_baseurl}}/{{title}}?Tx=${i}&cno=${cno}&name=${name}`);
   }
 </script>
 <style>
@@ -124,7 +126,7 @@
 
 <body class="BODY remi-main">
 
-  <a onclick="window.history.back();"><span class="cbutton" style="position:absolute;left:0px;top:2px;">返回</span></a>
+  <a href="{{remi_baseurl}}"><span class="cbutton" style="position:absolute;left:0px;top:2px;">返回</span></a>
 
   <div id="loading" class="Container" data-parent-widget="1962765476816" style="display:none;margin:None">
     <div id="loading-animation" class="Widget" data-parent-widget="1962765501920" style="margin:None"></div>
@@ -141,10 +143,10 @@
     <input id="std_name" class="" value="" type=""
       style="margin:3px;width:80px;height:20px;position:absolute;left:178px;top:45px"></input>
     <p class="Label" style="min-width:60px;margin:0px;position:absolute;left:320px;top:50px">日期</p>
-    <input id="xt_date" class="" value="2021-05-19" type="" autocomplete="off"
+    <input id="xt_date" class="" value="" type="" autocomplete="off"
       style="margin:3px;width:70px;height:20px;position:absolute;left:348px;top:45px"></input>
     <p class="Label" style="min-width:60px;margin:0px;position:absolute;left:440px;top:50px">時間</p>
-    <input id="xt_time" class="" value="9:50:9"
+    <input id="xt_time" class="" value=""
       style="margin:3px;width:60px;height:20px;position:absolute;left:468px;top:45px"></input>
     <p class="Label" style="min-width:60px;margin:0px;position:absolute;left:562px;top:50px">總耗時</p>
     <input id="xt_spendtime" class="" value="0" type="" autocomplete="off"
@@ -202,7 +204,37 @@
         </table>
       </div>
 
+      <script>
+  function GetDate(x = null) {
+    let y=0, m = 0, r = 0;
+    let d = new Date(); 
+    y=d.getFullYear();
+    m=d.getMonth()+1;
+    r=d.getDate();
+    return (y < 10 ? `0${y}` : `${y}`) + (m < 10 ? `-0${m}` : `-${m}`) + (r < 10 ? `-0${r}` : `-${r}`)
+  }
 
+  function GetTime(x = null) {
+    let  h=0, m = 0, s = 0;
+    let d = new Date(); 
+    h = d.getHours(); 
+    m = d.getMinutes(); 
+    s = d.getSeconds(); 
+    return  h +":" + (m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
+  }
+    document.getElementById("xt_date").value=GetDate();
+    document.getElementById("xt_time").value=GetTime();        
+    function show_infobox(x) {
+          document.getElementById("msgbox_txt").innerHTML=x;
+            document.getElementById('msgbox').style.display = "block";
+          //$("#formid_select").val(-2);
+        }
+        function close_msgbox(x) {
+            document.getElementById(x).style.display = "none";
+          //$("#formid_select").val(-2);
+        }
+      </script>
+    
 
 </body>
 
