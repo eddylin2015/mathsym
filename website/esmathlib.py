@@ -107,12 +107,12 @@ def Get_Expr(QIID,QAMT,Tx=-1):
     elif QIID=="PF304" : NTE=Get_PF304_Expr(QAMT,Tx)
     elif QIID=="PF305" : NTE=Get_PF305_Expr(QAMT,Tx)
     elif QIID=="PF306" : NTE=Get_PF306_Expr(QAMT,Tx)
-    elif QIID=="PF401" : NTE=Get_PF401_Expr(5,Tx)
-    elif QIID=="PF402" : NTE=Get_PF402_Expr(5,Tx)
-    elif QIID=="PF403" : NTE=Get_PF403_Expr(5,Tx)
-    elif QIID=="PF404" : NTE=Get_PF404_Expr(5,Tx)
-    elif QIID=="PF501" : NTE=Get_PF501_Expr(5,Tx)
-    elif QIID=="PF601" : NTE=Get_PF601_Expr(5,Tx)
+    elif QIID=="PF401" : NTE=Get_PF401_Expr(QAMT,Tx)
+    elif QIID=="PF402" : NTE=Get_PF402_Expr(QAMT,Tx)
+    elif QIID=="PF403" : NTE=Get_PF403_Expr(QAMT,Tx)
+    elif QIID=="PF404" : NTE=Get_PF404_Expr(QAMT,Tx)
+    elif QIID=="PF501" : NTE=Get_PF501_Expr(QAMT,Tx)
+    elif QIID=="PF601" : NTE=Get_PF601_Expr(QAMT,Tx)
     else:
         return None
     return NTE

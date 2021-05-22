@@ -272,7 +272,7 @@
               style="width:450px;height:100px;position:absolute;left:45px;top:15px"></input>
             {% if TE.St is iterable and TE.St is not string %}
             {% for St1 in TE.St %}
-            {% set Q_POS=18 + 30 * loop.index %}
+            {% set Q_POS=18 + 30 * (loop.index-1) %}
             <div style="width:440px;height:30px;position:absolute;left:48px;top:{{Q_POS}}px"> \({{St1|safe}}\)</div>
             {% endfor %}
             {% else %}
@@ -317,20 +317,20 @@
             {% if loop.nextitem is defined %}
             <span id="btnNext{{TE.Id}}" class="cbutton" onclick="showCtx({{TE.Id}})" style="display:none;position:absolute;left:360px;top:130px;">下一題</span>
             {% else %}
-            <span id="btnNext{{TE.Id}}" class="cbutton" onclick="formSubmit({{TE.Id}})" style="display:none;position:absolute;left:360px;top:130px;">預覽小結</span>
+            <span id="btnNext{{TE.Id}}" class="cbutton" onclick="formSubmit({{TE.Id}})" style="display:none;position:absolute;left:360px;top:130px;">儲存答案</span>
             <!--span id="btnNext{{TE.Id}}" class="cbutton" onclick="show_AnsMsgbox()" style="display:none;position:absolute;left:360px;top:25px;">儲存總表</span-->
 
             {% endif %}
 
             <div style="width:492px;height:84px;position:absolute;left:10px;top:300px;background-color:#ffffd8">
               <input style="display:none" name="{{TE.Id+1000}}" id="T{{TE.Id}}" value="{{TE.Minute}}">
-              {% if TE.PlotImg %}
-              <img src="{{remi_baseurl}}/img/{{TE.PlotImg}}">
-              {% else %}
-              {% endif %}
-
-              说明：1.2.3.
+              说明：
             </div>
+
+            {% if TE.PlotImg %}
+            <img  src="{{remi_baseurl}}/img/{{TE.PlotImg}}" style="width:180px;position:absolute;left:345px;top:160px;background-color:#ffffd8">
+            {% else %}
+            {% endif %}
 
 
           </div>

@@ -14,7 +14,7 @@ import random
 import config
 from esapp import login_required_auth, get_model
 
-QAMT = 6  # 出題數目
+QAMT = 5  # 出題數目
 NTE_Storage = {}
 
 def create_app(config):
