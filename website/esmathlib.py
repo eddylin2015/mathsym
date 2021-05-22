@@ -81,7 +81,8 @@ def GetQList():
 """
 def Get_Expr(QIID,QAMT,Tx=-1):
     NTE=None
-    if QIID=="PP301":     NTE=Get_P301_Expr(QAMT,Tx)
+    if QIID=="PP301":    NTE=Get_P301_Expr(QAMT,Tx)
+    elif QIID=="PP303":  NTE=Get_P303_Expr(QAMT,Tx)
     elif QIID=="P302":   NTE=Get_P302_Expr(QAMT,Tx)    
     elif QIID=="PF101":  NTE=Get_PF101_Expr(QAMT,Tx)
     elif QIID=="PF102" : NTE=Get_PF102_Expr(QAMT,Tx)
@@ -162,6 +163,7 @@ def Post_Expr_CheckAns(QIID,NTE,TEid=-1,MxMunites=6):
         elif QIID=="PF401" : Put_Expr_InequV1(TE)
         elif QIID=="PF501" : Put_Expr_InequV1(TE)
         elif QIID=="PF601" : Put_Expr_X1(TE)
+        elif QIID=="PP303" : Put_Expr_V2(TE)
         else:  Put_Expr_V1(TE)
         Get_Expr_CheckAnsMark(QIID,TE)
 
@@ -193,6 +195,26 @@ def Put_Expr_V1(TE):
     except:
         pass
     return False
+
+def Put_Expr_V2(TE):
+    x, y, z = sp.symbols('x,y,z')
+    ans = TE["Ans"]
+    Val = TE["Val"]
+    ans = ans.split(";")
+    ans1 = ans[0]
+    ans2 = ans[1] if len(ans) > 1 else "3.1415"
+    if ans1.strip() == "":
+        ans1 = "3.1415"
+    if ans2.strip() == "":
+        ans2 = "3.1415"
+    try:
+        ans = [ parse_expr(ans1),  parse_expr(ans2)]
+        if ans == Val:  # 比對答案:
+            TE["OK"] = 1
+        else:  # 不則
+            TE["OK"] = 0
+    except:
+        pass    
 
 def Put_Expr_InequV1(TE):
     x = sp.symbols('x')
@@ -333,6 +355,38 @@ def Get_P302_Expr(QN,Tx=-1):
         NTE.append(TE)
     return NTE
 
+def Get_P303_Expr(QN,Tx=-1):
+    x,y,z=sp.symbols('x y z')
+    NTE = []
+    for Qid in range(0, QN):
+        ai = np.random.choice(range(4,10), 2)
+        if Tx == 0:
+            sum_head=ai[0]+ai[1]
+            sum_feet=ai[0]*2+ai[1]*4
+            St = [f"鷄兔同籠,",f"有{sum_head}個頭,{sum_feet}隻腳,","問鷄兔分別有多少隻?"]
+            Val = [ai[0],ai[1]]  # 簡化算式,得出標準答案
+        elif Tx == 1:
+            times=random.choice([2,3,4])
+            ai[0]=ai[1]*times
+            sum_head=ai[0]+ai[1]
+            sum_feet=ai[0]*2+ai[1]*4
+            St =[ f"鷄兔同籠,",f"有{sum_head}個頭,數量鷄是兔{times}倍,"," 問鷄兔分別有多少隻?"]
+            Val = [ai[0],ai[1]]  # 簡化算式,得出標準答案
+        elif Tx == 2:
+            times=random.choice([2,3,4])
+            ai[1]=ai[0]*times
+            sum_head=ai[0]+ai[1]
+            sum_feet=ai[0]*2+ai[1]*4
+            St = [f"鷄兔同籠,",f"有{sum_head}個頭,數量兔是鷄{times}倍,"," 問鷄兔分別有多少隻?"]
+            Val = [ai[0],ai[1]]  # 簡化算式,得出標準答案
+        else:
+            sum_head=ai[0]+ai[1]
+            sum_feet=ai[0]*2+ai[1]*4
+            St = [f"鷄兔同籠,",f"有{sum_head}個頭,{sum_feet}隻腳,"," 問鷄兔分別有多少隻?"]
+            Val = [ai[0],ai[1]]  # 簡化算式,得出標準答案
+        TE = GetTE(Qid, St, Val, Tx)
+        NTE.append(TE)
+    return NTE
 """
 PF101有理數運算
 """
