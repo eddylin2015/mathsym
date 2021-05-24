@@ -14,7 +14,7 @@ import random
 import config
 from esapp import login_required_auth, get_model
 
-QAMT = 5  # 出題數目
+QAMT = 10  # 出題數目
 NTE_Storage = {}
 
 def create_app(config):
@@ -66,7 +66,7 @@ def create_app(config):
 
         book = get_model().QIZTXReadByGid(QIID)
         if book==None:
-            return render_template("view_remi.html", title=QID, mtitle=Title_[2])
+            return render_template("view_remi.html", title=QID, mtitle=Title_[2],Tx=0,cno="",name="") 
         else:
             return render_template("view2.html",title=QID, book=book, mtitle=Title_[2])
 

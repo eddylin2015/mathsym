@@ -3,6 +3,8 @@ import random  # 亂數
 import math  # math 內置數學函數
 import numpy as np  # 數字矩陣
 import sympy as sp  # sympy 簡易別名 sp
+import scipy 
+from scipy import optimize as sci_opt
 from sympy import I, pi, E
 from sympy.parsing.sympy_parser import parse_expr  # 文字字串, 解釋成, Sympy 運算式
 from sympy.plotting import plot  # 繪圖表
@@ -74,7 +76,9 @@ def GetQList():
         "PF403.4.等比數列之和",
         "PF404.4.對數運算基礎",
         "PF501.4.高次不等式及分式不等式",
-        "PF601.4.餘式定理",]
+        "PF601.4.餘式定理",
+        "PF602.1.綫性規劃",
+        ]
 
 """
 算式
@@ -114,6 +118,7 @@ def Get_Expr(QIID,QAMT,Tx=-1):
     elif QIID=="PF404" : NTE=Get_PF404_Expr(QAMT,Tx)
     elif QIID=="PF501" : NTE=Get_PF501_Expr(QAMT,Tx)
     elif QIID=="PF601" : NTE=Get_PF601_Expr(QAMT,Tx)
+    elif QIID=="PF602" : NTE=Get_PF602_Expr(QAMT,Tx)
     else:
         return None
     return NTE
@@ -2356,3 +2361,29 @@ def Get_PF601_Expr(QN,Tx=-1):
             pass
     return NTE
 
+def Get_PF602_Expr(QN,Tx=-1):
+    tm=["""1. 設有甲、乙二紙廠生產三種紙類，
+        甲廠機器每運轉一日可生產 1 噸 A 級紙、1 噸 B 級紙、5 噸 C 級紙；
+        乙廠機器每運轉一日可生產 3 噸 A 級紙、1 噸 B 級紙、2 噸 C 級紙；
+        今有 一訂單需 A 級紙 9 噸、B 級紙 7 噸、C 級紙 20 噸。 
+        若甲廠運轉一日需花費 4 萬元，乙廠 需花費 3 萬元，
+        問需如何運轉才能使開銷最低，又最低 的開銷為多少元？""",
+        """2.有一工廠生產兩種不同產品(A,B),需4個部門,是各部門年最大產能:<table><tr><td><td>Product A<td>Product B</tr><tr><td>Moulding<td>25000<td>35000</tr><tr><td>Painting<td>33000<td>17000</tr><tr><td>Assembly A<td>22500<td>0</tr><tr><td>Assembly B<td>0<td>15000</tr><tr><td>Net profit pre unit<td>300<td>250</tr></table>
+        |下一頁
+        |abc
+        |下一頁
+        |下一頁
+        |下一頁
+        |下一頁"""]
+    x=sp.symbols('x')
+    NTE=[]
+    for i in range(0,QN):
+        idx=i%2
+        St=tm[idx].split("\n")
+        Val=[0,0,0]
+        TE=GetTE(i,St,Val)    
+        TE["PlainText"]=1
+        TE["Tip"]=["A=","B=","P="]
+
+        NTE.append(TE)    
+    return NTE
