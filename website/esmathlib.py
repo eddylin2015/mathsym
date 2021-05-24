@@ -42,7 +42,7 @@ def GetTE(Qid, St, Val, Tx=0):
     TE["OK"] = 0
     TE["Mark"] = 0
     TE["Minute"]= datetime.datetime.now().strftime("%M:%S")   #"%m-%d-%Y %H:%M:%S")
-    TE["Tip"] = ""
+    TE["Tip"] = "xyz"
     TE["PotImg"]=None
     TE["PlainText"]=None
     return TE
@@ -321,7 +321,6 @@ def Get_P301_Expr(QN,Tx=-1):
 
 
         TE = GetTE(Qid, St, Val, Tx)
-        TE["Tip"] = "用分數表逹值: -(a/b)"
         NTE.append(TE)
     return NTE
 """
@@ -356,7 +355,6 @@ def Get_P302_Expr(QN,Tx=-1):
 
 
         TE = GetTE(Qid, St, Val, Tx)
-        TE["Tip"] = "用分數表逹值: -(a/b)"
         NTE.append(TE)
     return NTE
 
@@ -390,6 +388,7 @@ def Get_P303_Expr(QN,Tx=-1):
             St = [f"鷄兔同籠,",f"有{sum_head}個頭,{sum_feet}隻腳,"," 問鷄兔分別有多少隻?"]
             Val = [ai[0],ai[1]]  # 簡化算式,得出標準答案
         TE = GetTE(Qid, St, Val, Tx)
+        TE["Tip"]="鷄兔"
         NTE.append(TE)
     return NTE
 """
@@ -436,7 +435,6 @@ def Get_PF101_Expr(QN,Tx=-1):
 
 
         TE = GetTE(Qid, St, Val, Tx)
-        TE["Tip"] = "用分數表逹值: -(a/b)"
         NTE.append(TE)
     return NTE
 
@@ -607,7 +605,7 @@ def Get_PF103_Expr(QN,Tx=-1):
             St=sp.latex(fx)                                  #題目 latex 數學格式
             Val=sp.solve(fx)                                 #sympy.solve求根,得出標準答案
         TE=GetTE(Qid, St, Val, Tx)
-        TE["Tip"] = "請填x的值"
+        TE["Tip"] = "x"
         NTE.append(TE)
     return NTE
 
@@ -709,7 +707,7 @@ def Get_PF105_Expr(QN,Tx=-1):
         St=r"\left\{\begin{array}\\ %s  \\  %s  \\  \end{array}\right."%(sp.latex(eq1),sp.latex(eq2))  
         Val = sp.solve([eq1, eq2], [x, y])
         TE = GetTE(Qid, St, Val)
-        TE["Tip"] = "求x ,y ?"
+        TE["Tip"] = "xy"
         if Val == []:
             pass
         else:
@@ -959,7 +957,6 @@ def Get_PF107_Expr(QN,Tx=-1):
             St=r"\left\{\begin{array}\\ %s  \\  %s  \\  \end{array}\right."%(sp.latex(fx1),sp.latex(fx2))  
             Val= reduce_rational_inequalities([[fx1,fx2]],x)   # and
         TE = GetTE(Qid, St, Val, Tx)
-        TE["Tip"] = "請作答 空集輸入 false;  "
         NTE.append(TE)
     return NTE
 
@@ -1079,7 +1076,6 @@ def Get_PF201_Expr(QN,Tx=-1):
             St=r"\sqrt{%s}"% m
             Val=sp.sqrt(m)    
         TE = GetTE(Qid, St, Val, Tx)
-        TE["Tip"]='請作答sqrt(2) 可寫 J(2 ):'
         NTE.append(TE)
     return NTE
 
@@ -1391,7 +1387,6 @@ def Get_PF207_Expr(QN,Tx=-1):
         if k < 0:
             Val = -1
         TE = GetTE(Qid, sp.latex(St), Val, Tx)
-        TE["Tip"] = " y 隨 x 的增大而____  (  +1 表示 增大  或  -1 表示  減少 )"
         
         try:
             TE["PlotImg"]="img"+GetKey()+str(Qid)+".png"
@@ -1454,7 +1449,6 @@ def Get_PF291_Expr(QN,Tx=-1):
         St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
         Val = sp.factor(St)  # 因式分解,得出標準答案
         TE = GetTE(Qid, sp.latex(St), Val, Tx)
-        TE["Tip"] = "十字相乘法因式分解"
         NTE.append(TE)
     return NTE
 
@@ -1498,7 +1492,7 @@ def Get_PF292_Expr(QN,Tx=-1):
         St = sp.Eq(St, 0)  # f(x)=0
         Val = sp.solve(St)  # 因式分解,得出標準答案
         TE = GetTE(Qid, sp.latex(St), Val, Tx)
-        TE["Tip"] = "解方程 x1, x2?"
+        TE["Tip"] = ["x1", "x2"]
         NTE.append(TE)
     return NTE
 
@@ -1540,7 +1534,6 @@ def Get_PF293_Expr(QN,Tx=-1):
         Val = sp.expand(St)
         TE = {}
         TE = GetTE(Qid, sp.latex(St), Val, Tx)
-        TE["Tip"] = "整式的乘法練習,開展式子"
         NTE.append(TE)
     return NTE
 
@@ -1619,7 +1612,6 @@ def Get_PF301_Expr(QN,Tx=-1):
         St = sp.Eq(St, 0)  # f(x)=0
         Val = sp.solve(St)  # 因式分解,得出標準答案
         TE = GetTE(Qid, sp.latex(St), Val, Tx)
-        TE["Tip"] = "因式分解"
         NTE.append(TE)
     return NTE
 
@@ -1744,7 +1736,7 @@ def Get_PF303_Expr(QN,Tx=-1):
         #St = [sp.latex(eq1), sp.latex(eq2)]  # 題目
         St=r"\left\{\begin{array}\\ %s  \\  %s  \\  \end{array}\right."%(sp.latex(eq1),sp.latex(eq2))  
         TE = GetTE(Qid, St, Val, Tx)
-        TE["Tip"] = "分別給出:  x1,y1 及 x2,y2 值"
+        TE["Tip"] = ["x1,y1","x2,y2"]
         NTE.append(TE)
     return NTE
 
@@ -1788,7 +1780,7 @@ def Get_PF304_Expr(QN,Tx=-1):
         St = sp.Eq(y, a*(x-h)**2+k)  # , evaluate=False) #字串解釋為可運算式子 expression
         Val = [h, k]
         TE = GetTE(Qid, sp.latex(St), Val, Tx)
-        TE["Tip"] = "頂點坐標x ,y ?"
+        TE["Tip"] = "xy"
         #TE["Plot"]=a*(x-h)**2+k
         NTE.append(TE)
     return NTE
@@ -2369,12 +2361,8 @@ def Get_PF602_Expr(QN,Tx=-1):
         若甲廠運轉一日需花費 4 萬元，乙廠 需花費 3 萬元，
         問需如何運轉才能使開銷最低，又最低 的開銷為多少元？""",
         """2.有一工廠生產兩種不同產品(A,B),需4個部門,是各部門年最大產能:<table><tr><td><td>Product A<td>Product B</tr><tr><td>Moulding<td>25000<td>35000</tr><tr><td>Painting<td>33000<td>17000</tr><tr><td>Assembly A<td>22500<td>0</tr><tr><td>Assembly B<td>0<td>15000</tr><tr><td>Net profit pre unit<td>300<td>250</tr></table>
-        |下一頁
-        |abc
-        |下一頁
-        |下一頁
-        |下一頁
-        |下一頁"""]
+        |目標 \\( P=300x+250y  \\) ; 註: x = 產品(A)數量單位; y = 產品(B)
+        |條件 \\(  \\left\{\\begin{array}\\\\1.4x+y ≤ 35000\\\\0.51x+y ≤ 17000\\\\x ≤ 22500\\\\y ≤ 15000\\\\x ≥ 0\\\\y ≥ 0  \\end{array}\\right.\\) """]
     x=sp.symbols('x')
     NTE=[]
     for i in range(0,QN):
@@ -2383,7 +2371,7 @@ def Get_PF602_Expr(QN,Tx=-1):
         Val=[0,0,0]
         TE=GetTE(i,St,Val)    
         TE["PlainText"]=1
-        TE["Tip"]=["A=","B=","P="]
+        TE["Tip"]=["X=","Y=","P="]
 
         NTE.append(TE)    
     return NTE
