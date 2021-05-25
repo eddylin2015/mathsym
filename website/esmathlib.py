@@ -2353,7 +2353,45 @@ def Get_PF601_Expr(QN,Tx=-1):
             pass
     return NTE
 
+def PF602_PLOT(exprs,Path_):
+    x=sp.Symbol('x')
+    fig=Figure()
+    fig.set_figheight(3)
+    fig.set_figwidth(3)
+    ax=fig.subplots()    
+    """        
+    plt.close('all')
+    fig = plt.figure()
+    fig.set_figheight(3)
+    fig.set_figwidth(3)            
+    ax = fig.add_subplot(1, 1, 1)
+    """        
+    ax.set_aspect('equal')
+    ax.grid(axis='both',which='major',color=[166/255,166/255,166/255], linestyle='-', linewidth=1)
+    ax.minorticks_on()
+    ax.grid(axis='both',which='minor',color=[166/255,166/255,166/255], linestyle=':', linewidth=1)
+    for expr in exprs:
+        lam_x = sp.lambdify(x, expr, modules=['numpy'])
+        x_vals = np.linspace(-1, 10, 5)
+        y_vals = lam_x(x_vals)
+        ax.plot(x_vals, y_vals)
+        ax.axhline(0, color='black')
+        ax.axvline(0, color='black')    
+    ax.set_xlim(-1,10)            
+    ax.set_ylim(-1,10)            
+    #plt.xlim([-1,10])
+    #plt.ylim([-1,10])
+    #plt.show()        
+    fig.savefig(os.getcwd()+"\\static\\"+Path_)
+    try:
+        pass
+    except:
+        print
+        return None
+    return Path_
+
 def Get_PF602_Expr(QN,Tx=-1):
+    x=sp.symbols('x')
     tms=["""1. 設有甲、乙二紙廠生產三種紙類，機器每運轉一日:
         甲廠生產 1 噸 A 級紙、1 噸 B 級紙、5 噸 C 級紙,開銷4 萬元；
         乙廠生產 3 噸 A 級紙、1 噸 B 級紙、2 噸 C 級紙,開銷3 萬元；；
@@ -2366,14 +2404,17 @@ def Get_PF602_Expr(QN,Tx=-1):
         |條件 \\(  \\left\{\\begin{array}\\\\1.4x+y ≤ 35000\\\\0.51x+y ≤ 17000\\\\x ≤ 22500\\\\y ≤ 15000\\\\x ≥ 0\\\\y ≥ 0  \\end{array}\\right.\\) """]
     vals=[{"x":2,"y":5,"Pmin":23},{"x1":20224.72,"y1":6685.39,"Pmax":7738764,"x2":0,"y2":0,"Pmin":0}]    
     tips=[["X1=","Y1=","Pmin="],["X1=","Y1=","Pmax=","X2=","Y2=","Pmin="]]
-    x=sp.symbols('x')
+    exprs=[ [(9-x)/3 ,7-x,(20-5*x) /2], [(9-x)/2 ,7-x,(20-5*x) /3] ]
+    
     NTE=[]
-    for i in range(0,QN):
-        idx=i%2
+    for Qid in range(0,QN):
+        idx=Qid%2
         St=tms[idx].split("\n")
         Val=vals[idx]
-        TE=GetTE(i,St,Val)    
+        TE=GetTE(Qid,St,Val)    
         TE["PlainText"]=1
         TE["Tip"]=tips[idx]
+        x,y=sp.symbols("x,y")
+        TE["PlotImg"]=PF602_PLOT(exprs[idx],"img"+GetKey()+str(Qid)+".png")
         NTE.append(TE)    
     return NTE
