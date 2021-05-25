@@ -2368,10 +2368,10 @@ def Get_PF602_Expr(QN,Tx=-1):
     for i in range(0,QN):
         idx=i%2
         St=tm[idx].split("\n")
-        Val=[0,0,0]
+        Val=[0,0,0,0,0,0]
         TE=GetTE(i,St,Val)    
         TE["PlainText"]=1
-        TE["Tip"]=["X=","Y=","P="]
+        TE["Tip"]=["X1=","Y1=","Pmax=","X2=","Y2=","Pmin="]
 
         NTE.append(TE)    
     return NTE

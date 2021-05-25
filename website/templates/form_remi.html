@@ -68,29 +68,25 @@
 
         <p class="Label" style="position:absolute;left:10px;top:180px">答題<br><a onclick="showkeyboard()">⌨</a> </p>
 
-        <div style="margin:0;width:300px;height:90px;position:absolute;left:45px;top:180px">
-          <table>
+        <div style="display: grid;grid-template-columns: 150px 150px;margin:0;width:300px;height:90px;position:absolute;left:45px;top:180px">
             {% if TE.Val is iterable and TE.Val is not string %}
+            <div style="width: 150px;">
             {% for Val1 in TE.Val %}
-            <tr>
-              <td>
-                <input name="{{TE.Id}}" autocomplete="off" style="width:288px;height:20px;font-size: 16px;"
+                <input name="{{TE.Id}}" autocomplete="off" style="width:140px;height:20px;font-size: 16px;"
                 placeholder="{{TE.Tip[loop.index-1]}}"
                 >
-              </td>
-            </tr>
+                {% if loop.index==3 %}
+            </div><div style="width: 150px;">
+                {% endif %}
             {% endfor %}
+          </div>  
+
             {% else %}
-            <tr>
-              <td>
                 <input name="{{TE.Id}}" autocomplete="off" onclick="InputEdit(this);"
                   style="width:288px;height:40px;font-size: 16px;"
                   placeholder="答題"
                   >
-              </td>
-            </tr>
             {% endif %}
-          </table>
         </div>
 
 
