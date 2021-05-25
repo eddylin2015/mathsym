@@ -75,9 +75,13 @@ def GetQList():
         "PF402.4.等差數列之和",
         "PF403.4.等比數列之和",
         "PF404.4.對數運算基礎",
+        "PF405.1.一元二次方程式",
+        "PF406.1.乘法公式",
         "PF501.4.高次不等式及分式不等式",
         "PF601.4.餘式定理",
         "PF602.1.綫性規劃",
+        "PF603.1.三角函數同角變換",
+        
         ]
 
 """
@@ -116,9 +120,12 @@ def Get_Expr(QIID,QAMT,Tx=-1):
     elif QIID=="PF402" : NTE=Get_PF402_Expr(QAMT,Tx)
     elif QIID=="PF403" : NTE=Get_PF403_Expr(QAMT,Tx)
     elif QIID=="PF404" : NTE=Get_PF404_Expr(QAMT,Tx)
+    elif QIID=="PF405" : NTE=Get_PF405_Expr(QAMT,Tx)
+    elif QIID=="PF406" : NTE=Get_PF406_Expr(QAMT,Tx)
     elif QIID=="PF501" : NTE=Get_PF501_Expr(QAMT,Tx)
     elif QIID=="PF601" : NTE=Get_PF601_Expr(QAMT,Tx)
     elif QIID=="PF602" : NTE=Get_PF602_Expr(QAMT,Tx)
+    elif QIID=="PF603" : NTE=Get_PF603_Expr(QAMT,Tx)
     else:
         return None
     return NTE
@@ -2082,10 +2089,10 @@ def Get_PF402_Expr(QN,Tx=-1):
             a=expr_func(np.arange(18))
             print(a)
             tem_=""
-            for i,a_ in enumerate(a):
-                if i>0 and i<4  :
-                    tem_ = tem_+str(a_ )+"、"
-            St=r'己知 {}...{}, S_{} ?'.format(tem_,a[a2],a2)
+            for i_,a_ in enumerate(a):
+                if i_>0 and i_<4  :
+                    tem_ = tem_+str(sp.latex(a_))+"、"
+            St=r'己知 %s...、%s, S_{%s} ?'%(tem_,sp.latex(a[a2]),sp.latex(a2))
             Val=sp.summation(expre, (n, 1, a2))
             pass
         elif Tx==3:
@@ -2095,7 +2102,7 @@ def Get_PF402_Expr(QN,Tx=-1):
             expre= n*d
             expr_func= sp.lambdify(n,expre)
             a=expr_func(np.arange(18))
-            St=r'己知 a1={},d={}, S_{} ?'.format(a[1],d,a2)
+            St=r'己知 a_{1}=%s,d=%s, S_{%s} ?'%(a[1],d,a2)
             Val=sp.summation(expre, (n, 1, a2))
             pass
         TE=GetTE(i,St,Val)        
@@ -2107,7 +2114,7 @@ def Get_PF403_Expr(QN,Tx=-1):
     x=sp.symbols('x')
     n= sp.symbols('n')
     NTE=[]
-    a1=random.sample([sp.S(-4),-3,-2,sp.Rational(-1,2),sp.Rational(-1,3),sp.Rational(-1,4),1,2,3,4], k=5)
+    a1=random.sample([sp.S(-4),-3,-2,sp.Rational(-1,2),sp.Rational(-1,3),sp.Rational(-1,4),1,2,3,4], k=10)
     for i in range(0,QN):
         if Tx==0:
             a2=random.randrange(3) +1 
@@ -2144,10 +2151,13 @@ def Get_PF403_Expr(QN,Tx=-1):
             for j in range(12):
                 a.append(expre.subs(n,j))
             tem_=""
-            for i,a_ in enumerate(a):
-                if i>0 and i<4  :
-                    tem_ = tem_+str(a_ )+"、"
-            St=r'己知 {}...、{}, S_{} ?'.format(tem_,a[a2],a2)
+            for i_,a_ in enumerate(a):
+                if i_>0 and i_<4  :
+                    tem_ = tem_+str(sp.latex(a_))+"、"
+            
+                    
+            St=r'己知 %s...、%s, S_{%s} ?'%(tem_,sp.latex(a[a2]),sp.latex(a2))            
+
             Val=sp.summation(expre, (n, 1, a2))
             pass
         elif Tx==3:
@@ -2356,8 +2366,8 @@ def Get_PF601_Expr(QN,Tx=-1):
 def PF602_PLOT(exprs,Path_):
     x=sp.Symbol('x')
     fig=Figure()
-    fig.set_figheight(3)
-    fig.set_figwidth(3)
+    fig.set_figheight(5)
+    fig.set_figwidth(5)
     ax=fig.subplots()    
     """        
     plt.close('all')
@@ -2392,23 +2402,21 @@ def PF602_PLOT(exprs,Path_):
 
 def Get_PF602_Expr(QN,Tx=-1):
     x=sp.symbols('x')
+    #example
     tms=["""1. 設有甲、乙二紙廠生產三種紙類，機器每運轉一日:
         甲廠生產 1 噸 A 級紙、1 噸 B 級紙、5 噸 C 級紙,開銷4 萬元；
         乙廠生產 3 噸 A 級紙、1 噸 B 級紙、2 噸 C 級紙,開銷3 萬元；；
         今有 一訂單需 A 級紙 9 噸、B 級紙 7 噸、C 級紙 20 噸。 
         問需如何運轉才能使開銷最低，又最低 的開銷為多少元？,
         |目標 \\( Pmin=4x+5y  \\) ; 註: 甲廠運轉x日;乙廠y日
-        |條件 \\(  \\left\{\\begin{array}\\\\x+3y ≥ 9 \\\\x+y ≥ 7\\\\5x+2y ≥20\\\\x ≥ 0,y ≥ 0  \\end{array}\\right.\\)""",
-        """2.有一工廠生產兩種不同產品(A,B),需4個部門,是各部門年最大產能:<table><tr><td><td>Product A<td>Product B</tr><tr><td>Moulding<td>25000<td>35000</tr><tr><td>Painting<td>33000<td>17000</tr><tr><td>Assembly A<td>22500<td>0</tr><tr><td>Assembly B<td>0<td>15000</tr><tr><td>Net profit pre unit<td>300<td>250</tr></table>
-        |目標 \\( P=300x+250y  \\) ; 註: x = 產品(A)數量單位; y = 產品(B)
-        |條件 \\(  \\left\{\\begin{array}\\\\1.4x+y ≤ 35000\\\\0.51x+y ≤ 17000\\\\x ≤ 22500\\\\y ≤ 15000\\\\x ≥ 0\\\\y ≥ 0  \\end{array}\\right.\\) """]
-    vals=[{"x":2,"y":5,"Pmin":23},{"x1":20224.72,"y1":6685.39,"Pmax":7738764,"x2":0,"y2":0,"Pmin":0}]    
-    tips=[["X1=","Y1=","Pmin="],["X1=","Y1=","Pmax=","X2=","Y2=","Pmin="]]
-    exprs=[ [(9-x)/3 ,7-x,(20-5*x) /2], [(9-x)/2 ,7-x,(20-5*x) /3] ]
+        |條件 \\(  \\left\{\\begin{array}\\\\x+3y ≥ 9 \\\\x+y ≥ 7\\\\5x+2y ≥20\\\\x ≥ 0,y ≥ 0  \\end{array}\\right.\\)"""]
+    vals=[{"x":2,"y":5,"Pmin":23}]    
+    tips=[["X1=","Y1=","Pmin="]]
+    exprs=[ [(9-x)/3 ,7-x,(20-5*x) /2] ]
     
     NTE=[]
     for Qid in range(0,QN):
-        idx=Qid%2
+        idx=0
         St=tms[idx].split("\n")
         Val=vals[idx]
         TE=GetTE(Qid,St,Val)    
@@ -2416,5 +2424,76 @@ def Get_PF602_Expr(QN,Tx=-1):
         TE["Tip"]=tips[idx]
         x,y=sp.symbols("x,y")
         TE["PlotImg"]=PF602_PLOT(exprs[idx],"img"+GetKey()+str(Qid)+".png")
-        NTE.append(TE)    
+        NTE.append(TE) 
+        break;   
+    return NTE
+
+
+def Get_PF603_Expr(QN,Tx=-1):
+    x=sp.symbols('x')
+    #example
+    tms=["""己知  \\(\\cos x\\),求  \\(\\sec x\\) ?
+        <br><br><br><br><br><br>
+
+        註: 解答時,用**表示不存在.
+        """]
+    vals=[[1,x]]    
+    tips=[["分子","分母"]]
+    exprs=[ [(9-x)/3 ,7-x,(20-5*x) /2] ]
+    
+    NTE=[]
+    for Qid in range(0,QN):
+        idx=0
+        St=tms[idx].split("\n")
+        Val=vals[idx]
+        TE=GetTE(Qid,St,Val)    
+        TE["PlainText"]=1
+        TE["Tip"]=tips[idx]
+        x,y=sp.symbols("x,y")
+        TE["PlotImg"]="//mail.mbc.edu.mo/ckeditorimages/worknote_210_2_triangle_same_angle_translate.png"
+        NTE.append(TE) 
+        break;   
+    return NTE
+
+def Get_PF405_Expr(QN,Tx=-1):
+    x=sp.symbols('x')
+    #example
+    tms=["""\\(  5x^2+kx-92=0  \\)
+        己知 \\( x_{1} = -4 \\) 
+        求另一根 \\( x_{2} \\) 和參數K
+        <br><br><br><br><br><br>
+        """]
+    vals=[["23/5",-3]]    
+    tips=[["x2","k"]]
+    NTE=[]
+    for Qid in range(0,QN):
+        idx=0
+        St=tms[idx].split("\n")
+        Val=vals[idx]
+        TE=GetTE(Qid,St,Val)    
+        TE["PlainText"]=1
+        TE["Tip"]=tips[idx]
+        NTE.append(TE) 
+        break;   
+    return NTE
+
+def Get_PF406_Expr(QN,Tx=-1):
+    x=sp.symbols('x')
+    #example
+    tms=[""" \\( (y+8x)(y-8x) \\)
+        """]
+    vals=[["y^2-64*x^2"]]    
+    tips=[[""]]
+    
+    NTE=[]
+    for Qid in range(0,QN):
+        idx=0
+        St=tms[idx].split("\n")
+        Val=vals[idx]
+        TE=GetTE(Qid,St,Val)    
+        TE["PlainText"]=1
+        TE["Tip"]=tips[idx]
+        x,y=sp.symbols("x,y")
+        NTE.append(TE) 
+        break;   
     return NTE

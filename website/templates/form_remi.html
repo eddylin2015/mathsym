@@ -72,6 +72,7 @@
             {% if TE.Val is iterable and TE.Val is not string %}
             <div style="width: 150px;">
             {% for Val1 in TE.Val %}
+                
                 <input name="{{TE.Id}}" autocomplete="off" style="width:140px;height:20px;font-size: 16px;"
                 placeholder="{{TE.Tip[loop.index-1]}}"
                 >
@@ -122,8 +123,12 @@
         </div>
 
         {% if TE.PlotImg %}
-        <div style="position:absolute;left:535px;top:10px;">
+        <div style="position:absolute;left:515px;top:10px;">
+        {% if TE.PlotImg.startswith("//") %}  
+        <img src="{{TE.PlotImg}}"  style="height:200px;max-width: 260px">
+        {% else %}
         <img src="{{remi_baseurl}}/img/{{TE.PlotImg}}"  style="height:200px">
+        {% endif %}
         </div>
         {% else %}
         {% endif %}

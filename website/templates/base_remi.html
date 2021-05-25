@@ -248,9 +248,8 @@
         <p class="Label" style="min-width:60px;margin:0px;position:absolute; left:690px; top:90px">等级</p>
         <input id="xt_grade" class="" value="0" type="" autocomplete="off" readonly
             style="margin:3px;width:40px;height:20px;position:absolute; left:720px; top:85px"></input>
-
-
-        {% for n in range(0,4) %}
+        {% set QID,TX,Name = title.split('.') %}
+        {% for n in range(0,TX|int) %}
         {% set B_POSI = 10+70 * n %}
         <a onclick="choiceTx({{n}})"><button class="Button"
                 style="margin:0px;width:60px;height:25px;position:absolute;left:{{B_POSI}}px;top:85px">題型{{n+1}}</button></a>
