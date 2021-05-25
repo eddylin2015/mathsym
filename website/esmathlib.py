@@ -2354,24 +2354,26 @@ def Get_PF601_Expr(QN,Tx=-1):
     return NTE
 
 def Get_PF602_Expr(QN,Tx=-1):
-    tm=["""1. 設有甲、乙二紙廠生產三種紙類，
-        甲廠機器每運轉一日可生產 1 噸 A 級紙、1 噸 B 級紙、5 噸 C 級紙；
-        乙廠機器每運轉一日可生產 3 噸 A 級紙、1 噸 B 級紙、2 噸 C 級紙；
+    tms=["""1. 設有甲、乙二紙廠生產三種紙類，機器每運轉一日:
+        甲廠生產 1 噸 A 級紙、1 噸 B 級紙、5 噸 C 級紙,開銷4 萬元；
+        乙廠生產 3 噸 A 級紙、1 噸 B 級紙、2 噸 C 級紙,開銷3 萬元；；
         今有 一訂單需 A 級紙 9 噸、B 級紙 7 噸、C 級紙 20 噸。 
-        若甲廠運轉一日需花費 4 萬元，乙廠 需花費 3 萬元，
-        問需如何運轉才能使開銷最低，又最低 的開銷為多少元？""",
+        問需如何運轉才能使開銷最低，又最低 的開銷為多少元？,
+        |目標 \\( Pmin=4x+5y  \\) ; 註: 甲廠運轉x日;乙廠y日
+        |條件 \\(  \\left\{\\begin{array}\\\\x+3y ≥ 9 \\\\x+y ≥ 7\\\\5x+2y ≥20\\\\x ≥ 0,y ≥ 0  \\end{array}\\right.\\)""",
         """2.有一工廠生產兩種不同產品(A,B),需4個部門,是各部門年最大產能:<table><tr><td><td>Product A<td>Product B</tr><tr><td>Moulding<td>25000<td>35000</tr><tr><td>Painting<td>33000<td>17000</tr><tr><td>Assembly A<td>22500<td>0</tr><tr><td>Assembly B<td>0<td>15000</tr><tr><td>Net profit pre unit<td>300<td>250</tr></table>
         |目標 \\( P=300x+250y  \\) ; 註: x = 產品(A)數量單位; y = 產品(B)
         |條件 \\(  \\left\{\\begin{array}\\\\1.4x+y ≤ 35000\\\\0.51x+y ≤ 17000\\\\x ≤ 22500\\\\y ≤ 15000\\\\x ≥ 0\\\\y ≥ 0  \\end{array}\\right.\\) """]
+    vals=[{"x":2,"y":5,"Pmin":23},{"x1":20224.72,"y1":6685.39,"Pmax":7738764,"x2":0,"y2":0,"Pmin":0}]    
+    tips=[["X1=","Y1=","Pmin="],["X1=","Y1=","Pmax=","X2=","Y2=","Pmin="]]
     x=sp.symbols('x')
     NTE=[]
     for i in range(0,QN):
         idx=i%2
-        St=tm[idx].split("\n")
-        Val=[0,0,0,0,0,0]
+        St=tms[idx].split("\n")
+        Val=vals[idx]
         TE=GetTE(i,St,Val)    
         TE["PlainText"]=1
-        TE["Tip"]=["X1=","Y1=","Pmax=","X2=","Y2=","Pmin="]
-
+        TE["Tip"]=tips[idx]
         NTE.append(TE)    
     return NTE
