@@ -2363,7 +2363,7 @@ def Get_PF601_Expr(QN,Tx=-1):
             pass
     return NTE
 
-def PF602_PLOT(exprs,Path_):
+def PF602_PLOT(exprs,Path_,xlim=[-1,10],ylim=[-1,10]):
     x=sp.Symbol('x')
     fig=Figure()
     fig.set_figheight(5)
@@ -2382,13 +2382,13 @@ def PF602_PLOT(exprs,Path_):
     ax.grid(axis='both',which='minor',color=[166/255,166/255,166/255], linestyle=':', linewidth=1)
     for expr in exprs:
         lam_x = sp.lambdify(x, expr, modules=['numpy'])
-        x_vals = np.linspace(-1, 10, 5)
+        x_vals = np.linspace(xlim[0], xlim[1], 5)
         y_vals = lam_x(x_vals)
         ax.plot(x_vals, y_vals)
         ax.axhline(0, color='black')
         ax.axvline(0, color='black')    
-    ax.set_xlim(-1,10)            
-    ax.set_ylim(-1,10)            
+    ax.set_xlim(xlim[0],xlim[1])            
+    ax.set_ylim(ylim[0],ylim[1])            
     #plt.xlim([-1,10])
     #plt.ylim([-1,10])
     #plt.show()        
@@ -2404,28 +2404,33 @@ def Get_PF602_Expr(QN,Tx=-1):
     x=sp.symbols('x')
     #example
     tms=["""1. 設有甲、乙二紙廠生產三種紙類，機器每運轉一日:
-        甲廠生產 1 噸 A 級紙、1 噸 B 級紙、5 噸 C 級紙,開銷4 萬元；
-        乙廠生產 3 噸 A 級紙、1 噸 B 級紙、2 噸 C 級紙,開銷3 萬元；；
-        今有 一訂單需 A 級紙 9 噸、B 級紙 7 噸、C 級紙 20 噸。 
+        甲廠生產 1 噸 A 級紙、1 噸 B 級紙、5  噸 C 級紙, 開銷4 萬元；
+        乙廠生產 3 噸 A 級紙、1 噸 B 級紙、2  噸 C 級紙, 開銷3 萬元；；
+        今有訂單 9 噸 A 級紙、7 噸 B 級紙、20 噸 C 級紙。 
         問需如何運轉才能使開銷最低，又最低 的開銷為多少元？,
-        |目標 \\( Pmin=4x+5y  \\) ; 註: 甲廠運轉x日;乙廠y日
-        |條件 \\(  \\left\{\\begin{array}\\\\x+3y ≥ 9 \\\\x+y ≥ 7\\\\5x+2y ≥20\\\\x ≥ 0,y ≥ 0  \\end{array}\\right.\\)"""]
-    vals=[{"x":2,"y":5,"Pmin":23}]    
-    tips=[["X1=","Y1=","Pmin="]]
-    exprs=[ [(9-x)/3 ,7-x,(20-5*x) /2] ]
-    
+        |目標 \\( Pmin=4x+5y  \\) ; 註: 甲廠運轉x日;乙廠y日; x,y∈N
+        |條件 \\(  \\left\{\\begin{array}\\\\x+3y ≥ 9 \\\\x+y ≥ 7\\\\5x+2y ≥20\\\\x ≥ 0,y ≥ 0  \\end{array}\\right.\\)"""
+        ,
+        """2.有一工廠生產兩種不同產品(A,B),需4個部門,是各部門年最大產能:<table><tr><td><td>Product A<td>Product B</tr><tr><td>Moulding<td>25000<td>35000</tr><tr><td>Painting<td>33000<td>17000</tr><tr><td>Assembly A<td>22500<td>0</tr><tr><td>Assembly B<td>0<td>15000</tr><tr><td>Net profit pre unit<td>300<td>250</tr></table>
+        |目標 \\( P=300x+250y  \\) ; 註: x = 產品(A)數量單位; y = 產品(B);x,y∈R
+        |條件 \\(  \\left\{\\begin{array}\\\\1.4x+y ≤ 35000\\\\0.51x+y ≤ 17000\\\\x ≤ 22500\\\\y ≤ 15000\\\\x ≥ 0, y ≥ 0  \\end{array}\\right.\\) """
+        ]
+
+    vals=[{"x":2,"y":5,"Pmin":23},{"x1":20224.72,"y1":6685.39,"Pmax":7738764}]    
+    tips=[["X1=","Y1=","Pmin="],["X1=","Y1=","Pmax="]]
+    exprs=[ [(9-x)/3 ,7-x,(20-5*x) /2],[35000-1.4*x,17000-0.51*x,(22500-x)*1000  ,15000- x*0.0001 ] ]
+    xylim=[[-1,10],[-1,30000]]
     NTE=[]
-    for Qid in range(0,QN):
-        idx=0
+    for Qid in range(0,2):
+        idx=Qid
         St=tms[idx].split("\n")
         Val=vals[idx]
         TE=GetTE(Qid,St,Val)    
         TE["PlainText"]=1
         TE["Tip"]=tips[idx]
         x,y=sp.symbols("x,y")
-        TE["PlotImg"]=PF602_PLOT(exprs[idx],"img"+GetKey()+str(Qid)+".png")
+        TE["PlotImg"]=PF602_PLOT(exprs[idx],"img"+GetKey()+str(Qid)+".png",xylim[idx],xylim[idx])
         NTE.append(TE) 
-        break;   
     return NTE
 
 
