@@ -25,3 +25,4 @@ website/static/
 lesson/kw_data.xlsx
 website/config.py
 website/bookshelf.db
+website/sqlite3.exe

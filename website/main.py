@@ -63,12 +63,8 @@ def create_app(config):
     def MathViewPanel(QID):
         Title_=QID.split(".")
         QIID=Title_[0]
-
         book = get_model().QIZTXReadByGid(QIID)
-        if book==None:
-            return render_template("view_remi.html", title=QID, mtitle=Title_[2],Tx=0,cno="",name="") 
-        else:
-            return render_template("view2.html",title=QID, book=book, mtitle=Title_[2])
+        return render_template("view_remi.html", title=QID,book=book, mtitle=Title_[2],Tx=0,cno="",name="") 
 
     # GET 顯示QAMT題QID相關算式
     # POST 收集作答,並對比答案.
@@ -81,7 +77,7 @@ def create_app(config):
         name = (request.args.get('name', ""))
         Title_=QID.split(".")
         QIID=Title_[0]
-
+        book = get_model().QIZTXReadByGid(QIID)
         if request.method == 'POST':
             # 取得題目及電腦標準答案 (NTE)
             SID = request.form["SID"]
@@ -112,7 +108,7 @@ def create_app(config):
         SID = lib.GetKey()
         NTE_blob = pickle.dumps(NTE)
         NTE_Storage[SID] = NTE_blob
-        return render_template("form_remi.html", title=QID, mtitle=Title_[2], NTE=NTE, sid=SID,Tx=Tx,cno=cno,name=name)      
+        return render_template("form_remi.html", title=QID, book=book, mtitle=Title_[2], NTE=NTE, sid=SID,Tx=Tx,cno=cno,name=name)      
 
     @app.route('/trythisapps/img/<filename>')
     @login_required_auth

@@ -74,8 +74,8 @@
             tabData[i] = [];
             for (var j = 0, col_; col_ = row_.cells[j]; j++) {
                 if (i > 0 && j == 5) {
-                    let a = ["\\left\\{\\begin{array}", "\\end{array}\\right"]
-                    let b = ["", ""]
+                    let a = ["\\left\\{\\begin{array}", "\\end{array}\\right","\mathtt{\text{","}}"]
+                    let b = ["", "","", ""]
                     temp_ = col_.innerText.replace(/[\\]left[(]/g, "(").replace(/[\\]right[)]/g, ")")
                     for (let c = 0; c < a.length; c++) {
                         temp_ = temp_.replace(a[c], b[c])

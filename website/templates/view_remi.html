@@ -6,6 +6,7 @@
   <div class="Container" style="width:500px;height:380px;position:static;top:130px;background-color:#fde9d9;order:-1">
     <div id="1962765948912"
       style="width:492px;height:384px;position:absolute;left:10px;top:10px;background-color:#ffffd8">
+      {% if book==None %}
       <h6>步驟：</h6>
       <ul>
         <li>1.设置：(1) 選擇題型。</li>
@@ -22,6 +23,10 @@
         <li>5.每題10分。內設基準時間，提前完成加分，超時完成扣分。</li>
         <li>6.一次测验必须做滿10題，然後电脑自動填寫報表。</li>
       </ul>
+      {% else %}
+      {{ book.qnote|safe }}
+      {{ book.snote|safe }}
+      {% endif %}
     </div>
 
 

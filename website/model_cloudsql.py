@@ -55,13 +55,15 @@ class QIZTX(db.Model):
     qtitle= db.Column(db.String(255))
     tx=db.Column(db.Integer)
     qnote= db.Column(db.Text)
+    snote= db.Column(db.Text)
     createbyid=db.Column(db.String(255))
-    def __init__(self, id=None, gid=None,qtitle=None,tx=None,qnote=None,createbyid=None):
+    def __init__(self, id=None, gid=None,qtitle=None,tx=None,qnote=None,snote=None,createbyid=None):
         self.id= id
         self.gid =gid
         self.qtitle =qtitle
         self.tx =tx
         self.qnote =qnote
+        self.snote =snote
         self.createbyid =createbyid
     def __repr__(self):
         return "<QIZTX(KEY='%s')" % (self.id)
