@@ -120,16 +120,14 @@
         <div style="width:492px;height:175px;position:absolute;left:10px;top:320px;background-color:#ffffd8">
           <input style="display:none" name="{{TE.Id+1000}}" id="T{{TE.Id}}" value="{{TE.Minute}}">
           {% if book==None %}
-          <h6>說明：</h6>
-          <ul>
-            <li>1.可以用紙筆計算，也可以用計算器輔助計算。</li>
-            <li>2.单行分數写法如右，例如：\(\frac{𝑎}{𝑏} \) 写成 a / b ----- 分数线用斜横。</li>
-            <li>3.单行指数写法如右，例如： \(x^2+1\) 写成 x**2+1 ---- 用指数符"**"。</li>
-            <li>4.单行根式写法如右，例如：\(\sqrt[2]{𝑥+1}\) 写成 J(x+1) ---- 大写 J+ 括弧。</li>
-            <li>5.单行對数写法如右，例如：\(\log_{2}{8}\) 写成 log(8,2) 或者log(8)/log(2)。</li>
-            <li>6.每題10分。內設基準時間，提前完成加分，超時完成扣分。</li>
-            <li>7.一次测验必须做滿10題，然後电脑自動填寫報表。</li>
-          </ul>
+          <span>說明：</span><br>
+            <span>1.可以用紙筆計算，也可以用計算器輔助計算。</span><br>
+            <span>2.单行分數写法如右，例如：\(\frac{𝑎}{𝑏} \) 写成 a / b ----- 分数线用斜横。</span><br>
+            <span>3.单行指数写法如右，例如： \(x^2+1\) 写成 x**2+1 ---- 用指数符"**"。</span><br>
+            <span>4.单行根式写法如右，例如：\(\sqrt[2]{𝑥+1}\) 写成 J(x+1) ---- 大写 J+ 括弧。</span><br>
+            <span>5.单行對数写法如右，例如：\(\log_{2}{8}\) 写成 log(8,2) 或者log(8)/log(2)。</span><br>
+            <span>6.每題10分。內設基準時間，提前完成加分，超時完成扣分。</span><br>
+            <span>7.一次测验必须做滿10題，然後电脑自動填寫報表。</span><br>
           {% else %}
           {{ book.snote|safe }}
           {% endif %}
