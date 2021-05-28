@@ -1,5 +1,7 @@
 import re
 import math
+import sympy as sp
+import random
 
 def IterateMultiDict(f):
     """
@@ -9,6 +11,9 @@ def IterateMultiDict(f):
     for key in f.keys():
         for value in f.getlist(key):
             print (key+":"+value)
+
+
+
 
 ### math
 def lcm(a, b):
@@ -83,3 +88,43 @@ def NTE2Table(data):
                    '</td><td>'.join("$$%s$$" % r[_] if i==2 else "%s" % r[_] for i, _ in enumerate(r))) for r in data)
            )
 
+def TakeARnd(Ta , Tb , Desm=0 , SwIs=0 , Tc=0 , Td=0 ):
+    r =0 
+    BL = True
+    while(BL):
+        r = random.randint(Ta,Tb)
+        #r = Int(r * 10 ^ Desm + 0.5) / 10 ^ Desm
+        if SwIs==0:
+            BL = False
+        elif SwIs==1:
+            BL = (r >= Tc) and (r <= Td)
+        else:
+            BL = (r == Tc) or (r == Td)
+    return r
+
+# ------ 建构一个随机分数,  ---------------
+# ----- 分子为(-k , k) 内的整数-------
+# ------  分数的SwIs ：0  不允许整数，1 允许整数，2 真分数，3 假分数
+# ------ 本课题规定，只取正分数
+# k As Single, SwIs As Integer
+# As AFrc
+def TakeAFrc(k, SwIs ): 
+    a=0;b=0;c=0;r=0
+    F=sp.Rational(1,2)
+    BL = True
+    while BL :                                         #
+        a = TakeARnd(1, k, 0, 1, 0, 0)            #  分子， 本课题规定，只取正分数
+        b = TakeARnd(1, k, 0, 1, 0, 0)             # 分母
+        r = math.gcd(a, b)
+        a = a / r; b = b / r
+        F=sp.Rational(a,b)
+        if SwIs== 0:
+            BL = b == 1
+        elif SwIs== 1:
+            BL = False
+        elif SwIs== 2:
+            BL = abs(a) >= abs(b) or b == 1
+        else:
+            BL = abs(a) <= abs(b) or b == 1
+    #Loop
+    return F

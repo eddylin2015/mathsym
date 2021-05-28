@@ -80,7 +80,7 @@ def GetQList():
         "PF405.1.高中一元二次方程式",
         "PF406.1.高中乘法公式",
         "PF602.1.高中綫性規劃",
-        "PF603.1.高中三角函數同角變換",
+        "PF603.4.高中三角函數同角變換",
         
         ]
 
@@ -2435,30 +2435,96 @@ def Get_PF602_Expr(QN,Tx=-1):
 
 
 def Get_PF603_Expr(QN,Tx=-1):
-    x=sp.symbols('x')
-    #example
-    tms=["""己知  \\(\\cos x\\),求  \\(\\sec x\\) ?
-        <br><br><br><br><br><br>
-
-        註: 解答時,用**表示不存在.
-        """]
-    vals=[[1,x]]    
-    tips=[["分子","分母"]]
-    exprs=[ [(9-x)/3 ,7-x,(20-5*x) /2] ]
-    
+    tips=["分子","分母"]
+    Sheet02Cells=[
+    ["已知==>",	"sin",	"cos",	"tan",	"cot",	"sec",	"csc",	"I",	"II",	"III",	"IV",	"0",	"30",	"45",	"60",	"90",	"120",	"135",	"150",	"180",	"210",	"125",	"240",	"270",	"300",	"315",	"330",	"360"],
+    ["sin",	"k",	"J(1-k^2)",	"k/J(1+k^2)",	"1/J(1+k^2)",	"J(k^2-1)/k",	"1/k",	"1",	"1",	"-1",	"-1",	"0",	"1/2",	"J(2)/2",	"J(3)/2",	"1",	"J(3)/2",	"J(2)/2",	"1/2",	"0",	"-1/2",	"-J(2)/2",	"-J(3)/2",	"-1",	"-J(3)/2",	"-J(2)/2",	"-1/2",	"0"],
+    ["cos",	"J(1-k^2)",	"k",	"1/J(1+k^2)",	"k/J(1+k^2)",	"1/k",	"J(k^2-1)/k",	"1",	"-1",	"-1",	"1",	"1",	"J(3)/2",	"J(2)/2",	"1/2",	"0",	"-1/2",	"-J(2)/2",	"-J(3)/2",	"-1",	"-J(3)/2",	"-J(2)/2",	"-1/2",	"0",	"1/2",	"J(2)/2",	"J(3)/2",	"1"],
+    ["tan",	"k/J(1-k^2)",	"J(1-k^2)/k",	"k",	"1/k",	"J(k^2-1)",	"1/J(k^2-1)",	"1",	"-1",	"1",	"-1",	"0",	"J(3)/3",	"1",	"J(3)",	"**",	"-J(3)",	"-1",	"-J(3)/3",	"0",	"J(3)/3",	"1",	"J(3)",	"**",	"-J(3)",	"-1",	"-J(3)/3",	"0"],
+    ["cot",	"J(1-k^2)/k",	"k/J(1-k^2)",	"1/k",	"k",	"1/J(k^2-1)",	"J(k^2-1)",	"1",	"-1",	"1",	"-1",	"**",	"J(3)",	"1",	"J(3)/3",	"0",	"-J(3)/3",	"-1",	"-J(3)",	"**",	"J(3)",	"1",	"J(3)/3",	"0",	"-J(3)/3",	"-1",	"-J(3)",	"**"],
+    ["sec",	"1/J(1-k^2)",	"1/k",	"J(1+k^2)",	"J(1+k^2)/k",	"k",	"k/J(k^2-1)",	"1",	"-1",	"-1",	"1",	"1",	"2J(3)/3",	"J(2)",	"2",	"**",	"-2",	"-J(2)",	"-2J(3)/3",	"-1",	"-2J(3)/3",	"-J(2)",	"-2",	"**",	"2",	"J(2)",	"2J(3)/3",	"1"],
+    ["csc",	"1/k",	"1/J(1-k^2)",	"J(1+k^2)/k",	"J(1+k^2)",	"k/J(k^2-1)",	"k",	"1",	"1",	"-1",	"-1",	"**",	"2",	"J(2)",	"2J(3)/3",	"1",	"2J(3)/3",	"J(2)",	"2",	"**",	"-2",	"-J(2)",	"-2J(3)/3",	"-1",	"-2J(3)/3",	"-J(2)",	"-2",	"**"]
+    ]
     NTE=[]
-    for Qid in range(0,QN):
-        idx=0
-        St=tms[idx].split("\n")
-        Val=vals[idx]
-        TE=GetTE(Qid,St,Val)    
+    for Qid in range(0,QN  ):
+        
+        Ss1 = ["sin", "cos", "tan", "cot", "sec", "csc"]
+        Ss3 = ["I", "II", "III", "IV"]
+        i = lib.TakeARnd(1, 6, 0, 0, 0, 0)
+        j = lib.TakeARnd(1, 6, 0, 1, i, i)
+        s1 = Ss1[i - 1]; s2 = Ss1[j - 1]                           #   '已知s1, 求 s2
+        St = Sheet02Cells[j ][i ]                           #  '答案的公式
+        if Tx == 0 or  Tx == 1 :
+            if Tx == 0 :
+                St = St.replace( "k^2", s1 + "^2x")
+                St = St.replace( "k", s1 + " x")
+            else:
+                St = St.replace( "k", "A")
+            k = St.split("/")
+            if len(k) == 1 :
+                Ts1 = St
+                Ts2 = ""
+            else:
+                Ts1 = k[0]
+                Ts2 = k[1]
+            if Tx == 0 :
+                s1 = s1 + " x"
+                s2 = s2 + " x"
+            else:
+                s1 = s1 + " x = A"
+                s2 = s2 + " x"
+            Xx = Ss3[0]
+            St=[f"已知 {s1}, 求 {s2} ?  x∈{Xx}象限"]
+            Val=[Ts1, Ts2]
+            TE=GetTE(Qid,St,Val)
+            TE["Tip"]=["分子","分母"]
+        elif Tx == 2 :               #给定函数值，指定象限
+            if i < 3 :
+                x = lib.TakeAFrc(9, 2)                                     # sin,cos 取真分数
+            elif i < 5 :
+                x = lib.TakeAFrc(9, 1)                                     # tan,coe, 不限
+            else:
+                x = lib.TakeAFrc(9, 3)                                     # sec,csc 取假分数
+            k = random.randint(0,100) % 4
+            Xx = Ss3[k]
+            r = Sheet02Cells[i][ 7 + k]
+            if r == -1 :
+                x = -1 * x
+            s1 = f"{s1}  x = {x}"                                     # 其值的正负要跟象限而定
+            s2 = f"{s2}  x"
+            St_=f"已知 {s1}, 求 {s2} ?  x∈{Xx}象限"
+            # ---- 答案计算，化简
+            Val=[]
+            temp_=St.split("/")
+            for temp__ in temp_:
+                Val.append(temp__.replace("k",f"({x})"))
+            St=[St_]
+            TE=GetTE(Qid,St,Val)
+            TE["Tip"]=["分子","分母"]
+        elif Tx == 3 :       #特殊角，例 sin A = J(3)/2   A∈ II, ==> A=? tanA =?         
+            Tip=["A=", f"{s2} A="]
+            s5 = "**"
+            while s5 == "**":
+                r = lib.TakeARnd(1, 16, 0, 0, 0, 0)                      # 角
+                s5 = Sheet02Cells[i][ 10 + r]
+            s1 = f"{s1} A = {s5} "
+            s2 = f"A,   {s2} A"
+            a = Sheet02Cells[0][11 + r]
+            Ts1 = f"{a}°"
+            Ts2 = Sheet02Cells[j][ 10 + r]
+            k = int(int(a) / 91)
+            Xx = Ss3[k]      
+            St_=f"已知 {s1}, 求 {s2} ?  x∈{Xx}象限"
+            # ---- 答案计算，化简
+            Val=[Ts1,Ts2]
+            St=[St_]
+            TE=GetTE(Qid,St,Val)
+            TE["Tip"]=Tip
+
         TE["PlainText"]=1
-        TE["Tip"]=tips[idx]
-        x,y=sp.symbols("x,y")
         TE["PlotImg"]="//mail.mbc.edu.mo/ckeditorimages/worknote_210_2_triangle_same_angle_translate.png"
-        NTE.append(TE) 
-        break;   
-    return NTE
+        NTE.append(TE)   
+    return NTE     
 
 def Get_PF405_Expr(QN,Tx=-1):
     x=sp.symbols('x')
