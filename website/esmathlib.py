@@ -19,6 +19,7 @@ import esutils as lib
 import os
 from sympy.geometry import Point, Circle, Triangle, Segment, Line, RegularPolygon
 import matplotlib.pyplot as plt
+import PF602_Module 
 """
 基本數據結構
 TE 單條題目記錄: St題目, Val電腦答案, Ans作答,OK檢查1/0, Tip提示
@@ -79,7 +80,7 @@ def GetQList():
         "PF601.4.餘式定理",
         "PF405.1.高中一元二次方程式",
         "PF406.1.高中乘法公式",
-        "PF602.1.高中綫性規劃",
+        "PF602.4.高中綫性規劃",
         "PF603.4.高中三角函數同角變換",
         
         ]
@@ -2415,22 +2416,52 @@ def Get_PF602_Expr(QN,Tx=-1):
         |目標 \\( P=300x+250y  \\) ; 註: x = 產品(A)數量單位; y = 產品(B);x,y∈R
         |條件 \\( \\left\{\\begin{array}\\\\1.4x+y ≤ 35000\\\\0.51x+y ≤ 17000\\\\x ≤ 22500\\\\y ≤ 15000\\\\x ≥ 0, y ≥ 0  \\end{array}\\right.\\) """
         ]
-
     vals=[{"x":2,"y":5,"Pmin":23},{"x1":20224.72,"y1":6685.39,"Pmax":7738764}]    
     tips=[["X1=","Y1=","Pmin="],["X1=","Y1=","Pmax="]]
     exprs=[ [(9-x)/3 ,7-x,(20-5*x) /2],[35000-1.4*x,17000-0.51*x,(22500-x)*1000  ,15000- x*0.0001 ] ]
     xylim=[[-1,10],[-1,30000]]
     NTE=[]
-    for Qid in range(0,2):
+    for Qid in range(0,10):
         idx=Qid
-        St=tms[idx].split("\n")
-        Val=vals[idx]
-        TE=GetTE(Qid,St,Val)    
-        TE["PlainText"]=1
-        TE["Tip"]=tips[idx]
-        x,y=sp.symbols("x,y")
-        TE["PlotImg"]=PF602_PLOT(exprs[idx],"img"+GetKey()+str(Qid)+".png",xylim[idx],xylim[idx])
-        NTE.append(TE) 
+        if Tx==0:
+            AL=PF602_Module.GetALset(3)
+            TE=GetTE(Qid,AL[0],AL[1])    
+            TE["PlotImg"]=PF602_Module.PF602_Line_PLOT(AL[2],"img"+GetKey()+str(Qid)+".png")
+            TE["PlainText"]=1
+            TE["Tip"]=["x1,y1","Pmax","x2,y2","Pmin"]
+            NTE.append(TE) 
+            pass
+        elif Tx==1:
+            AL=PF602_Module.GetALset(4)
+            TE=GetTE(Qid,AL[0],AL[1])    
+            TE["PlotImg"]=PF602_Module.PF602_Line_PLOT(AL[2],"img"+GetKey()+str(Qid)+".png")
+            
+            TE["PlainText"]=1
+            TE["Tip"]=["x1,y1","Pmax","x2,y2","Pmin"]
+            NTE.append(TE) 
+            pass
+        elif Tx==2:
+            AL=PF602_Module.GetALset(5)
+            TE=GetTE(Qid,AL[0],AL[1])    
+            TE["PlotImg"]=PF602_Module.PF602_Line_PLOT(AL[2],"img"+GetKey()+str(Qid)+".png")
+
+            TE["PlainText"]=1
+            TE["Tip"]=["x1,y1","Pmax","x2,y2","Pmin"]
+            NTE.append(TE) 
+            pass
+        elif Tx==3:
+            if Qid>1 :break
+            
+            St=tms[idx].split("\n")
+            Val=vals[idx]
+            TE=GetTE(Qid,St,Val)    
+            TE["PlainText"]=1
+            TE["Tip"]=tips[idx]
+            x,y=sp.symbols("x,y")
+            TE["PlotImg"]=PF602_PLOT(exprs[idx],"img"+GetKey()+str(Qid)+".png",xylim[idx],xylim[idx])
+            NTE.append(TE) 
+            
+        
     return NTE
 
 
