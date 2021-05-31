@@ -699,27 +699,87 @@ def Put_PF105_Expr(TE):
         pass
 
 def Get_PF105_Expr(QN,Tx=-1):
-    TxFlag=Tx==-1    
     x, y, z = sp.symbols('x,y,z')
     NTE = []
     for Qid in range(0, QN):
-        a = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-        b = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-        c = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-        d = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-        m = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-        n = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-        eq1 = sp.Eq(a*x+b*y, m)
-        eq2 = sp.Eq(c*x+d*y, n)
-        #St = [eq1, eq2]
-        St=r"\left\{\begin{array}\\ %s  \\  %s  \\  \end{array}\right."%(sp.latex(eq1),sp.latex(eq2))  
-        Val = sp.solve([eq1, eq2], [x, y])
-        TE = GetTE(Qid, St, Val)
-        TE["Tip"] = "xy"
-        if Val == []:
-            pass
-        else:
-            NTE.append(TE)
+        if Tx==0:
+            a = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            b = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            c = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            d = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            m = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            n = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            eq1 = sp.Eq(a*x+b*y, m)
+            eq2 = sp.Eq(c*x+d*y, n)
+            #St = [eq1, eq2]
+            St=r"\left\{\begin{array}\\ %s  \\  %s  \\  \end{array}\right."%(sp.latex(eq1),sp.latex(eq2))  
+            Val = sp.solve([eq1, eq2], [x, y])
+            TE = GetTE(Qid, St, Val)
+            TE["Tip"] = "xy"
+            if Val == []:
+                pass
+            else:
+                NTE.append(TE)
+        elif Tx==1:
+            a = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            b = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            c = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            d = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            m = random.choice(range(-10,10)); 
+            if m==0 : m=2
+            n = random.choice(range(-10,10)); 
+            if n==0 : n=2
+            eq1 = sp.Eq(a*x+b*y, m)
+            eq2 = sp.Eq(c*x+d*y, n)
+            #St = [eq1, eq2]
+            St=r"\left\{\begin{array}\\ %s  \\  %s  \\  \end{array}\right."%(sp.latex(eq1),sp.latex(eq2))  
+            Val = sp.solve([eq1, eq2], [x, y])
+            TE = GetTE(Qid, St, Val)
+            TE["Tip"] = "xy"
+            if Val == []:
+                pass
+            else:
+                NTE.append(TE)
+        elif Tx==2:
+            a = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            b = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            c = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            d = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            m = random.choice(range(-30,30)); 
+            if m==0 : m=2
+            n = random.choice(range(-30,30)); 
+            if n==0 : n=2
+            eq1 = sp.Eq(a*x+b*y, m)
+            eq2 = sp.Eq(c*x+d*y, n)
+            #St = [eq1, eq2]
+            St=r"\left\{\begin{array}\\ %s  \\  %s  \\  \end{array}\right."%(sp.latex(eq1),sp.latex(eq2))  
+            Val = sp.solve([eq1, eq2], [x, y])
+            TE = GetTE(Qid, St, Val)
+            TE["Tip"] = "xy"
+            if Val == []:
+                pass
+            else:
+                NTE.append(TE)
+
+        elif Tx==3:
+            a = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            b = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            c = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            d = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            m = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            n = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            eq1 = sp.Eq(a*x+b*y, m)
+            eq2 = sp.Eq(c*x+d*y, n)
+            #St = [eq1, eq2]
+            St=r"\left\{\begin{array}\\ %s  \\  %s  \\  \end{array}\right."%(sp.latex(eq1),sp.latex(eq2))  
+            Val = sp.solve([eq1, eq2], [x, y])
+            TE = GetTE(Qid, St, Val)
+            TE["Tip"] = "xy"
+            if Val == []:
+                pass
+            else:
+                NTE.append(TE)
+
     return NTE
 
 
@@ -990,19 +1050,73 @@ def Put_PF108_Expr(TE):
 
 
 def Get_PF108_Expr(QN,Tx=-1):
-    TxFlag=Tx==-1       
     NTE = []
     for Qid in range(0, QN):
-        a = 1
-        p = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-        q = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-        b = p+q
-        c = p*q
-        express_str = f"(x +({a}))* ( x + ({b}))  "  # 題型 express_str ax+bx+c
-        St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
-        Val = sp.expand(St)
-        TE = GetTE(Qid, sp.latex(St), Val, Tx)
-        NTE.append(TE)
+        if Tx==0:
+            a = 1
+            p = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            q = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            b = p+q
+            c = p*q
+            express_str = f"(x +({b})) * ( x + ({c}))  "  # 題型 express_str ax+bx+c
+            St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
+            Val = sp.expand(St)
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            NTE.append(TE)
+        elif Tx==1:
+            a = 1
+            p = random.choice(range(-10,10))
+            q = random.choice(range(-10,10))
+            if p==0 : p=2
+            if q==0 : q=2
+            b = p+q
+            c = p*q
+            express_str = f"(x +({b})) * ( x + ({c}))  "  # 題型 express_str ax+bx+c
+            St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
+            Val = sp.expand(St)
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            NTE.append(TE)
+        elif Tx==2:
+            a = 1
+            p = random.choice(range(-16,16))
+            q = random.choice(range(-16,16))
+            if p==0 : p=2
+            if q==0 : q=2
+            b = p+q
+            c = p*q
+            express_str = f"(x +({b})) * ( x + ({c}))  "  # 題型 express_str ax+bx+c
+            St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
+            Val = sp.expand(St)
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            NTE.append(TE)
+        elif Tx==3:
+            a = 1
+            p = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            q = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            u = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            r = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            b = p+q
+            c = p*q
+            u= f"{u}*x" if  u != 1 else "x"
+            r= f"{r}*x" if  r != 1 else "x"
+            express_str = f"( {u} + ({b}) ) * ( {r} + ({c}) )"  # 題型 express_str ax+bx+c
+            St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
+            Val = sp.expand(St)
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            NTE.append(TE)
+        else:
+            a = 1
+            p = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            q = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            u = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            r = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            b = p+q
+            c = p*q
+            express_str = f"(x +({b}))* ( x + ({c}))  "  # 題型 express_str ax+bx+c
+            St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
+            Val = sp.expand(St)
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            NTE.append(TE)
     return NTE
 
 
