@@ -46,6 +46,7 @@ def GetTE(Qid, St, Val, Tx=0):
     TE["Tip"] = "xyz"
     TE["PotImg"]=None
     TE["PlainText"]=None
+    TE["ValFmt"]=None
     return TE
 
 def GetQList():
@@ -176,6 +177,7 @@ def Post_Expr_CheckAns(QIID,NTE,TEid=-1,MxMunites=6):
         elif QIID=="PF401" : Put_Expr_InequV1(TE)
         elif QIID=="PF501" : Put_Expr_InequV1(TE)
         elif QIID=="PF601" : Put_Expr_X1(TE)
+        elif QIID=="PF602" : Put_Expr_V6(TE)
         elif QIID=="PP303" : Put_Expr_V2(TE)
         else:  Put_Expr_V1(TE)
         Get_Expr_CheckAnsMark(QIID,TE)
@@ -223,6 +225,26 @@ def Put_Expr_V2(TE):
     try:
         ans = [ parse_expr(ans1),  parse_expr(ans2)]
         if ans == Val:  # 比對答案:
+            TE["OK"] = 1
+        else:  # 不則
+            TE["OK"] = 0
+    except:
+        pass    
+
+def Put_Expr_V6(TE):
+    x, y, z = sp.symbols('x,y,z')
+    ans = TE["Ans"]
+    Val = TE["Val"]
+    ans = ans.split(";")
+    ans1=[]
+    try:    
+        for temp in ans:
+            if temp.strip() == "":
+                ans1.append(parse_expr(  "3.1415"))
+            else:
+                ans1.append(parse_expr(lib.Text2St(temp)))
+    
+        if ans1 == Val:  # 比對答案:
             TE["OK"] = 1
         else:  # 不則
             TE["OK"] = 0
@@ -2542,7 +2564,8 @@ def Get_PF602_Expr(QN,Tx=-1):
             TE=GetTE(Qid,AL[0],AL[1])    
             TE["PlotImg"]=PF602_Module.PF602_Line_PLOT(AL[2],"img"+GetKey()+str(Qid)+".png")
             TE["PlainText"]=1
-            TE["Tip"]=["x1,y1","Pmax","x2,y2","Pmin"]
+            TE["Tip"]=["x1","y1","Pmax","x2","y2","Pmin"]
+            #print(TE)
             NTE.append(TE) 
             pass
         elif Tx==1:
@@ -2551,16 +2574,15 @@ def Get_PF602_Expr(QN,Tx=-1):
             TE["PlotImg"]=PF602_Module.PF602_Line_PLOT(AL[2],"img"+GetKey()+str(Qid)+".png")
             
             TE["PlainText"]=1
-            TE["Tip"]=["x1,y1","Pmax","x2,y2","Pmin"]
+            TE["Tip"]=["x1","y1","Pmax","x2","y2","Pmin"]
             NTE.append(TE) 
             pass
         elif Tx==2:
             AL=PF602_Module.GetALset(5)
             TE=GetTE(Qid,AL[0],AL[1])    
             TE["PlotImg"]=PF602_Module.PF602_Line_PLOT(AL[2],"img"+GetKey()+str(Qid)+".png")
-
             TE["PlainText"]=1
-            TE["Tip"]=["x1,y1","Pmax","x2,y2","Pmin"]
+            TE["Tip"]=["x1","y1","Pmax","x2","y2","Pmin"]
             NTE.append(TE) 
             pass
         elif Tx==3:
@@ -2621,7 +2643,9 @@ def Get_PF603_Expr(QN,Tx=-1):
             Xx = Ss3[0]
             St=[f"已知 {s1}, 求 {s2} ?  x∈{Xx}象限"]
             Val=[Ts1, Ts2]
+
             TE=GetTE(Qid,St,Val)
+            TE["ValFmt"]=r"<table><tr><td>%s<tr><td>%s</table>"%(Ts1,Ts2)
             TE["Tip"]=["分子","分母"]
         elif Tx == 2 :               #给定函数值，指定象限
             if i < 3 :

@@ -234,7 +234,7 @@ def GetALset(n ):
         if a < Min :
             Min = a        #最小值
             k = i
-    Val=[TPs.Pnt[j],Max,TPs.Pnt[k],Min]    # 最大/小點的點號
+    Val=[TPs.Pnt[j][0],TPs.Pnt[j][1],Max,TPs.Pnt[k][0],TPs.Pnt[k][1],Min]    # 最大/小點的點號
     #Line_PLOT(expr_arr,"")
     return [St,Val,expr_arr]
 
