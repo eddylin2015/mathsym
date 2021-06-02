@@ -94,8 +94,9 @@ def create_app(config):
             fmt = request.args.get('fmt', "")
             if fmt=="JSON":
                 TE=NTE[TEid]
-                ValStr=str(TE["Val"]) if TE["ValFmt"]==None else TE["ValFmt"]
-                j={"OK":str(TE["OK"]),"Val":ValStr,"Mark":str(TE["Mark"]),"Minute":TE["Minute"],"Ans":str(TE["Ans"])}
+                ValFmt="" if TE["ValFmt"]==None else TE["ValFmt"]
+                ValSt="" if TE["ValSt"]==None else TE["ValSt"]
+                j={"OK":str(TE["OK"]),"Val":str(TE["Val"]),"ValFmt":ValFmt,"ValSt":ValSt,"Mark":str(TE["Mark"]),"Minute":TE["Minute"],"Ans":str(TE["Ans"])}
                 return  json.dumps(j, separators=(',', ':')) 
             elif fmt=="REMI":    
                 NTE_Storage.pop(SID, None)

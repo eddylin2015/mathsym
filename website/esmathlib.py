@@ -47,6 +47,7 @@ def GetTE(Qid, St, Val, Tx=0):
     TE["PotImg"]=None
     TE["PlainText"]=None
     TE["ValFmt"]=None
+    TE["ValSt"]=None
     return TE
 
 def GetQList():
@@ -2645,7 +2646,8 @@ def Get_PF603_Expr(QN,Tx=-1):
             Val=[Ts1, Ts2]
 
             TE=GetTE(Qid,St,Val)
-            TE["ValFmt"]=r"<table><tr><td>%s<tr><td>%s</table>"%(Ts1,Ts2)
+            TE["ValFmt"]=r"HTML"
+            TE["ValSt"]=r"<table><tr><td>%s<tr><td>%s</table>"%(Ts1,Ts2)
             TE["Tip"]=["分子","分母"]
         elif Tx == 2 :               #给定函数值，指定象限
             if i < 3 :
@@ -2665,10 +2667,16 @@ def Get_PF603_Expr(QN,Tx=-1):
             # ---- 答案计算，化简
             Val=[]
             temp_=St.split("/")
+            ValSt="<table>"
             for temp__ in temp_:
-                Val.append(temp__.replace("k",f"({x})"))
+                tt_=temp__.replace("k",f"({x})")
+                ValSt=f"{ValSt}<tr><td>{tt_}"
+                Val.append(tt_)
+            
             St=[St_]
             TE=GetTE(Qid,St,Val)
+            TE["ValFmt"]=r"HTML"
+            TE["ValSt"]=ValSt+"</table>"
             TE["Tip"]=["分子","分母"]
         elif Tx == 3 :       #特殊角，例 sin A = J(3)/2   A∈ II, ==> A=? tanA =?         
             Tip=["A=", f"{s2} A="]
@@ -2688,6 +2696,8 @@ def Get_PF603_Expr(QN,Tx=-1):
             Val=[Ts1,Ts2]
             St=[St_]
             TE=GetTE(Qid,St,Val)
+            TE["ValFmt"]=r"HTML"
+            TE["ValSt"]=r"<table><tr><td>%s<tr><td>%s</table>"%(Ts1,Ts2)
             TE["Tip"]=Tip
 
         TE["PlainText"]=1

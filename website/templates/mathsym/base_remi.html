@@ -57,6 +57,7 @@
             if (keyCode === 13) { e.preventDefault(); return false; }
         });
     });
+
     /* formsubit action*/
     function formSubmit__(cid) {
         for (let i = 0; i < 10; i++) {
@@ -157,8 +158,16 @@
         $.post(`?fmt=JSON&TEid=${i}`, $("#formid").serialize(), function (data) {
             let d = JSON.parse(data)
             let ok_or_not_span = d.OK == "1" ? '<span>√</span>' : '<span>X</span>';
-            let dVal = Val2OutStr(d.Val)
-            $(`#Standrad_And${i}`).html(dVal);
+            if (d.ValFmt=="LATEX"){
+               let html = MathJax.tex2chtml(d.ValSt, {em: 12, ex: 6, display: false});
+               let text = html.outerHTML;
+               $(`#Standrad_And${i}`).html(text);
+            }else if(d.ValFmt=="HTML"){
+                $(`#Standrad_And${i}`).html(d.ValSt);
+            }else{
+                $(`#Standrad_And${i}`).html(Val2OutStr(d.Val));
+            }
+
             let rec_history = document.getElementById("rec_history")
             let row = rec_history.insertRow(); row.style = "font-size:12px;"
             let cel=null;
