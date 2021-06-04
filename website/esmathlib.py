@@ -179,6 +179,7 @@ def Post_Expr_CheckAns(QIID,NTE,TEid=-1,MxMunites=6):
         elif QIID=="PF501" : Put_Expr_InequV1(TE)
         elif QIID=="PF601" : Put_Expr_X1(TE)
         elif QIID=="PF602" : Put_Expr_V6(TE)
+        elif QIID=="PF603" : Put_Expr_S6(TE)
         elif QIID=="PP303" : Put_Expr_V2(TE)
         else:  Put_Expr_V1(TE)
         Get_Expr_CheckAnsMark(QIID,TE)
@@ -251,6 +252,22 @@ def Put_Expr_V6(TE):
             TE["OK"] = 0
     except:
         pass    
+
+def Put_Expr_S6(TE):
+    x, y, z = sp.symbols('x,y,z')
+    ans = TE["Ans"]
+    Val = TE["Val"]
+    ans = ans.split(";")
+    TE["OK"] = 0
+    try:    
+        for i_, temp in enumerate(ans):
+            if lib.S6Compare(Val[i_], temp):
+                TE["OK"] = 1
+            else:
+                TE["OK"] = 0
+                return
+    except:
+        pass   
 
 def Put_Expr_InequV1(TE):
     x = sp.symbols('x')

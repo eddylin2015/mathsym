@@ -19,6 +19,25 @@ def IterateMultiDict(f):
 def lcm(a, b):
     return abs(a*b) // math.gcd(a, b)    
 
+### Trim
+def StrAllTrim(text):
+    text=str(text)
+    out=""
+    for c in text:
+        if c==" ":
+            pass
+        else:
+            out=out+c
+    return out
+
+### V6Compare(a,b)
+def S6Compare(a,b):
+    a=StrAllTrim(a) 
+    b=StrAllTrim(b) 
+    a=a.replace("°","")
+    b=b.replace("°","")
+    return a.lower()==b.lower()
+
 ### input ans 
 def Text2St(ans):
     if ans.strip() == "": return "-3.1415926"
