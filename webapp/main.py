@@ -1,34 +1,28 @@
-from flask import current_app, Flask, redirect, request
+
 import datetime
-import random
-import sympy as sp
-import numpy as np
-
+from email.message import Message
+from http.server import BaseHTTPRequestHandler, HTTPServer 
+from urllib import parse
 TE_Storage = {}
+class HandleRequests(BaseHTTPRequestHandler):
+    def handle(self):
+        try:
+            BaseHTTPRequestHandler.handle(self)
+        except Exception:
+            print(Exception)
 
-def create_app():
-    app = Flask(__name__)
- 
-    @app.route("/")
-    def index():
-        return redirect('/app')
+    def _set_headers(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.send_header('Content-Type','text/html; charset=utf-8')
+        self.end_headers()
 
-    @app.route("/app", methods=['GET', 'POST'])
-    def MathPanel():
-        if request.method == 'POST':
-            # 取得題目及電腦標準答案
-            SID = request.form["SID"]
-            Ans = request.form["Ans"]
-            TE=TE_Storage.get(SID)
-            if TE==None :
-                return "超時! <a href=/app> 下一題 </a>"
-            Val=TE["Val"]
-            return f""" OK! 答案:{Val}<a href=/app> 下一題 </a>"""
-        # GET 顯示題目
-        TE={"St":"A+B","Val":1}
+    def do_GET(self):
+        self._set_headers()
+        TE={"St":"1+1","Val":2}
         SID=datetime.datetime.now().isoformat()
         TE_Storage[SID]=TE
-        return f"""
+        self.wfile.write(bytes( f"""
         <html>
         <head><meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
@@ -47,16 +41,26 @@ def create_app():
             </form>
         </body>
         </html>
-        """
+        """, "utf-8") )       
+        
+    def do_POST(self):
+        '''Reads post request body'''
+        self._set_headers()
+        content_length = int(self.headers['Content-Length'])
+        post_body = self.rfile.read(content_length)
+        data=parse.parse_qs(post_body)
+        SID=data[b"SID"][0].decode('utf-8')
+        Ans=data[b"Ans"][0].decode('utf-8')
+        TE=TE_Storage.get(SID)
+        Message=""
+        if TE==None :
+            Message="超時!"
+        else:
+            Val=TE["Val"]
+            Message=f"OK! 答案:{Val}"
+        self.wfile.write(bytes(f'''{Message} <a href=/app> 下一題 </a>''', "utf-8") )   
 
-    # 容錯處理
-    @app.errorhandler(500)
-    def server_error(e):
-        return """<pre>{}</pre>full stacktrace.""".format(e), 500
+    def do_PUT(self):
+        self.do_POST()
 
-    return app
-
-app = create_app()
-
-if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=83, debug=True)
+HTTPServer(('127.0.0.1', 80), HandleRequests).serve_forever()

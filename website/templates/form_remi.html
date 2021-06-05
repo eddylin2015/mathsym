@@ -44,7 +44,7 @@
       <div id="content{{TE.Id}}" style="{{display_style}}">
         <p class="Label" style="position:absolute;left:10px;top:8px">命題</p>
         <input class="" value="" type="" autocomplete="off"
-          style="width:450px;height:165px;position:absolute;left:45px;top:8px"></input>
+          style="width:450px;height:160px;position:absolute;left:45px;top:8px"></input>
         {% if TE.St is iterable and TE.St is not string %}
            <div id="" style="width:455x;height:30px;position:absolute;left:48px;top:18px;font-size: 15px;">
               {% set tm_style = "display:block" %}
@@ -105,33 +105,18 @@
         </div>
 
         <span id="btnSubm{{TE.Id}}" class="cbutton" onclick="CheckTE({{TE.Id}})"
-          style="position:absolute;left:360px;top:180px;">确定</span>
+          style="position:absolute;left:420px;top:180px;">确定</span>
 
         {% if loop.nextitem is defined %}
         <span id="btnNext{{TE.Id}}" class="cbutton" onclick="showCtx({{TE.Id}})"
-          style="display:none;position:absolute;left:360px;top:180px;">下一題</span>
+          style="display:none;position:absolute;left:420px;top:180px;">下一題</span>
         {% else %}
         <span id="btnNext{{TE.Id}}" class="cbutton" onclick="formSubmit({{TE.Id}})"
-          style="display:none;position:absolute;left:360px;top:180px;">儲存答案</span>
+          style="display:none;position:absolute;left:420px;top:180px;">儲存答案</span>
         <!--span id="btnNext{{TE.Id}}" class="cbutton" onclick="show_AnsMsgbox()" style="display:none;position:absolute;left:360px;top:25px;">儲存總表</span-->
 
         {% endif %}
-
-        <div style="width:492px;height:175px;position:absolute;left:10px;top:320px;background-color:#ffffd8">
-          <input style="display:none" name="{{TE.Id+1000}}" id="T{{TE.Id}}" value="{{TE.Minute}}">
-          {% if book==None %}
-          <span>說明：</span><br>
-            <span>1.可以用紙筆計算，也可以用計算器輔助計算。</span><br>
-            <span>2.单行分數写法如右，例如：\(\frac{𝑎}{𝑏} \) 写成 a / b ----- 分数线用斜横。</span><br>
-            <span>3.单行指数写法如右，例如： \(x^2+1\) 写成 x**2+1 ---- 用指数符"**"。</span><br>
-            <span>4.单行根式写法如右，例如：\(\sqrt[2]{𝑥+1}\) 写成 J(x+1) ---- 大写 J+ 括弧。</span><br>
-            <span>5.单行對数写法如右，例如：\(\log_{2}{8}\) 写成 log(8,2) 或者log(8)/log(2)。</span><br>
-            <span>6.每題10分。內設基準時間，提前完成加分，超時完成扣分。</span><br>
-            <span>7.一次测验必须做滿10題，然後电脑自動填寫報表。</span><br>
-          {% else %}
-          {{ book.snote|safe }}
-          {% endif %}
-        </div>
+        <input style="display:none" name="{{TE.Id+1000}}" id="T{{TE.Id}}" value="{{TE.Minute}}">
 
         {% if TE.PlotImg %}
         <div style="position:absolute;left:515px;top:10px;">
@@ -151,6 +136,21 @@
       {% endfor %}
 
     </form>
+    <div style="width:492px;height:165px;position:absolute;left:10px;top:330px;background-color:#ffffd8">
+      {% if book==None %}
+      <span>說明：</span><br>
+        <span>1.可以用紙筆計算，也可以用計算器輔助計算。</span><br>
+        <span>2.单行分數写法如右，例如：\(\frac{𝑎}{𝑏} \) 写成 a / b ----- 分数线用斜横。</span><br>
+        <span>3.单行指数写法如右，例如： \(x^2+1\) 写成 x^2+1 ---- 用指数符"^"。</span><br>
+        <span>4.单行根式写法如右，例如：\(\sqrt[2]{𝑥+1}\) 写成 J(x+1) ---- 大写 J+ 括弧。</span><br>
+        <span>5.单行對数写法如右，例如：\(\log_{2}{8}\) 写成 log(8,2) 或者log(8)/log(2)。</span><br>
+        <span>6.每題10分。內設基準時間，提前完成加分，超時完成扣分。</span><br>
+        <span>7.一次测验必须做滿10題，然後电脑自動填寫報表。</span><br>
+      {% else %}
+      {{ book.snote|safe }}
+      {% endif %}
+    </div>
+
   </div>
 
   <div style="width:266px;height:490px;position:static;background-color:#e9fdd9;z-index:10;">
