@@ -59,7 +59,8 @@ def GetQList():
         "PF105.4.二元一次方程","PF106.4.一元一次不等式",
         "PF107.4.一元一次不等式組",    
         "PF108.4.整式的乘法練習","PF201.4.根式的運算",
-        "PF202.4.整式的乘法公式",
+        "PF202.3.整式的乘法公式平方差",
+        "PF2021.3.整式的乘法公式完全平方公式",
         "PF203.4.因式分解提公因式",
         "PF204.4.分式的乘除",
         "PF205.4.分式的加減",         
@@ -105,6 +106,7 @@ def Get_Expr(QIID,QAMT,Tx=-1):
     elif QIID=="PF108" : NTE=Get_PF108_Expr(QAMT,Tx)
     elif QIID=="PF201" : NTE=Get_PF201_Expr(QAMT,Tx)
     elif QIID=="PF202" : NTE=Get_PF202_Expr(QAMT,Tx)
+    elif QIID=="PF2021" : NTE=Get_PF2021_Expr(QAMT,Tx)
     elif QIID=="PF203" : NTE=Get_PF203_Expr(QAMT,Tx)
     elif QIID=="PF204" : NTE=Get_PF204_Expr(QAMT,Tx)
     elif QIID=="PF205" : NTE=Get_PF205_Expr(QAMT,Tx)
@@ -161,6 +163,7 @@ def Post_Expr_CheckAns(QIID,NTE,TEid=-1,MxMunites=6):
         elif QIID=="PF108" : Put_PF108_Expr(TE)
         elif QIID=="PF201" : Put_PF201_Expr(TE)
         elif QIID=="PF202" : Put_PF202_Expr(TE)
+        elif QIID=="PF2021" : Put_PF2021_Expr(TE)
         elif QIID=="PF203" : Put_PF203_Expr(TE)
         elif QIID=="PF204" : Put_PF204_Expr(TE)
         elif QIID=="PF205" : Put_PF205_Expr(TE)
@@ -1248,13 +1251,13 @@ PF202整式的乘法公式平方差
 
 
 def Put_PF202_Expr(TE):
-    x=sp.Symbol('x')
+    x,y,z=sp.symbols('x y z')
     Val=TE["Val"]
     ans=TE["Ans"]
-    ans = lib.Text2St(ans)
+    ans = lib.Text2StV1(ans)
     if ans.strip()=="":ans="3.1415"
     try:
-        if parse_expr(ans).subs({x:7})==Val.subs({x:7}):                   #比對答案:
+        if parse_expr(ans).subs({x:7,y:7,z:7})==Val.subs({x:7,y:7,z:7}):  #比對答案:
             TE["OK"]=1
         else:                                      #不則
             TE["OK"]=0
@@ -1263,27 +1266,39 @@ def Put_PF202_Expr(TE):
 
 
 def Get_PF202_Expr(QN,Tx=-1):
-    TxFlag=Tx==-1       
-    sample_list1 = list(range(-19, 19))
+    x,y,z=sp.symbols("x y z")
+    sample_list0= list(range(-39,29))   # [-5,-4,-3,-2,-1,1,2,3,4,5]
+    sample_list1= list(range(-19,19))
     sample_list1.remove(0)    # 非零數列
     NTE = []
     for Qid in range(0, QN):
-        if TxFlag : Tx=Qid % 2
         if Tx==0:
             a = random.choice(sample_list1)
-            p = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-            q = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-            b = p+q
-            c = p*q
-            express_str = f"(x +({a})) * ( x - ({a}))  "  # 題型 express_str ax+bx+c
+            p=random.choice([-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10])
+            q=random.choice([-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10])
+            St=(p*x +a) * (p*x - a)
+            #express_str=f"({p}*x +({a})) * ({p}*x - ({a}))  "  #題型 express_str ax+bx+c
+            #St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
+            Val = sp.expand(St)
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            NTE.append(TE)
+
         elif Tx==1:
-            a = random.choice(sample_list1)
-            p = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-            q = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-            b = p+q
-            c = p*q
-            op=random.choice(["-","-","+"])
-            express_str = f"({p}*x  {op} ({q}) *  y )**2   "  # 題型 express_str ax+bx+c
+            a =random.choice(sample_list1) 
+            p=random.choice([-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10])
+            q=random.choice([sp.Rational(1,2),sp.Rational(2,3),sp.Rational(3,4),2,3,4])
+            St=(p*x**q +a) * (p*x**q - a)    #題型 express_str ax+bx+c
+            Val=sp.expand(St)
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            NTE.append(TE)
+        elif Tx==2:            
+            a =random.choice(sample_list1) 
+            p=random.choice([1,2,3,4,5])
+            q=random.choice([sp.Rational(1,2),sp.Rational(2,3),2,3,4])
+            St=(p*x**q * y**p + z**p ) * (p * x**q * y**p - z**p)  
+            Val=sp.expand(St)
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            NTE.append(TE)
         else:
             a = random.choice(sample_list1)
             p = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
@@ -1291,12 +1306,72 @@ def Get_PF202_Expr(QN,Tx=-1):
             b = p+q
             c = p*q
             express_str = f"(x +({a})) * ( x - ({a}))  "  # 題型 express_str ax+bx+c
-        St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
-        Val = sp.expand(St)
-        TE = GetTE(Qid, sp.latex(St), Val, Tx)
-        NTE.append(TE)
+            St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
+            Val = sp.expand(St)
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            NTE.append(TE)
     return NTE
 
+def Put_PF2021_Expr(TE):
+    x,y,z=sp.symbols('x y z')
+    Val=TE["Val"]
+    ans=TE["Ans"]
+    ans = lib.Text2StV1(ans)
+    if ans.strip()=="":ans="3.1415"
+    try:
+        if parse_expr(ans).subs({x:7,y:7,z:7})==Val.subs({x:7,y:7,z:7}):  #比對答案:
+            TE["OK"]=1
+        else:                                      #不則
+            TE["OK"]=0
+    except:
+        pass
+
+"整式的乘法完全平方公式"
+def Get_PF2021_Expr(QN,Tx=-1):
+    x,y,z=sp.symbols("x y z")
+    sample_list0= list(range(-39,29))   # [-5,-4,-3,-2,-1,1,2,3,4,5]
+    sample_list1= list(range(-19,19))
+    sample_list1.remove(0)    # 非零數列
+    NTE = []
+    for Qid in range(0, QN):
+        if Tx==0:
+            a = random.choice(sample_list1)
+            p=random.choice([-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10])
+            q=random.choice([-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10])
+            express_str=f"({p}*x +({a})) * ({p}*x - ({a}))  "  #題型 express_str ax+bx+c
+            St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
+            Val = sp.expand(St)
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            NTE.append(TE)
+
+        elif Tx==1:
+            a =random.choice(sample_list1) 
+            p=random.choice([-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10])
+            q=random.choice([sp.Rational(1,2),sp.Rational(2,3),sp.Rational(3,4),2,3,4])
+            St=(p*x**q +a) * (p*x**q - a)    #題型 express_str ax+bx+c
+            Val=sp.expand(St)
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            NTE.append(TE)
+        elif Tx==2:            
+            a =random.choice(sample_list1) 
+            p=random.choice([1,2,3,4,5])
+            q=random.choice([sp.Rational(1,2),sp.Rational(2,3),2,3,4])
+            St=(p*x**q * y**p + z**p ) * (p * x**q * y**p - z**p)  
+            Val=sp.expand(St)
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            NTE.append(TE)
+        else:
+            a = random.choice(sample_list1)
+            p = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            q = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
+            b = p+q
+            c = p*q
+            express_str = f"(x +({a})) * ( x - ({a}))  "  # 題型 express_str ax+bx+c
+            St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
+            Val = sp.expand(St)
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            NTE.append(TE)
+    return NTE
 
 """
 PF203因式分解提公因式
