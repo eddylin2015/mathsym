@@ -60,7 +60,7 @@ def GetQList():
         "PF107.4.一元一次不等式組",    
         "PF108.4.整式的乘法練習","PF201.4.根式的運算",
         "PF202.3.整式的乘法公式平方差",
-        "PF2021.3.整式的乘法公式完全平方公式",
+        "PF2021.2.整式的乘法公式完全平方公式",
         "PF203.4.因式分解提公因式",
         "PF204.4.分式的乘除",
         "PF205.4.分式的加減",         
@@ -1329,48 +1329,39 @@ def Put_PF2021_Expr(TE):
 "整式的乘法完全平方公式"
 def Get_PF2021_Expr(QN,Tx=-1):
     x,y,z=sp.symbols("x y z")
-    sample_list0= list(range(-39,29))   # [-5,-4,-3,-2,-1,1,2,3,4,5]
-    sample_list1= list(range(-19,19))
-    sample_list1.remove(0)    # 非零數列
     NTE = []
     for Qid in range(0, QN):
+        p,q=np.random.choice(range(-16,16),2)
+        p=p if p!=0 else 1;q=q if q!=0 else 1
+        Tidx=Qid % 3
         if Tx==0:
-            a = random.choice(sample_list1)
-            p=random.choice([-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10])
-            q=random.choice([-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10])
-            express_str=f"({p}*x +({a})) * ({p}*x - ({a}))  "  #題型 express_str ax+bx+c
-            St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
-            Val = sp.expand(St)
-            TE = GetTE(Qid, sp.latex(St), Val, Tx)
-            NTE.append(TE)
-
+            if Tidx==0:
+                express_str=f"(x+({q})) ** 2" 
+                St=parse_expr(express_str, evaluate=False) 
+                Stt=sp.latex(St)
+            elif Tidx==1:
+                Stt=f"({p}+y)^2"
+                St=(p+y)**2
+            elif Tidx==2:
+                Stt=f"({p}-y)^2"
+                St=(p-y)**2
+            Val=sp.expand(St)
+            TE=GetTE(Qid,Stt,Val)        
+            NTE.append(TE)    
         elif Tx==1:
-            a =random.choice(sample_list1) 
-            p=random.choice([-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10])
-            q=random.choice([sp.Rational(1,2),sp.Rational(2,3),sp.Rational(3,4),2,3,4])
-            St=(p*x**q +a) * (p*x**q - a)    #題型 express_str ax+bx+c
+            if Tidx==0:
+                express_str=f"({p}*x+({q})) ** 2" 
+                St=parse_expr(express_str, evaluate=False) 
+                Stt=sp.latex(St)
+            elif Tidx==1:
+                St=(p+q*y)**2
+                Stt=sp.latex(St)
+            elif Tidx==2:
+                St=(p*x+q*y)**2
+                Stt=sp.latex(St)
             Val=sp.expand(St)
-            TE = GetTE(Qid, sp.latex(St), Val, Tx)
-            NTE.append(TE)
-        elif Tx==2:            
-            a =random.choice(sample_list1) 
-            p=random.choice([1,2,3,4,5])
-            q=random.choice([sp.Rational(1,2),sp.Rational(2,3),2,3,4])
-            St=(p*x**q * y**p + z**p ) * (p * x**q * y**p - z**p)  
-            Val=sp.expand(St)
-            TE = GetTE(Qid, sp.latex(St), Val, Tx)
-            NTE.append(TE)
-        else:
-            a = random.choice(sample_list1)
-            p = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-            q = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-            b = p+q
-            c = p*q
-            express_str = f"(x +({a})) * ( x - ({a}))  "  # 題型 express_str ax+bx+c
-            St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
-            Val = sp.expand(St)
-            TE = GetTE(Qid, sp.latex(St), Val, Tx)
-            NTE.append(TE)
+            TE=GetTE(Qid,Stt,Val)        
+            NTE.append(TE)    
     return NTE
 
 """
