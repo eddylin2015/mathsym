@@ -60,7 +60,7 @@ def GetQList():
         "PF107.4.一元一次不等式組",    
         "PF108.4.整式的乘法練習","PF201.4.根式的運算",
         "PF202.3.整式的乘法公式平方差",
-        "PF2021.2.整式的乘法公式完全平方公式",
+        "PF2021.4.整式的乘法公式完全平方公式",
         "PF203.4.因式分解提公因式",
         "PF204.4.分式的乘除",
         "PF205.4.分式的加減",         
@@ -1331,10 +1331,11 @@ def Get_PF2021_Expr(QN,Tx=-1):
     x,y,z=sp.symbols("x y z")
     NTE = []
     for Qid in range(0, QN):
-        p,q=np.random.choice(range(-16,16),2)
-        p=p if p!=0 else 1;q=q if q!=0 else 1
-        Tidx=Qid % 3
         if Tx==0:
+            p,q=np.random.choice(range(-16,16),2)
+            p=p if p!=0 else 1;q=q if q!=0 else 1
+
+            Tidx=Qid % 3
             if Tidx==0:
                 express_str=f"(x+({q})) ** 2" 
                 St=parse_expr(express_str, evaluate=False) 
@@ -1349,6 +1350,9 @@ def Get_PF2021_Expr(QN,Tx=-1):
             TE=GetTE(Qid,Stt,Val)        
             NTE.append(TE)    
         elif Tx==1:
+            p,q=np.random.choice(range(-16,16),2)
+            p=p if p!=0 else 1;q=q if q!=0 else 1
+            Tidx=Qid % 3
             if Tidx==0:
                 express_str=f"({p}*x+({q})) ** 2" 
                 St=parse_expr(express_str, evaluate=False) 
@@ -1362,6 +1366,51 @@ def Get_PF2021_Expr(QN,Tx=-1):
             Val=sp.expand(St)
             TE=GetTE(Qid,Stt,Val)        
             NTE.append(TE)    
+        elif Tx==2:
+            p,q=np.random.choice(range(-16,16),2)
+            #r=random.choice(["(1/3)","(2/3)","(1/4)",2,3,4,5])
+            #s=random.choice(["(1/3)","(2/3)","(1/4)",2,3,4,5])
+            r=random.choice([sp.S(1)/3,sp.S(2)/3,sp.S(1)/4,2,3,4,5])
+            s=random.choice([sp.S(1)/3,sp.S(2)/3,sp.S(1)/4,2,3,4,5])
+            p=p if p!=0 else 1;q=q if q!=0 else 1
+            Tidx=Qid % 2
+            
+            if Tidx==0:
+                expr1=p*x**s
+                expr2=r*y**r
+                #express_str=f"({p}*x**{s}+ ({r})*y**{r}) ** 2" 
+                #St=parse_expr(express_str, evaluate=False) 
+                St=(expr1+expr2)**2
+                Stt=sp.latex(St)
+            elif Tidx==1:
+                expr1=p* x**r
+                expr2=r* y**r
+                #express_str=f"({p}*x**{r} - ({r})*y**{r}) ** 2" 
+                #St=parse_expr(express_str, evaluate=False) 
+                St=(expr1-expr2)**2
+                Stt=sp.latex(St)            
+            Val=sp.expand(St)
+            TE=GetTE(Qid,Stt,Val)        
+            NTE.append(TE)    
+        elif Tx==3:
+            p,q=np.random.choice(range(-5,5),2)
+            r=random.choice(["(1/3)","(2/3)","(1/4)",2,3,4,5])
+            s=random.choice(["(1/3)","(2/3)","(1/4)",2,3,4,5])
+            p=p if p!=0 else 1;q=q if q!=0 else 1
+            p=p*sp.Rational(1,2)
+            q=q*sp.Rational(1,2)
+            exp1=p*x+q
+            exp2=p*x-q
+            exp3=(p*x)**2 - q**2
+            St=exp1 * exp2 * exp3
+            #express_str=f"(({p}*x)**2-({q})**2) *({p}*x**{q} +({q})) * ({p}*x**{q} - ({q}))" 
+            #St=parse_expr(express_str, evaluate=False) 
+            Stt=sp.latex(St)            
+            Val=sp.expand(St)
+            TE=GetTE(Qid,Stt,Val)        
+            NTE.append(TE)                
+
+
     return NTE
 
 """
