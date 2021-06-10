@@ -1422,7 +1422,7 @@ def Put_PF203_Expr(TE):
     x,y,z=sp.symbols('x,y,z')
     Val = TE["Val"]
     ans=TE["Ans"]
-    ans=lib.Text2St(ans)
+    ans=lib.Text2StV1(ans)
     if ans.strip()=="": ans="3.1415"
     subsV={x:7,y:11,z:17}
     try:
@@ -1434,24 +1434,51 @@ def Put_PF203_Expr(TE):
 
 
 def Get_PF203_Expr(QN,Tx=-1):
-    TxFlag=Tx==-1       
+    x,y,z=sp.symbols('x,y,z',real=True)
     NTE = []
     for Qid in range(0, QN):
-        a = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-        b = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-        c = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-        ab = a*b
-        ac = a*c
-        p = random.choice([0, 1, 2, 3, 4, 5])
-        q = random.choice([0, 1, 2, 3, 4, 5])
-        u = random.choice([0, 1, 2, 3, 4, 5])
-        v = random.choice([0, 1, 2, 3, 4, 5])
-        # 題型 express_str ax+bx+c
-        express_str = f"{ab} * x**{p} * y**{q}  + {ac} * x**{u}*y**{v}  "
-        St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
-        Val = sp.factor(St)
-        TE = GetTE(Qid, sp.latex(St), Val, Tx)
-        NTE.append(TE)
+        if Tx==0:
+            pass
+            a,b,c,d =  np.random.choice([-5,-4,-3,-2,-1,1,2,3,4,5],4)
+            ab=a*b;ac=a*c; ad=a*d
+            p=random.choice([2,3,4,5])
+            q=random.choice([1,2,3])
+            u=random.choice([1,2,3,4,5])
+            v=random.choice([1,2])
+            expr1=a*b*x**p
+            expr2=b*c*x**q
+            expr3=a*b*c*d*x**v
+            St=expr1+expr2+expr3
+            Val=sp.factor(St)
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            NTE.append(TE)
+        
+        elif Tx==1:
+            a,b,c,d = np.random.choice([-5,-4,-3,-2,-1,1,2,3,4,5],4)
+            ab=a*b; ac=a*c; ad=a*d
+            p,q,u,v = np.random.choice([1,2,3,4],4)
+            express_str=f"{ab} * x**{p} * y**{q}  + {ac} * x**{u}*y**{v}  "  #題型 express_str ax+bx+c
+            St=parse_expr(express_str, evaluate=False) #字串解釋為可運算式子 expression
+            Val=sp.factor(St)
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            NTE.append(TE)
+        elif Tx==2:
+            p,q=np.random.choice([-5,-4,-3,-2,-1,1,2,3,4,5],2)
+            b=p+q; c=p*q
+            express_str=f"x**2 + {b}*x +  {c} "  
+            St=parse_expr(express_str, evaluate=False)     #字串解釋為可運算式子 expression
+            Val=sp.factor(St)                              #因式分解,得出標準答案
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            NTE.append(TE)
+        elif Tx==3:
+            a,b,c,d=np.random.choice([-5,-4,-3,-2,-1,1,2,3,4,5],4)
+            expr1=a*c*x**2
+            expr2=(a*d+b*c)*x
+            expr3=b*d
+            St=expr1+expr2+expr3
+            Val=sp.factor(St)                              #因式分解,得出標準答案
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            NTE.append(TE)
     return NTE
 
 
@@ -1741,6 +1768,12 @@ def Put_PF292_Expr(TE):
     try:
         cnt=0
         for idx in ans_:
+            if idx.strip()=="無解":
+                if Val[0]=="無解": 
+                    TE["OK"]=1
+                else:
+                    TE["OK"]=0
+                return    
             for v_ in Val:
                 if int(idx)==v_ : cnt+=1
         if cnt>1:                   #比對答案:
@@ -1753,24 +1786,52 @@ def Put_PF292_Expr(TE):
 
 
 def Get_PF292_Expr(QN,Tx=-1):
-    TxFlag=Tx==-1       
-
-    sample_list1 = list(range(-39, 29))
-    sample_list1.remove(0)    # 非零數列
+    x=sp.Symbol('x',real=True)
     NTE = []
     for Qid in range(0, QN):
-        a = 1
-        p = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-        q = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-        b = p+q
-        c = p*q
-        express_str = f"{a}*x**2 + {b}*x +  {c} "
-        St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
-        St = sp.Eq(St, 0)  # f(x)=0
-        Val = sp.solve(St)  # 因式分解,得出標準答案
-        TE = GetTE(Qid, sp.latex(St), Val, Tx)
-        TE["Tip"] = ["x1", "x2"]
-        NTE.append(TE)
+        if Tx==0:
+            p,q=np.random.choice([-5,-4,-3,-2,-1,1,2,3,4,5],2)
+            b=p+q
+            c=p*q
+            express_str=f"x**2 + {b}*x +  {c} "  
+            St=parse_expr(express_str, evaluate=False)     #字串解釋為可運算式子 expression
+            St=sp.Eq(St,0)                              #f(x)=0
+            Val=sp.solve(St)                              #因式分解,得出標準答案
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            TE["Tip"] = ["x1", "x2"]
+            NTE.append(TE)
+        elif Tx==1:
+            a,b,c,d=np.random.choice([-5,-4,-3,-2,-1,1,2,3,4,5],4)
+            expr1=a*c*x**2
+            expr2=(a*d+b*c)*x
+            St=expr1+expr2+b*d
+            St=sp.Eq(St,0)                              #f(x)=0
+            Val=sp.solve(St)                              #因式分解,得出標準答案
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            TE["Tip"] = ["x1", "x2"]
+            NTE.append(TE)
+        elif Tx==2:
+            pass
+            a,b,c,d=random.choice([-5,-4,-3,-2,-1,1,2,3,4,5],4)
+            expr1=a*c*(x+a)**2
+            expr2=sp.Mul((a*d+b*c),(x+a),evaluate=False)
+            St=sp.Add(expr1,expr2,b*d,evaluate=False)
+            St=sp.Eq(St,0)                              #f(x)=0
+            Val=sp.solve(St)                              #因式分解,得出標準答案
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            TE["Tip"] = ["x1", "x2"]
+            NTE.append(TE)
+        elif Tx==3:
+            a,b,c=np.random.choice([-5,-4,-3,-2,-1,1,2,3,4,5],3)
+            expr1=a*x**2
+            expr2=b*x
+            St=expr1+expr2+c
+            St=sp.Eq(St,0)                    #f(x)=0
+            Val=sp.solve(St,x)         #因式分解,得出標準答案
+            if Val==[]: Val=["無解"]
+            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            TE["Tip"] = ["x1", "x2"]
+            NTE.append(TE)
     return NTE
 
 
@@ -1783,7 +1844,7 @@ def Put_PF293_Expr(TE):
     x=sp.Symbol('x')
     Val=TE["Val"]
     ans=TE["Ans"]
-    ans = lib.Text2St(ans)
+    ans = lib.Text2StV1(ans)
     try:
         if parse_expr(ans).subs({x:7})==Val.subs({x:7}):                   #比對答案:
             TE["OK"]=1

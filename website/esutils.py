@@ -59,30 +59,33 @@ def Text2St(ans):
     ans=re.sub(r"(\d)J[(]", r"\1*J(", ans)
     ans = ans.replace(r"J(", r"sqrt(")
     return ans
-    
-def Text2StV1(ans):
+
+def Text2StV1(ans,symbols_=['x','y','z']):
     if ans.strip() == "": return "-3.1415926"
     dictionary = {'X': 'x', 'Y':'y', 'Z': 'z', '^': '**'}
     transTable = ans.maketrans(dictionary)
     ans = ans.translate(transTable)
     ans = re.sub(r"[)][(]", r")*(", ans)
     ans = re.sub(r"[)][ ]*[(]", r")*(", ans)
-    ans = re.sub(r"[)][ ]*x", r")*x", ans)
-    ans = re.sub(r"[)][ ]*y", r")*y", ans)
-    ans = re.sub(r"[)][ ]*z", r")*z", ans)
-    ans = re.sub(r"(\d)[ ]*x", r"\1*x", ans)
-    ans = re.sub(r"(\d)[ ]*y", r"\1*y", ans)
-    ans = re.sub(r"(\d)[ ]*z", r"\1*z", ans)
-    ans = re.sub(r"x[ ]*y", r"x*y", ans)
-    ans = re.sub(r"y[ ]*z", r"y*z", ans)
-    ans = re.sub(r"x[ ]*z", r"x*z", ans)
-    ans = re.sub(r"x[ ]*[(]", r"x*(", ans)
-    ans = re.sub(r"y[ ]*[(]", r"y*(", ans)
-    ans = re.sub(r"z[ ]*[(]", r"z*(", ans)
+    for idx,s_ in enumerate(symbols_):
+        re_expr=r"(\d)[ ]*"+s_
+        rep_str=r"\1*"+s_
+        ans = re.sub(re_expr, rep_str, ans)
+        re_expr=r"[)][ ]*"+s_
+        rep_str=r")*"+s_
+        ans = re.sub(re_expr, rep_str, ans)
+        re_expr=s_+r"[ ]*[(]"
+        rep_str=s_+r"*("
+        ans = re.sub(re_expr, rep_str, ans)
+        if idx<(len(symbols_)-1):
+            re_expr=symbols_[idx]+r"[ ]*"+symbols_[idx+1]
+            rep_str=symbols_[idx]+r"*"+symbols_[idx+1]
+            ans = re.sub(re_expr, rep_str, ans)
     ans = re.sub(r"(\d)[ ]*[(]", r"\1*(", ans)
     ans = re.sub(r"(\d)[ ]*J[(]", r"\1*J(", ans)
     ans = ans.replace('J(','sqrt(',10)
     return ans
+
 
 ### input inequ_ans 
 
