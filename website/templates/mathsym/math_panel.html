@@ -13,19 +13,21 @@
         background-color: #F5F5F5;
         border-radius: 4px;
         border:1px;
+        z-index: 1000;
     }
     button.math_key{
         /*width: 50px; */
-        min-width: 50px;
+        min-width: 55px;
         height: 50px;
+        font-size: 24px;
     }
 </style>
 
 
 <div id="math_keyboard" class="math_keyboard">
     <a onclick="showkeyboard_page(this)"><small>0</small>⌨</a><input id="math_keyboard_input"  readonly style="width:200px;   background-color: #F5F5F5;">
-    <button onclick="SendStr(null,'backspace');"> 🔙 </button>
-    <button onclick="SendStr(null,'EnterKey');">⤶</button>
+    <button onclick="SendStr(null,'backspace');" style="width: 45px;height: 30px;"> 🔙 </button>
+    <button onclick="SendStr(null,'EnterKey');" style="width: 45px;height: 30px">⤶</button>
     <a onclick="showkeyboard()">[x]</a>
     <div id="math_keyboard_page0" style="display: block;">
     <button class='math_key'  onclick="SendStr(null,'x');">x</button>
@@ -68,7 +70,7 @@
     <button class='math_key'  onclick="SendStr(null,'ln(x)');">\(\ln X\)</button>
     <button class='math_key'  onclick="SendStr(null,'E');">E</button>
     <button class='math_key'  onclick="SendStr(null,'pi');">\(\pi\)</button>
-    <button class='math_key'  onclick="SendStr(null,'I');">I</button>
+    <button class='math_key' style="min-width: 30px;width:30px"  onclick="SendStr(null,'I');">I</button>
         
     <br>
     <button class='math_key'  onclick="SendStr(null,'J()');">\(\sqrt{a}\)</button>
@@ -92,8 +94,8 @@
     <button class='math_key'  onclick="SendStr(null,'7');"> 7 </button>
     <button class='math_key'  onclick="SendStr(null,'8');"> 8 </button>
     <button class='math_key'  onclick="SendStr(null,'9');"> 9 </button><br>
-    <button class='math_key'  onclick="SendStr(null,'x');">x</button>
-    <button class='math_key'  onclick="SendStr(null,'y');">y</button>
+    <button class='math_key'  onclick="SendStr(null,'a');">a</button>
+    <button class='math_key'  onclick="SendStr(null,'b');">b</button>
 
     <button class='math_key'  onclick="SendStr(null,'*');"> * </button>
     <button class='math_key'  onclick="SendStr(null,',');"> , </button>

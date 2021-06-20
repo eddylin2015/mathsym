@@ -1,171 +1,117 @@
-{% extends "base.html" %}
+{% extends "mathsym/base_form.html" %}
 {% block content %}
-<script>
-  /*Gobol Variables*/
-  var InputElmId = 0;
-  /*Public common function */
-  /*output display for Math_Val*/
-  function Val2OutStr(dVal)
-  {
-    if (dVal == "(-oo < x) & (x < oo)") return dVal;
-    for (l_ of ["& (-oo < x)", "(x < oo) &", "(-oo < x) &", "& (x < oo)", "(x > -oo ) &",]) 
-    {
-      dVal = dVal.replace(l_, "")
-    }
-    return dVal;
-
-  }
-  /*Output MM:SS format */
-  function MSTime(x = null) {
-    let m=0,s=0;
-    if (x) { m = Math.floor(x / 60); s = x % 60;  }
-    else { let d = new Date();  m = d.getMinutes(); s = d.getSeconds(); } 
-    return (m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
-  }
-
-  /*Spend_Time: now-x ,return MM:SS*/
-  function spend_Time(x) {
-    let a_ = x.split(":")
-    let m_ = Number(a_[0]); let s_ = Number(a_[1])
-    let ms_ = m_ * 60 + s_
-    let d = new Date();
-    let m = d.getMinutes(); let s = d.getSeconds();
-    if (m_ == m && (s < s_)) s = s_
-    let ms = m * 60 + s
-    let c = ms - ms_; if (c < 0) c = c + 3600
-    return MSTime(c);
-  }
-
-</script>
-{% include "math_panel.html" %}
-<script>
-  $(document).ready(function () {
-    /*prevent auto submit for any press*/
-    $('#formid').on('keyup keypress', function (e) {
-      var keyCode = e.keyCode || e.which;
-      if (keyCode === 13) { e.preventDefault(); return false; }
-    });
-  });
-  /* formsubit action*/
-  function formSubmit(cid) {
-    for (let i = 0; i < 10; i++) {
-      let elm = document.getElementsByName("" + i);
-      if (elm[0]) { elm[0].disabled = false; }
-    }
-    document.getElementById('formid').submit();
-  }
-  /* showCtx: show next Tx */
-  function showCtx(cid) {
-    InputElmId = Number(cid) + 1
-    var x = document.getElementById("content" + cid);
-    x.style.display = x.style.display=== "none"? "block": "none";
-    for (let i = 1; i < 10; i++) {
-      let t = document.getElementById("T" + (cid + i)); if (t !== null) t.value = MSTime()
-      x = document.getElementById("content" + (cid + i));
-      if (x) {
-        x.style.display = x.style.display=== "none"? "block": "none";
-        break;
-      } 
-    }
-  }
-
-  /*Check TE.Ans*/
-  function CheckTE(i) {
-    offkeyboard();    
-    var t = document.getElementById("T" + i);
-    t.value = spend_Time(t.value)
-    $.post(`?fmt=JSON&TEid=${i}`, $("#formid").serialize(), function (data) {
-      let d = JSON.parse(data)
-      let ok_or_not_span=d.OK == "1"?'<span class="glyphicon glyphicon-ok"></span>':'<span class="glyphicon glyphicon-remove"></span>';
-      let dVal = Val2OutStr(d.Val)
-      $(`#OK${i}`).html(ok_or_not_span);
-      $(`#Mark${i}`).html(d.Mark);
-      $(`#SpendMinute${i}`).html(d.Minute);
-      $(`#Ans${i}`).html(htmlEntities(d.Ans));
-      $(`#Standrad_And${i}`).html(dVal);
-      let rec_history = document.getElementById("rec_history")
-      let row = rec_history.insertRow();  row.style = "font-size:12px;"
-      row.insertCell().innerHTML = d.OK
-      row.insertCell().innerHTML = d.Mark
-      row.insertCell().innerHTML = d.Minute
-      row.insertCell().innerHTML = htmlEntities( d.Ans)
-      row.insertCell().innerHTML = dVal
-    });
-    document.getElementById("btnNext" + i).style.display = "block";
-    document.getElementById("btnSubm" + i).style.display = "none";
-    for (let in_ of document.getElementsByName("" + i)) { in_.disabled = true; }
-  }
-</script>
-
-<div style="margin-left: auto;margin-right: auto;width: 50%;min-width: 350px;">
+<div style="position: relative;width:520px;height:400px;background-color:#fde9d9;z-index: 900;">
+  <div id="content_note_panel" style="width:520px;height:400px;background-color:#ffffd8">
+    <span class="cbutton" onclick="showCtx(-1);" style="position:absolute;left:300px;">下一題</span>
+    {% if book==None %}
+    <div style="background-color:#ffffd8">步驟：</div>
+    <ul>
+      <li>1.设置：(1) 選擇題型。</li>
+      <li>2.做题：(1)【下一題】，(2) 做題并開始計時，(3) 填写答案。</li>
+      <li>3.【確定】 --- 評判答案幷打分。</li>
+      <li>4.【儲存答案】 --- 确認評分之后,儲存分數 。</li>
+    </ul>
+    {% else %}
+    {{ book.qnote|safe }}
+    {{ book.snote|safe }}
+    {% endif %}
+  </div>
   <form method="POST" id="formid">
-    <P>
-      <input name="SID" type="hidden" value="{{sid}}">
-    </P>
+    <input name="SID" type="hidden" value="{{sid}}">
     {% for TE in NTE %}
     {% if loop.previtem is defined %}
-    {% set display_style = "display:none" %}
+    {% set display_style = "display:none;z-index: 999;" %}
     {% else %}
-    {% set display_style = "display:block" %}
+    {% set display_style = "display:none;z-index: 999;" %}
     {% endif %}
     <div id="content{{TE.Id}}" style="{{display_style}}">
-      <small>第{{TE.Id+1}}題:</small>
+      <span style="position:absolute;left:10px;top:8px">命題</span>
+      <input class="" value="" type="" autocomplete="off"
+        style="width:450px;height:160px;position:absolute;left:45px;top:8px"></input>
       {% if TE.St is iterable and TE.St is not string %}
+      <div id="" style="width:455x;height:30px;position:absolute;left:48px;top:18px;font-size: 15px;">
+        {% set tm_style = "display:block" %}
+        {% for St1 in TE.St %}
+        {% if St1.strip().startswith("|") %}
+        {% set tm_style = "display:none" %}
+        {% endif %}
+        {% if TE.PlainText==1 %}
+        <div id="TM{{TE.Id}}_{{loop.index}}" style="{{tm_style}}"> {{St1|safe}}</div>
+        {% else %}
+        <div id="TM{{TE.Id}}_{{loop.index}}" style="{{tm_style}}"> \({{St1|safe}}\)</div>
+        {% endif %}
 
-      {% for St1 in TE.St %}
-      <div> \({{St1|safe}}\)</div>
-      {% endfor %}
+        {% if not loop.nextitem is defined %}
 
+        {% if St1.strip().startswith("|") %}
+        <span onclick="showTM({{TE.Id}})"
+          style="width:60px;position:absolute;left:420px;top:140px;font-size: 10px;">[續頁]</span>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+
+      </div>
       {% else %}
-      <div> \( \Large {{TE.St|safe}}\)</div>
-      {% endif %}
-      <div style="padding-top: 10px;">{{TE.Tip}}</div>
-      {% if TE.Val is iterable and TE.Val is not string %}
-      {% for Val1 in TE.Val %}
-      <div>作答:<input name="{{TE.Id}}" autocomplete="off"></div>
-      <a href=# onclick="SendStr('{{TE.Id}}','abc');">abc</a>
-      {% endfor %}
-      {% else %}
-      <div>作答:<input type="text" value="" name="{{TE.Id}}" autocomplete="off" onclick="InputEdit(this);"><a onclick="showkeyboard()">⌨</a> </div>
+      <div style="width:440px;height:100px;position:absolute;left:48px;top:18px"> \( \Large {{TE.St|safe}}\)</div>
       {% endif %}
 
-      <input style="display:none" name="{{TE.Id+1000}}" id="T{{TE.Id}}" value="{{TE.Minute}}">
-      {% if TE.PlotImg %}
-      <img src="/trythisapps/img/{{TE.PlotImg}}">
-      {% else %}
+      <p class="Label" style="position:absolute;left:10px;top:180px">答題<br><a onclick="showkeyboard()">⌨</a> </p>
 
-      {% endif %}
+      <div
+        style="display: grid;grid-template-columns: 150px 150px;margin:0;width:392px;height:90px;position:absolute;left:45px;top:180px">
 
-      <div style="padding-top: 20px;">
-        <a id="btnSubm{{TE.Id}}" class="btn btn-primary" onclick="CheckTE({{TE.Id}})">提交</a>
+        {% if TE.Val is iterable and TE.Val is not string %}
+        <div style="width: 150px;">
+          {% for Val1 in TE.Val %}
+
+          <input name="{{TE.Id}}" autocomplete="off" style="width:150px;height:20px;font-size: 16px;"
+            placeholder="{{TE.Tip[loop.index-1]}}">
+          {% if loop.index==3 %}
+        </div>
+        <div style="width: 150px;">
+          {% endif %}
+          {% endfor %}
+        </div>
+
+        {% else %}
+        <input name="{{TE.Id}}" autocomplete="off" onclick="InputEdit(this);"
+          style="width:385px;height:35px;font-size: 16px;" placeholder="答題">
+        {% endif %}
       </div>
 
-      <table class="table table-condensed">
-        <tr>
-          <td><small>對錯</small></td>
-          <td><small>得分</small></td>
-          <td><small>耗時</small></td>
-          <td><small>作答</small></td>
-          <td><small>標準答案</small></td>
-        </tr>
-        <tr style="font-size:12px">
-          <td><span id="OK{{TE.Id}}"></span></td>
-          <td><span id="Mark{{TE.Id}}"></span></td>
-          <td><span id="SpendMinute{{TE.Id}}"></span></td>
-          <td><span id="Ans{{TE.Id}}"></span></td>
-          <td>
-            <div id="Standrad_And{{TE.Id}}"></div>
-          </td>
-        </tr>
-      </table>
+
+      <p class="Label" style="position:absolute;left:10px;top:275px">答案</p>
+
+      <div class="" value="" type="" autocomplete="off"
+        style="width:385px;height:30px;position:absolute;left:45px;top:275px">
+        <div id="Standrad_And{{TE.Id}}"></div>
+      </div>
+
+      <span id="btnSubm{{TE.Id}}" class="cbutton" onclick="CheckTE({{TE.Id}})"
+        style="position:absolute;left:300px;top:220px;">确定</span>
 
       {% if loop.nextitem is defined %}
-      <div id="btnNext{{TE.Id}}" style="display:none"><a class="btn btn-primary" href=#
-          onclick="showCtx({{TE.Id}})">下一題</a></div>
+      <span id="btnNext{{TE.Id}}" class="cbutton" onclick="showCtx({{TE.Id}})"
+        style="display:none;position:absolute;left:300px;top:220px;">下一題</span>
       {% else %}
-      <div id="btnNext{{TE.Id}}" style="display:none"><a class="btn btn-warning" href=#
-          onclick="formSubmit({{TE.Id}})">預覽小結</a></div>
+      <span id="btnNext{{TE.Id}}" class="cbutton" onclick="formSubmit({{TE.Id}})"
+        style="display:none;position:absolute;left:300px;top:220px;">儲存答案</span>
+      <!--span id="btnNext{{TE.Id}}" class="cbutton" onclick="show_AnsMsgbox()" style="display:none;position:absolute;left:360px;top:25px;">儲存總表</span-->
+
       {% endif %}
+      <input style="display:none" name="{{TE.Id+1000}}" id="T{{TE.Id}}" value="{{TE.Minute}}">
+
+      {% if TE.PlotImg %}
+      <div id="Plot{{TE.Id}}"  style="position:absolute;left:520px;top:200px;z-index: 999;">
+        {% if TE.PlotImg.startswith("//") %}
+        <img src="{{TE.PlotImg}}" style="height:200px;max-width: 260px">
+        {% else %}
+        <img src="{{remi_baseurl}}/img/{{TE.PlotImg}}" style="height:200px">
+        {% endif %}
+      </div>
+      {% else %}
+      {% endif %}
+      <!-- left:345 -->
 
     </div>
     {% else %}
@@ -173,16 +119,8 @@
     {% endfor %}
 
   </form>
- 
-  <div>紀錄:</div>
-  <table class="table table-condensed" id="rec_history">
-    <tr>
-      <td><small>對錯</small></td>
-      <td><small>得分</small></td>
-      <td><small>耗時</small></td>
-      <td><small>作答</small></td>
-      <td><small>標準答案</small></td>
-    </tr>
-  </table>    
+
 </div>
+
+
 {% endblock %}
