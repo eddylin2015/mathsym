@@ -2366,7 +2366,7 @@ def Get_PF401_Expr(QN,Tx=-1):
             St=fx
             Val=solve_univariate_inequality(fx,x)      #solve_univariate_inequality 解不等式   
         
-        TE=GetTE(i,sp.latex(St),Val)        
+        TE=GetTE(i,sp.latex(St),Val,Tx)        
         NTE.append(TE)    
     return NTE
 
