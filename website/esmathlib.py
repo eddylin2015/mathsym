@@ -1183,67 +1183,53 @@ def Put_PF201_Expr(TE):
         pass
 
 def Get_PF201_Expr(QN,Tx=-1):
-    TxFlag=Tx==-1       
-    sample_list0= list(range(-39,29))   # [-5,-4,-3,-2,-1,1,2,3,4,5]
-    sample_list1= list(range(8,20))    #sample_list1.remove(0)    # 非零數列
-    b_li=list(range(1,18))
-    b_li.remove(4)
-    b_li.remove(9)
-    b_li.remove(16)
-    
     NTE=[]
     for Qid in range(0,QN):
-        if TxFlag:Tx=Qid%4
-        if Tx==1:
-            a=random.choice(range(2,18))
-            b=random.choice(b_li)
-            c=random.choice(range(2,15))
-            d=random.choice(range(2,15))
-            m=c*c*b
-            n=d*d*b
-            St=r"\sqrt{%s} + \sqrt{%s} "% (m,n)
-            Val=sp.sqrt(m)+sp.sqrt(n)
-        elif Tx==2:
-            a=random.choice(range(1,11))
-            b=random.choice(b_li)
+        if Tx==0:  #題型一
+            a,b=np.random.choice(range(2,80),2)
+            St=b*sp.sqrt(2*a)
+            Stt=r" %s\sqrt{%s} "%(b,2*a)
+            Val=sp.simplify(St)
+            TE = GetTE(Qid, Stt, Val, Tx)
+            NTE.append(TE)
+        if Tx==1: #分母有理化二
+            a,b=np.random.choice(range(2,60),2)
             c=random.choice(range(1,10))
-            d=random.choice(range(1,10))
-            e=random.choice([-1,-1,1])
-            m=c*c*b
-            n=d*d*b
-            if e==-1:
-                St=r"\sqrt{%s} \times {(\sqrt{%s})}^{%s} "% (m,n,e)
-            else:
-                St=r"\sqrt{%s} \times {\sqrt{%s}} "% (m,n)
-            Val=sp.sqrt(m)*sp.sqrt(n)**e
-        elif Tx==3:
-            a=random.choice(range(1,11))
-            c=random.choice(range(1,10))
-            b=random.choice(b_li)
-            d=random.choice(b_li)
-            l=random.choice(range(1,10))
-            e=random.choice([-1,1])
-            m=a*a*b
-            n=c*c*d
-            if m==n: e=1
-            if e==-1:
-                St=r"\frac{\sqrt{%s}}{  \sqrt{%s} - (\sqrt{%s})} "% (l,m,n)
-            else:
-                St=r"\frac{\sqrt{%s}}{  \sqrt{%s} + (\sqrt{%s})} "% (l,m,n)
-            Val=sp.sqrt(l) /( sp.sqrt(m) +e* sp.sqrt(n))
+            St=r"\frac{%s}{ %s \sqrt{%s} }"%(b,c,a)
+            Val=b/(c*sp.sqrt(a))
+            Val=sp.simplify(Val)            
+            TE = GetTE(Qid, St, Val, Tx)
+            NTE.append(TE)
+        elif Tx==2: #分母有理化三
+            a=random.choice(range(2,50))
+            b,c=np.random.choice(range(2,5),2)
+            c=random.choice(range(2,5))
+            St=r" \frac{%s}{%s + \sqrt{%s}} "%(b,c,a)
+            Val=b/( sp.sqrt(a)+c)
             Val=sp.simplify(Val)
+            TE = GetTE(Qid, St, Val, Tx)
+            NTE.append(TE)
+        elif Tx==3:  #題型四
+            Tid=random.choice(range(0,3))
+            a=random.choice([2,4,8,12,16,18,20,24,28,32,36,3,9,27,48,75,108,147])
+            b,c,d=np.random.choice([2,4,8,12,16,18,20,24,28,32,36,3,9,27,48,75,108,147],3)
+            st1=sp.sqrt(a)
+            st2=sp.sqrt(b)
+            st3=sp.sqrt(c)
+            if Tid==0:
+                St=st1+st2-st3
+                Stt=r" \sqrt{%s} + \sqrt{%s} - \sqrt{%s} "%(a,b,c)
+            elif Tid==1:
+                St=(st1+st2)*(st1-st2)
+                Stt=r" (\sqrt{%s} +\sqrt{%s})(\sqrt{%s}-\sqrt{%s}) "%(a,b,a,b)
+            elif Tid==2:
+                St=(st1+st2)**2
+                Stt=r" (\sqrt{%s} + \sqrt{%s})^2 "%(a,b)        
+            Val=sp.simplify(St)
+            TE = GetTE(Qid, Stt, Val, Tx)
+            NTE.append(TE)
 
-            
-        else:
-            a=random.choice(range(2,18))
-            b=random.choice(b_li)
-            m=a*a*b
-            St=r"\sqrt{%s}"% m
-            Val=sp.sqrt(m)    
-        TE = GetTE(Qid, St, Val, Tx)
-        NTE.append(TE)
     return NTE
-
 
 """
 PF202整式的乘法公式平方差
