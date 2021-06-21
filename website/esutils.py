@@ -103,7 +103,7 @@ def Text2Inequ(ans):
     
     ans = re.sub(r"[<][ ]*x[ ]*[<]", r"<x & x<", ans)
     ans = re.sub(r"[>][ ]*x[ ]*[>]", r">x & x>", ans)
-    if ans.strip() == "": return "(-oo < x) & (x < oo)"
+    if ans.strip() == "R" or  ans.strip() == "r" : return "(-oo < x) & (x < oo)"
     if ans.strip() == "": return "-3.1415926"
     
     ans = re.sub(r"X", r"x", ans)
