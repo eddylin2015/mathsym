@@ -102,7 +102,7 @@
       <input style="display:none" name="{{TE.Id+1000}}" id="T{{TE.Id}}" value="{{TE.Minute}}">
 
       {% if TE.PlotImg %}
-      <div id="Plot{{TE.Id}}"  style="position:absolute;left:520px;top:200px;z-index: 999;">
+      <div style="position:absolute;left:520px;top:200px;z-index: 999;">
         {% if TE.PlotImg.startswith("//") %}
         <img src="{{TE.PlotImg}}" style="height:200px;max-width: 260px">
         {% else %}

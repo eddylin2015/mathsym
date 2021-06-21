@@ -1664,10 +1664,11 @@ PF207一次函數圖像的性質
 
 def Put_PF207_Expr(TE):
     Val=TE["Val"]
-    ans=TE["Ans"]
-    ans=lib.Text2St(ans)
+    ans=TE["Ans"].lower().strip()
+    #ans=lib.Text2St(ans)
     try:
-        if parse_expr(ans)==Val:                   #比對答案:
+        #if parse_expr(ans)==Val:                   #比對答案:
+        if ans==Val:                   #比對答案:
             TE["OK"]=1
         else:                                      #不則
             TE["OK"]=0
@@ -1687,10 +1688,10 @@ def Get_PF207_Expr(QN,Tx=-1):
         k = random.choice(sample_list1)
         b = random.choice(sample_list0)
         St = sp.Eq(y, k*x+b)  
-        Val = 1
+        Val = "a"
         if k < 0:
-            Val = -1
-        TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            Val = "b"
+        TE = GetTE(Qid, ["根據方程式及右圖, 判斷函數圖像的性質:",sp.latex(St),"選擇題:", "a. y隨x的增大而增大。","b. y隨x的增大而減少。"], Val, Tx)
         
         try:
             TE["PlotImg"]="img"+GetKey()+str(Qid)+".png"

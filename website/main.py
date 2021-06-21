@@ -110,7 +110,7 @@ def create_app(config):
         SID = lib.GetKey()
         NTE_blob = pickle.dumps(NTE)
         NTE_Storage[SID] = NTE_blob
-        return render_template("form.html", title=QID, book=book, mtitle=Title_[2], NTE=NTE, sid=SID,Tx=Tx,cno=cno,name=name)      
+        return render_template("form.html", title=QID, book=book, mtitle=Title_[2], NTE=NTE, sid=SID,Tx=Tx,cno=cno,name=name)      #_remi
 
     @app.route('/trythisapps/img/<filename>')
     @login_required_auth

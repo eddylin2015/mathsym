@@ -1,12 +1,11 @@
-{% extends "mathsym/base_remi.html" %}
+{% extends "base_remi.html" %}
 {% block content %}
 
 <div class="HBox"
-  style="width:780px;height:500px;position:absolute;left:10px;top:130px;background-color:#fde9d9;display:flex;flex-direction:row;justify-content:space-around;align-items:center">
+  style="width:780px;height:400px;position:absolute;left:10px;top:130px;background-color:#fde9d9;display:flex;flex-direction:row;justify-content:space-around;align-items:center">
   <div class="Container" style="width:500px;height:380px;position:static;top:130px;background-color:#fde9d9;order:-1">
     <div id="1962765948912"
       style="width:492px;height:384px;position:absolute;left:10px;top:10px;background-color:#ffffd8">
-      {% if book==None %}
       <h6>步驟：</h6>
       <ul>
         <li>1.设置：(1) 選擇題型。</li>
@@ -18,16 +17,11 @@
       <ul>
         <li>1.可以用紙筆計算，也可以用計算器輔助計算。</li>
         <li>2.单行分數写法如右，例如：\(\frac{𝑎}{𝑏} \) 写成 a / b ----- 分数线用斜横。</li>
-        <li>3.单行指数写法如右，例如： \(x^2+1\) 写成 x**2+1 或 x^2=1---- 用指数符"**"或"^"。</li>
+        <li>3.单行指数写法如右，例如： \(x^2+1\) 写成 x**2+1 ---- 用指数符"**"。</li>
         <li>4.单行根式写法如右，例如：\(\sqrt[2]{𝑥+1}\) 写成 J(x+1) ---- 大写 J+ 括弧。</li>
-        <li>5.单行對数写法如右，例如：\(\log_{2}{8}\) 写成 log(8,2) 或者log(8)/log(2)。</li>
-        <li>6.每題10分。內設基準時間，提前完成加分，超時完成扣分。</li>
-        <li>7.一次测验必须做滿10題，然後电脑自動填寫報表。</li>
+        <li>5.每題10分。內設基準時間，提前完成加分，超時完成扣分。</li>
+        <li>6.一次测验必须做滿10題，然後电脑自動填寫報表。</li>
       </ul>
-      {% else %}
-      {{ book.qnote|safe }}
-      {{ book.snote|safe }}
-      {% endif %}
     </div>
 
 
