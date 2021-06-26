@@ -1,8 +1,11 @@
 # 電腦與初級數學教學
 
-電腦與初級數學教學應用多樣, 例如 geogebra、 几何畫板、 三角函數建3D模型等, 在篇文章主要介紹Python在初級代數表現。
+電腦與初級數學教學應用,在中學教學中很多樣, 例如 geogebra、 几何畫板、 三角函數建3D模型等, 引入課堂。在篇文章主要介紹Python在初級代di數表現, Python在科學運算中的優異性, 學科直觀地表逹, 不須電腦技能, 零編程也可以學識Pyhton科學運算。
 
-### Python 3.9.x,以及第三方組件
+
+## 預備工作:  
+預備可請資訊老師代為安裝1,2。可以跳過預備工作這一節。
+### 1. Python 3.9.x,以及第三方組件
 
 - https://www.python.org/
 
@@ -11,17 +14,16 @@
 - 使用命令行指令 Win+R cmd
 
 ```cmd
-c:\Users\pi>pip install numpy sympy jupyterlab
+c:\Users\pi>pip install numpy sympy scipy matplotlib jupyterlab
 ```
-
-### 工作環境, 命令行執行jupyter notebook
+### 2.工作環境, 命令行執行jupyter notebook
 ```cmd
 c:\Users\pi>jupyter notebook
 ```
 ![](https://www.dev2qa.com/wp-content/uploads/2019/03/create-new-jupyter-notebook-execute-python-file.png)
 
 
-### Latex 數學印刷體
+### 3.Latex 數學印刷體(MathJax網頁版)
 
 分數 a/b      
 ```
@@ -50,12 +52,35 @@ a^{b}
 ![](https://latex.codecogs.com/svg.latex?\Large&space;\sqrt{a})    
 ![](https://latex.codecogs.com/svg.latex?\Large&space;\sqrt[3]{x+y})    
 
-一元二次公式   
+一元二次求根公式   
 ```
 \Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  
 ```
 ![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a})    
 
+### 4. numpy , sympy, scipy, matplotlib
+python 科學計算組件,主要使用sympy 代數符號運算, 及matplotlib的繪圖功能。   
+
+### 5 演示一下sympy功能
+```python
+from sympy import *           #註解: 使用組件sympy 
+init_printing('mathjax')      #註解: 顯示數學印刷體
+x = Symbol('x')               #註解: x ,y 是代數符號
+y = Symbol('y')
+#註解: Rational有理數 3/2 ,  exp 是 常數E的虛數I乘x次方
+Rational(3 ,2) * pi + exp(I*x) / (x**2 + y)  
+```
+![](https://camo.qiitausercontent.com/eb0b2f3ace3542ef943fa97c78283cf02f6ded49/68747470733a2f2f71696974612d696d6167652d73746f72652e73332e616d617a6f6e6177732e636f6d2f302f3134303037352f31303232313863322d653462322d373565652d386439392d3738623862323766386535302e706e67)
+
+## 初級數學知識點
+
+### 1.有理數運算
+
+### 2.方程式
+
+### 3.不等式
+
+### 4.等比等差
 
 
 ### 題型練習
