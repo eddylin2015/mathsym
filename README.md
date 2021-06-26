@@ -23,9 +23,16 @@ c:\Users\pi>jupyter notebook
 
 ### Latex 數學印刷體
 
-分數 a/b      $\frac{a}{b}$  
-指數 a^b      $a^{b}$  
-對數 log(a,b) $\log_{b}{a}$
+分數 a/b      \frac{a}{b}   
+指數 a^b      a^{b}    
+對數 log(a,b) \log_{b}{a}
+開方 sqrt(a)  \sqrt{a}   
+              \sqrt[3]{x+y} 
+```
+\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  
+```
+![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a})
+
 
 
 ### 題型練習
