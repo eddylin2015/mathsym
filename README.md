@@ -1,20 +1,34 @@
-# 電腦數學符號運算簡介Symbolic Manipulation in Python (numpy,sympy)
+# 電腦與初級數學教學
 
-### 介紹電腦數學科學 
-
-學習Python, 幫助數學學成, 培養數學素養.
-
-[lesson1_sympy簡介](meeting/lesson01_ex0.ipynb)   
+電腦與初級數學教學應用多樣, 例如 geogebra、 几何畫板、 三角函數建3D模型等, 在篇文章主要介紹Python在初級代數表現。
 
 ### Python 3.9.x,以及第三方組件
-- pip install numpy
-- pip install sympy
-- pip install jupyterlab
-- [lib.py](lib.py) 自定義函數
+
+- https://www.python.org/
+
+下載安裝Python 3.9.x
+
+- 使用命令行指令 Win+R cmd
+
+```cmd
+pip install numpy sympy jupyterlab
+```
+
+### 工作環境, 命令行執行jupyter notebook
+
+![](https://www.dev2qa.com/wp-content/uploads/2019/03/create-new-jupyter-notebook-execute-python-file.png)
+
+### Latex 數印刷體
+
+分數 a/b      $\frac{a}{b}$  
+指數 a^b      $a^{b}$  
+對數 log(a,b) $\log_{b}{a}$
+
 
 ### 題型練習
 
 幫助同學,掌握不同類型題目:
+
 
 - [PF101有理數運算.ipynb](PF101%E6%9C%89%E7%90%86%E6%95%B8%E9%81%8B%E7%AE%97.ipynb)
 - [PF102整數指數冪運算.ipynb](PF102%E6%95%B4%E6%95%B8%E6%8C%87%E6%95%B8%E5%86%AA%E9%81%8B%E7%AE%97.ipynb)
@@ -52,5 +66,8 @@
 - [PF604.一元二次方程190305.ipynb](PF604.%E4%B8%80%E5%85%83%E4%BA%8C%E6%AC%A1%E6%96%B9%E7%A8%8B190305.ipynb)
 - [PF605.三角函数同角变换190410.ipynb](PF605.%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0%E5%90%8C%E8%A7%92%E5%8F%98%E6%8D%A2190410.ipynb)
 
-
+### 參考
+- 自定義函數及演示    
+[lib.py](lib.py)   
+[lesson1_sympy簡介](meeting/lesson01_ex0.ipynb)    
 
