@@ -21,7 +21,7 @@ c:\Users\pi>jupyter notebook
 ![](https://www.dev2qa.com/wp-content/uploads/2019/03/create-new-jupyter-notebook-execute-python-file.png)
 
 
-### Latex 數印刷體
+### Latex 數學印刷體
 
 分數 a/b      $\frac{a}{b}$  
 指數 a^b      $a^{b}$  
