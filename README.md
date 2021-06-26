@@ -23,11 +23,29 @@ c:\Users\pi>jupyter notebook
 
 ### Latex 數學印刷體
 
-分數 a/b      \frac{a}{b}   
-指數 a^b      a^{b}    
-對數 log(a,b) \log_{b}{a}
-開方 sqrt(a)  \sqrt{a}   
-              \sqrt[3]{x+y} 
+分數 a/b      
+```
+\frac{a}{b}   
+```
+指數 a^b      
+```
+a^{b}    
+```
+![](https://latex.codecogs.com/svg.latex?\Large&space;a^{b})
+對數 log(a,b) 
+```
+\log_{b}{a}
+```
+![](https://latex.codecogs.com/svg.latex?\Large&space;\log_{b}{a})
+開方 sqrt(a)  
+```
+\sqrt{a}   
+\sqrt[3]{x+y} 
+```
+![](https://latex.codecogs.com/svg.latex?\Large&space;\sqrt{a})
+![](https://latex.codecogs.com/svg.latex?\Large&space;\sqrt[3]{x+y})
+
+一元二次公式   
 ```
 \Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  
 ```
