@@ -11,12 +11,15 @@
 - 使用命令行指令 Win+R cmd
 
 ```cmd
-pip install numpy sympy jupyterlab
+c:\Users\pi>pip install numpy sympy jupyterlab
 ```
 
 ### 工作環境, 命令行執行jupyter notebook
-
+```cmd
+c:\Users\pi>jupyter notebook
+```
 ![](https://www.dev2qa.com/wp-content/uploads/2019/03/create-new-jupyter-notebook-execute-python-file.png)
+
 
 ### Latex 數印刷體
 
