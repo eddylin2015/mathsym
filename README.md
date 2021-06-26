@@ -4,7 +4,7 @@
 
 
 ## 預備工作:  
-預備可請資訊老師代為安裝1,2。可以跳過預備工作這一節。
+預備可請資訊老師代為安裝1,2。可以跳至第5點,簡單複製代碼,試用一下。
 ### 1. Python 3.9.x,以及第三方組件
 
 - https://www.python.org/
@@ -61,7 +61,7 @@ a^{b}
 ### 4. numpy , sympy, scipy, matplotlib
 python 科學計算組件,主要使用sympy 代數符號運算, 及matplotlib的繪圖功能。   
 
-### 5 演示一下sympy功能
+### 5. 演示一下sympy功能
 ```python
 from sympy import *           #註解: 使用組件sympy 
 init_printing('mathjax')      #註解: 顯示數學印刷體
