@@ -1,6 +1,6 @@
 # 電腦與初級數學教學
 
-電腦與初級數學教學應用,在中學教學中很多樣, 例如 geogebra、 几何畫板、 三角函數建3D模型等, 引入課堂。在篇文章主要介紹Python在初級代di數表現, Python在科學運算中的優異性, 學科直觀地表逹, 不須電腦技能, 零編程也可以學識Pyhton科學運算。
+電腦與初級數學教學應用,在中學教學中很多樣, 例如 geogebra、 几何畫板、 三角函數建3D模型等, 引入課堂。在篇文章主要介紹Python在初級代數中表現, Python在科學運算中的優異性, 算式直觀地表逹, 零編程也可以學識Pyhton科學運算。預備工作可請資訊老師代勞, 以及展示初級數學知識點電腦運算方法.
 
 
 ## 預備工作:  
@@ -56,23 +56,38 @@ a^{b}
 ```
 \Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  
 ```
+Jupyter Notebook 實作一下數學印刷體
+```python
+from IPython.display import display, Math, Latex
+display(Math(r' \Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  '))
+```
+
 ![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a})    
 
 ### 4. numpy , sympy, scipy, matplotlib
 python 科學計算組件,主要使用sympy 代數符號運算, 及matplotlib的繪圖功能。   
 
-### 5. 演示一下sympy功能
+### 5. sympy演示複雜式子
 ```python
 from sympy import *           #註解: 使用組件sympy 
-init_printing('mathjax')      #註解: 顯示數學印刷體
+init_printing(use_latex='mathjax')      #註解: 顯示數學印刷體
 x = Symbol('x')               #註解: x ,y 是代數符號
 y = Symbol('y')
-#註解: Rational有理數 3/2 ,  exp 是 常數E的虛數I乘x次方
+#註解: Rational有理數 3/2,  pi常數 ,  exp 是常數E的虛數I乘x次方, x**2即x平方.
 Rational(3 ,2) * pi + exp(I*x) / (x**2 + y)  
 ```
 ![](https://camo.qiitausercontent.com/eb0b2f3ace3542ef943fa97c78283cf02f6ded49/68747470733a2f2f71696974612d696d6167652d73746f72652e73332e616d617a6f6e6177732e636f6d2f302f3134303037352f31303232313863322d653462322d373565652d386439392d3738623862323766386535302e706e67)
 
 ## 初級數學知識點
+### 1.代數符號
+代數中未知數x,y,z定義, k,m,n 常數定義, f,g,h函數定義。
+```python
+from sympy import *
+x, y, z, t = symbols('x y z t',real=True) #為實數,解方程出現無解, 不會出現虛數解.
+k, m, n = symbols('k m n', integer=True)
+f, g, h = symbols('f g h', cls=Function)
+init_printing()
+```
 
 ### 1.有理數運算
 
