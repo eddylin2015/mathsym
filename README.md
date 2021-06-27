@@ -63,7 +63,7 @@ display(Math(r' \frac{a}{b} '))
 display(Math(r' a^{b}     '))
 display(Math(r' \log_{b}{a} '))
 display(Math(r' \sqrt[]{x+y}  '))
-display(Math(r' \Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  '))
+display(Math(r' x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  '))
 ```
 ![](img/latex_sample.png)
 
@@ -101,12 +101,40 @@ FractionNumber2=S('-4/7')       #註解: 分數表達2
 FractionNumber1 + FractionNumber2
 ```
 ![](https://latex.codecogs.com/svg.latex?\Large&space;\frac{-37}{28})   
+### 2.整式
+```python
+from sympy import *
+A,B,C=symbols('A,B,C',integer=True)
+f = (A-B)*C + B**2 + (-B-A)*C + B**2
+```
+2*B**2 + C*(-A - B) + C*(A - B)    
+```python
+simplify(f)   #註解:約簡式子
+```
+2𝐵(𝐵−𝐶)   
+```python
+ratsimp(f)   #註解:約簡,給出二項式
+```
+2𝐵2−2𝐵𝐶   
+```python
+f.subs({A: 10, B: 20, C: 30})   #註解: A,B,C代入數值
+```
+-400   
+![](img/rational_sample.png)   
+### 3.方程式
+```python
+```
 
-### 2.方程式
 
-### 3.不等式
+### 4.不等式
+```python
+```
 
-### 4.等比等差
+
+### 5.等比等差
+```python
+```
+
 
 ## 總結
 Sympy在符號運算表現優異，初級數學以至引申至大專數學，都可以應用輔助學習及教學。數學老師在學習Sympy比資訊同事學習更快，理解更好，有能力自行設計出知識點練習題型。個人工作屬資訊專職，從Sympy技術層面，本章作為個人工作總結，數學老師回饋參考資料難以查找，提供中文版本參考。后續，不斷完善豊富內容，涵蓋中學階段數學知識點。
