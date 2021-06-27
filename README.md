@@ -52,7 +52,7 @@ a^{b}
 
 一元二次求根公式   
 ```
-\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  
+\x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  
 ```
 ![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a})    
 
@@ -96,9 +96,9 @@ init_printing()
 ```python
 from sympy import *
 init_printing()
-frac1=Rational(-3,4)    #註解: 分數表達1 Rational(a,b)
-frac2=S(-4) / 7       #註解: -4/7 是小數表示,  S(-4) / 7 是分數
-frac1 + frac2
+FractionNumber1=Rational(-3,4)  #註解: 分數表達1 Rational(a,b)
+FractionNumber2=S('-4/7')       #註解: 分數表達2 
+FractionNumber1 + FractionNumber2
 ```
 ![](https://latex.codecogs.com/svg.latex?\Large&space;\frac{-37}{28})   
 
