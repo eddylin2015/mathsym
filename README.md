@@ -92,7 +92,15 @@ k, m, n = symbols('k m n', integer=True)
 f, g, h = symbols('f g h', cls=Function)
 init_printing()
 ```
-### 1.有理數運算
+### 1.有理數(Rational Number)運算
+```python
+from sympy import *
+init_printing()
+frac1=Rational(-3,4)    #註解: 分數表達1 Rational(a,b)
+frac2=S(-4) / 7       #註解: -4/7 是小數表示,  S(-4) / 7 是分數
+frac1 + frac2
+```
+![](https://latex.codecogs.com/svg.latex?\Large&space;\frac{−37}{28})
 
 ### 2.方程式
 
