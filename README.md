@@ -1,6 +1,6 @@
 # 電腦與初級數學教學
 
-電腦與初級數學教學應用,在中學教學中很多樣, 例如 geogebra、 几何畫板、 三角函數建3D模型等, 引入課堂。在篇文章主要介紹Python在初級代數中表現, Python在科學運算中的優異性, 算式直觀地表逹, 零編程也可以學識Pyhton科學運算。預備工作可請資訊老師代勞, 以及展示初級數學知識點電腦運算方法.
+電腦與初級數學教學應用,在中學教學中很多樣, 例如 geogebra、 几何畫板、 三角函數建3D模型等, 引入課堂。在篇文章主要介紹Python在初級代數中表現, Python在科學運算中的優異性, 算式直觀地表逹, 零編程也可以學識Pyhton科學運算。預備工作可請資訊老師代勞, 以及展示初級數學知識點電腦運算方法。
 
 
 ## 預備工作:  
@@ -54,7 +54,9 @@ a^{b}
 ```
 \Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  
 ```
-Jupyter Notebook 實作一下數學印刷體
+![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a})    
+
+jupyter notebook 實作一下數學印刷體
 ```python
 from IPython.display import display, Math, Latex
 display(Math(r' \frac{a}{b} '))
@@ -65,7 +67,6 @@ display(Math(r' \Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  '))
 ```
 ![](img/latex_sample.png)
 
-![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a})    
 
 ### 4. numpy , sympy, scipy, matplotlib
 python 科學計算組件,主要使用sympy 代數符號運算, 及matplotlib的繪圖功能。   
@@ -99,6 +100,8 @@ init_printing()
 
 ### 4.等比等差
 
+## 總結
+Sympy在符號運算表現優異，初級數學以至引申至大專數學，都可以應用輔助學習及教學。數學老師在學習Sympy比資訊同事學習更快,理解更好, 有能力自行設計出知識點練習題型。本章作為個人工作總結, 以及提供中文版本提供參考。
 
 ### 題型練習
 
