@@ -46,11 +46,9 @@ a^{b}
 
 開方 sqrt(a)  
 ```
-\sqrt{a}   
-\sqrt[3]{x+y} 
+\sqrt[]{x+y} 
 ```
-![](https://latex.codecogs.com/svg.latex?\Large&space;\sqrt{a})    
-![](https://latex.codecogs.com/svg.latex?\Large&space;\sqrt[3]{x+y})    
+![](https://latex.codecogs.com/svg.latex?\Large&space;\sqrt[]{x+y})    
 
 一元二次求根公式   
 ```
@@ -59,8 +57,13 @@ a^{b}
 Jupyter Notebook 實作一下數學印刷體
 ```python
 from IPython.display import display, Math, Latex
+display(Math(r' \frac{a}{b} '))
+display(Math(r' a^{b}     '))
+display(Math(r' \log_{b}{a} '))
+display(Math(r' \sqrt[]{x+y}  '))
 display(Math(r' \Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  '))
 ```
+![](img/latex_sample.png)
 
 ![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a})    
 
@@ -88,7 +91,6 @@ k, m, n = symbols('k m n', integer=True)
 f, g, h = symbols('f g h', cls=Function)
 init_printing()
 ```
-
 ### 1.有理數運算
 
 ### 2.方程式
