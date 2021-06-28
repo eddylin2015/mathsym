@@ -193,57 +193,6 @@ ax.plot(*zip(*t.vertices), 'o')
 plt.show()
 ```
 
-
-```python
-import sympy as sp
-from sympy.geometry import Point, Triangle, Segment
-import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
-t = Triangle(sss=(3, 4 , 5)) #53
-Ang=53
-
-plt.close('all')
-fig = plt.figure()
-ax = fig.add_subplot(1, 1, 1)
-ax.set_aspect('equal')
-ax.set_axis_off() 
-ax.add_patch(plt.Polygon(t.vertices, fill=False))
-ax.plot(*zip(*t.vertices), 'o')
-plt.close('all')
-fig = plt.figure()
-ax = fig.add_subplot(1, 1, 1)
-ax.set_aspect('equal')
-ax.set_axis_off() 
-ax.add_patch(plt.Polygon(t.vertices, fill=False))
-ax.plot(*zip(*t.vertices), 'o')
-#頂点,边,長度
-B, C, A = t.vertices         
-AB, BC, CA = Segment(A, B), Segment(B, C), Segment(C, A) 
-a, b, c = BC.length, CA.length, AB.length 
-#角標誌
-ax.text(*B, r'B', ha='right', va='top')
-ax.text(*C, r'C', ha='left', va='top')
-ax.text(*A, r'A', ha='left', va='bottom')
-#直角標誌
-squar_side_len=0.1
-c1=Point(C[0],C[1]+squar_side_len)
-c2=Point(C[0]-squar_side_len,C[1]+squar_side_len)
-c3=Point(C[0]-squar_side_len,C[1])
-ax.add_patch(plt.Polygon([C,c1,c2,c3], fill=False))
-#邊中點,標誌 a,b,c
-ax.text(*BC.midpoint, r'a', ha='right', va='top')
-ax.text(*CA.midpoint, r'b', ha='left', va='top')
-ax.text(*AB.midpoint, r'c', ha='left', va='bottom')    
-#角度53, 弧線
-d=np.arange(start=0,stop=Ang,step=1)
-rad=np.deg2rad(d)
-r=0.2
-xc = r*np.cos(rad)
-yc = r*np.sin(rad)
-plt.plot(xc,yc,color=[20/255,20/255,20/255],linestyle='-')   
-ax.text(B[0]+0.24,B[1]+0.04,f'${Ang}^o$')
-plt.show()
-```
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Rtriangle.svg/220px-Rtriangle.svg.png)
 
 ## 總結
