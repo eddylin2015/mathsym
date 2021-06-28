@@ -87,6 +87,7 @@ Rational(3 ,2) * pi + exp(I*x) / (x**2 + y)
 代數中未知數x,y,z定義, k,m,n 常數定義, f,g,h函數定義。
 ```python
 from sympy import *
+from IPython.display import Latex,HTML,Markdown  
 x, y, z, t = symbols('x y z t',real=True) #為實數,解方程出現無解, 不會出現虛數解.
 k, m, n = symbols('k m n', integer=True)
 f, g, h = symbols('f g h', cls=Function)
@@ -121,11 +122,8 @@ f.subs({A: 10, B: 20, C: 30})   #註解: A,B,C代入數值
 ```
 -400   
 ![](img/rational_sample.png)   
-### 3.多項式
-```python
-```
 
-### 4.方程式
+### 3.方程式
 ```python
 from sympy import *
 from sympy.abc import A, B, C, D
@@ -135,40 +133,40 @@ solve(f, A)
 ```
 [1/(C−D)(B^2−BC−BD+C^2)]  
 
-### 5.不等式
+### 4.不等式
 ```python
-import random              
 from sympy import *
 from sympy.solvers.inequalities import solve_univariate_inequality
 sp.init_printing("mathjax")   
-from IPython.display import Latex,HTML,Markdown  
-x=sp.Symbol('x')
+
+x=Symbol('x')
 St=(x +1)*(2*x-1) < 0
 solve_univariate_inequality(St,x)      #solve_univariate_inequality 解不等式  
 ```
 
-
-### 6.數列和
-```python
-import sympy as sp    
-i=sp.Symbol('i')   
-sp.summation(i*2, (i, 1, 10))   
-```
-
-### 7.數列積
+### 5.數列和
 ```python
 from sympy import *
-factorial(4)  
+i=Symbol('i')   
+summation(i*2, (i, 1, 10))   
+```
+
+### 6.數列積
+```python
+from sympy import *
+factorial(4)     #階乘
 ```
 ```python
 from sympy import *
-k=sp.symbols('k',integer=True)
-sp.product(k, (k, 1, 10) ) 
+k=symbols('k',integer=True)
+product(k, (k, 1, 10) ) 
 ```
 
-### 7.方程圖
+### 7.函數圖像的性質
 ```python
+from sympy import *
 from sympy.plotting import plot
+x,y=symbols('x y')
 
 y = -(x+2)*(x+1)*(x-1)
 
@@ -176,6 +174,77 @@ plot(y, (x, -4, 4))
 
 ```
 ![](https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F140075%2Fbeca4d0e-64a1-5c43-2061-ce3739a95be2.png?ixlib=rb-4.0.0&auto=format&gif-q=60&q=75&w=1400&fit=max&s=25b874aba5c1181708114ac0464bdef6)
+
+
+### 8.直角三角形
+```python
+import sympy as sp
+from sympy.geometry import Point, Triangle, Segment
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
+t = Triangle(sss=(3, 4 , 5)) #53
+plt.close('all')
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+ax.set_aspect('equal')
+ax.set_axis_off() 
+ax.add_patch(plt.Polygon(t.vertices, fill=False))
+ax.plot(*zip(*t.vertices), 'o')
+plt.show()
+```
+
+
+```python
+import sympy as sp
+from sympy.geometry import Point, Triangle, Segment
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
+t = Triangle(sss=(3, 4 , 5)) #53
+Ang=53
+
+plt.close('all')
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+ax.set_aspect('equal')
+ax.set_axis_off() 
+ax.add_patch(plt.Polygon(t.vertices, fill=False))
+ax.plot(*zip(*t.vertices), 'o')
+plt.close('all')
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+ax.set_aspect('equal')
+ax.set_axis_off() 
+ax.add_patch(plt.Polygon(t.vertices, fill=False))
+ax.plot(*zip(*t.vertices), 'o')
+#頂点,边,長度
+B, C, A = t.vertices         
+AB, BC, CA = Segment(A, B), Segment(B, C), Segment(C, A) 
+a, b, c = BC.length, CA.length, AB.length 
+#角標誌
+ax.text(*B, r'B', ha='right', va='top')
+ax.text(*C, r'C', ha='left', va='top')
+ax.text(*A, r'A', ha='left', va='bottom')
+#直角標誌
+squar_side_len=0.1
+c1=Point(C[0],C[1]+squar_side_len)
+c2=Point(C[0]-squar_side_len,C[1]+squar_side_len)
+c3=Point(C[0]-squar_side_len,C[1])
+ax.add_patch(plt.Polygon([C,c1,c2,c3], fill=False))
+#邊中點,標誌 a,b,c
+ax.text(*BC.midpoint, r'a', ha='right', va='top')
+ax.text(*CA.midpoint, r'b', ha='left', va='top')
+ax.text(*AB.midpoint, r'c', ha='left', va='bottom')    
+#角度53, 弧線
+d=np.arange(start=0,stop=Ang,step=1)
+rad=np.deg2rad(d)
+r=0.2
+xc = r*np.cos(rad)
+yc = r*np.sin(rad)
+plt.plot(xc,yc,color=[20/255,20/255,20/255],linestyle='-')   
+ax.text(B[0]+0.24,B[1]+0.04,f'${Ang}^o$')
+plt.show()
+```
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Rtriangle.svg/220px-Rtriangle.svg.png)
 
 ## 總結
 Sympy在符號運算表現優異，初級數學以至引申至大專數學，都可以應用輔助學習及教學。數學老師在學習Sympy比資訊同事學習更快，理解更好，有能力自行設計出知識點練習題型。個人工作屬資訊專職，從Sympy技術層面，本章作為個人工作總結，數學老師回饋參考資料難以查找，提供中文版本參考。后續，不斷完善豊富內容，涵蓋中學階段數學知識點。
