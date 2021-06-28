@@ -1,6 +1,6 @@
 # 電腦與初級數學教學
 
-電腦與初級數學教學應用,在中學教學中很多樣, 例如 geogebra、 几何畫板、 三角函數建3D模型等, 引入課堂。在篇文章主要介紹Python在初級代數中表現, Python在科學運算中的優異性, 算式直觀地表逹, 零編程也可以學識Pyhton科學運算。預備工作可請資訊老師代勞, 以及展示初級數學知識點電腦運算方法。
+電腦與初級數學教學應用,在中學教學中很多樣, 例如 geogebra、 几何畫板、 三角函數建3D模型等, 引入課堂。在篇文章主要介紹Python在初級代數中表現, Python在科學運算中的優異性, 算式直觀地表逹, 零編程也可以學識Pyhton科學運算。預備工作可請資訊老師代勞及測試工作環境, 可以直接至初級數學知識點電腦運算方法。
 
 
 ## 預備工作:  
@@ -127,18 +127,55 @@ f.subs({A: 10, B: 20, C: 30})   #註解: A,B,C代入數值
 
 ### 4.方程式
 ```python
-```
+from sympy import *
+from sympy.abc import A, B, C, D
 
+f=(A-B)*D + C**2 + (-B-A)*C+B**2
+solve(f, A)
+```
+[1/(C−D)(B^2−BC−BD+C^2)]  
 
 ### 5.不等式
 ```python
+import random              
+from sympy import *
+from sympy.solvers.inequalities import solve_univariate_inequality
+sp.init_printing("mathjax")   
+from IPython.display import Latex,HTML,Markdown  
+x=sp.Symbol('x')
+St=(x +1)*(2*x-1) < 0
+solve_univariate_inequality(St,x)      #solve_univariate_inequality 解不等式  
 ```
 
 
-### 6.等比等差
+### 6.數列和
 ```python
+import sympy as sp    
+i=sp.Symbol('i')   
+sp.summation(i*2, (i, 1, 10))   
 ```
 
+### 7.數列積
+```python
+from sympy import *
+factorial(4)  
+```
+```python
+from sympy import *
+k=sp.symbols('k',integer=True)
+sp.product(k, (k, 1, 10) ) 
+```
+
+### 7.方程圖
+```python
+from sympy.plotting import plot
+
+y = -(x+2)*(x+1)*(x-1)
+
+plot(y, (x, -4, 4))
+
+```
+![](https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F140075%2Fbeca4d0e-64a1-5c43-2061-ce3739a95be2.png?ixlib=rb-4.0.0&auto=format&gif-q=60&q=75&w=1400&fit=max&s=25b874aba5c1181708114ac0464bdef6)
 
 ## 總結
 Sympy在符號運算表現優異，初級數學以至引申至大專數學，都可以應用輔助學習及教學。數學老師在學習Sympy比資訊同事學習更快，理解更好，有能力自行設計出知識點練習題型。個人工作屬資訊專職，從Sympy技術層面，本章作為個人工作總結，數學老師回饋參考資料難以查找，提供中文版本參考。后續，不斷完善豊富內容，涵蓋中學階段數學知識點。
