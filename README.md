@@ -171,7 +171,7 @@ display(Math(r"\left\{\begin{array}\\ %s \\ %s \\ \end{array}\right."%(sp.latex(
 
 reduce_rational_inequalities([[fx1,fx2]],x)   
 ```
-![](https://latex.codecogs.com/svg.latex?\Large&space;\left\{\begin{array}\\2x>1\\x-9<-5\\&space;\end{array}\right)
+![](https://latex.codecogs.com/svg.latex?\Large&space;\left\{\begin{array}&space;\\&space;2x>1&space;\\&space;x-9<-5&space;\\&space;\end{array}\right)
 ![](https://latex.codecogs.com/svg.latex?\Large&space;\frac{1}{2}<x\wedge&space;x<4)
 ### 7.數列和
 ```python
