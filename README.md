@@ -1,9 +1,9 @@
 # 電腦與初級數學教學
 
-電腦與初級數學教學應用,在中學教學中很多樣, 例如 geogebra、 几何畫板、 三角函數建3D模型等, 引入課堂。在篇文章主要介紹Python在初級代數中表現, Python在科學運算中的優異性, 算式直觀地表逹, 零編程也可以學識Pyhton科學運算。預備工作可請資訊老師代勞及測試工作環境, 可以直接至初級數學知識點電腦運算方法。
+電腦與初級數學教學應用,在中學階段教學中, 例如 Geogebra、 几何畫板、 三角函數建3D模型等, 引入課堂。在篇文章主要介紹Python在初級代數中表現, Python在科學運算中的優異性, 算式直觀地表逹, 零編程也可以學識Pyhton科學運算。預備工作可請資訊老師代勞以及測試工作環境,可以直接轉至初級數學知識點電腦運算方法。本章的程式代碼簡化便於理解, 具體代碼可以參考[REAME.ipynb](REAME.ipynb)和題型練習程式代碼。
 
 
-## 預備工作:  
+## 一. 預備工作:  
 預備可請資訊老師代為安裝測試。可以跳至第5點,簡單複製代碼,試用一下。
 ### 1. Python 3.9.x,以及第三方組件  
 - https://www.python.org/   
@@ -26,7 +26,7 @@ c:\Users\pi>jupyter notebook
 | 指數 a^b  | a^{b}    |  ![](https://latex.codecogs.com/svg.latex?\Large&space;a^{b})    |
 |對數 log(a,b) | \log_{b}{a}| ![](https://latex.codecogs.com/svg.latex?\Large&space;\log_{b}{a})    |
 |開方 sqrt(x+y) | \sqrt[]{x+y}  | ![](https://latex.codecogs.com/svg.latex?\Large&space;\sqrt[]{x+y})    |
-|求根公式 | x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  |![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a})|    
+|求根公式 | x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  |![](https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a})|    
 
 jupyter notebook 實作一下數學印刷體    
 ```python
@@ -53,26 +53,39 @@ Rational(3 ,2) * pi + exp(I*x) / (x**2 + y)
 ```
 ![](https://camo.qiitausercontent.com/eb0b2f3ace3542ef943fa97c78283cf02f6ded49/68747470733a2f2f71696974612d696d6167652d73746f72652e73332e616d617a6f6e6177732e636f6d2f302f3134303037352f31303232313863322d653462322d373565652d386439392d3738623862323766386535302e706e67)
 
-## 初級數學知識點
-### 代數符號
-代數中未知數x,y,z定義, k,m,n 常數定義, f,g,h函數定義。
+## 二. Smpy與初級數學知識點
+### 代數符號的宣告
+在Sympy中宣告代數符號有未知數x,y,z定義,為實數解； 整數k,m,n 定義； 函數f,g,h定義。
 ```python
 from sympy import *
+init_printing()
 from IPython.display import Latex,HTML,Markdown  
 x, y, z, t = symbols('x y z t',real=True) #為實數,解方程出現無解, 不會出現虛數解.
 k, m, n = symbols('k m n', integer=True)
 f, g, h = symbols('f g h', cls=Function)
-init_printing()
 ```
 ### 1.有理數(Rational Number)運算
 ```python
 from sympy import *
 init_printing()
-FractionNumber1=Rational(-3,4)  #註解: 分數表達1 Rational(a,b)
-FractionNumber2=S('-4/7')       #註解: 分數表達2 
+FractionNumber1=Rational(-3,4)  #註解: -3/4 分數表達1 Rational(a,b)
+FractionNumber2=S('4/7')     #註解: 4/7  分數表達2  
+Add(FractionNumber1 , FractionNumber2, evaluate=False)
+```
+![](https://latex.codecogs.com/svg.latex?\Large&space;-\frac{3}{4}+\frac{4}{7})   
+```python
 FractionNumber1 + FractionNumber2
 ```
-![](https://latex.codecogs.com/svg.latex?\Large&space;\frac{-37}{28})   
+![](https://latex.codecogs.com/svg.latex?\Large&space;\frac{-5}{28})   
+```python
+FractionNumber1 * FractionNumber2
+```
+![](https://latex.codecogs.com/svg.latex?\Large&space;-\frac{3}{7})   
+```python
+sqrt( FractionNumber2 )
+```
+![](https://latex.codecogs.com/svg.latex?\Large&space;\frac{2\sqrt{7}}{7})   
+
 ### 2.整式
 ```python
 from sympy import *
@@ -169,7 +182,7 @@ plt.show()
 ## 總結
 Sympy在符號運算表現優異，初級數學以至引申至大專數學，都可以應用輔助學習及教學。數學老師在學習Sympy比資訊同事學習更快，理解更好，有能力自行設計出知識點練習題型。個人工作屬資訊專職，從Sympy技術層面，本章作為個人工作總結，數學老師回饋參考資料難以查找，提供中文版本參考。后續，不斷完善豊富內容，涵蓋中學階段數學知識點。
 
-### 題型練習
+## 初級數學知識點題型練習
 
 幫助同學,掌握不同類型題目:
 
