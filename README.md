@@ -119,8 +119,29 @@ f=(A-B)*D + C**2 + (-B-A)*C+B**2
 solve(f, A)
 ```
 ![](https://latex.codecogs.com/svg.latex?\Large&space;\left[\frac{B^{2}-BC-BD+C^{2}}{C-D}\right])
+### 4 方程式組
+```python
+# 解二元二次方程組
+import numpy as np                                #數字矩陣
+import sympy as sp                                #sympy 簡易別名 sp    
+sp.init_printing("mathjax")                       #sp.init_printing()  168 
+x,y=sp.symbols('x,y')
+p,q=np.random.choice(range(-10,10),2)
+p=p if p!=0 else 1;q=q if q!=0 else 1;
+b=p+q
+c=p*q
+eq1=sp.Eq(x+y,b)
+eq2=sp.Eq(x*y,c)
+St=[eq1,eq2]
+Val=sp.solve([eq1,eq2],x,y)        
+display(St)
+display(Val)
+```
+[𝑥+𝑦=−12, 𝑥𝑦=35]  
 
-### 4.不等式
+[(−7, −5), (−5, −7)]   
+
+### 5.不等式
 ```python
 from sympy import *
 from sympy.solvers.inequalities import solve_univariate_inequality
@@ -132,25 +153,46 @@ solve_univariate_inequality(St,x)      #solve_univariate_inequality 解不等式
 ```
 ![](https://latex.codecogs.com/svg.latex?\Large&space;-1<x\wedge&space;x<\frac{1}{2})
 
-### 5.數列和
+### 6.不等式組
+```python
+import numpy as np   
+import sympy as sp                                
+from sympy.solvers.inequalities import reduce_rational_inequalities
+from IPython.display import display, Math, Latex
+sp.init_printing("mathjax")                       
+x=sp.symbols('x')
+
+p,q=np.random.choice([-5,-4,-3,-2,-1,1,2,3,4,5],2)
+
+fx1= x * 2 > p 
+fx2= x - 9 < q 
+
+display(Math(r"\left\{\begin{array}\\ %s \\ %s \\ \end{array}\right."%(sp.latex(fx1),sp.latex(fx2))))
+
+reduce_rational_inequalities([[fx1,fx2]],x)   
+```
+![](https://latex.codecogs.com/svg.latex?\Large&space;\left\{\begin{array}\\2x>1\\x-9<-5\\&space;\end{array}\right.)
+![](https://latex.codecogs.com/svg.latex?\Large&space;\frac{1}{2}<x\wedge&space;x<4)
+### 7.數列和
 ```python
 from sympy import *
 i=Symbol('i')   
 summation(i*2, (i, 1, 10))   
 ```
-
-### 6.數列積
+110
+### 8.數列積
 ```python
 from sympy import *
 factorial(4)     #階乘
 ```
+24   
 ```python
 from sympy import *
 k=symbols('k',integer=True)
 product(k, (k, 1, 10) ) 
 ```
-
-### 7.函數圖像的性質
+3628800   
+### 9.函數圖像的性質
 ```python
 from sympy import *
 from sympy.plotting import plot
@@ -164,7 +206,7 @@ plot(y, (x, -4, 4))
 ![](https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F140075%2Fbeca4d0e-64a1-5c43-2061-ce3739a95be2.png?ixlib=rb-4.0.0&auto=format&gif-q=60&q=75&w=1400&fit=max&s=25b874aba5c1181708114ac0464bdef6)
 
 
-### 8.直角三角形
+### 10.直角三角形
 ```python
 import sympy as sp
 from sympy.geometry import Point, Triangle, Segment
@@ -234,5 +276,6 @@ https://docs.sympy.org/latest/index.html
 
 https://www.sympygamma.com/
 
+https://austinrochford.com/posts/2014-02-05-eulers-formula-sympy.html
 
 
