@@ -182,7 +182,7 @@ plt.show()
 ```
 簡化程序碼, 完整可參考[README.ipynb](README.ipynb)   
 
-![](http://mail.mbc.edu.mo/images/mathicons/sympy/right_triangle.png)
+![](img/right_triangle.png)
 
 ## 三.總結
 Sympy在符號運算表現優異，初級數學以至引申至大專數學，都可以應用輔助學習及教學。數學老師在學習Sympy比資訊同事學習更快，理解更好，有能力自行設計出知識點練習題型。個人工作屬資訊專職，從Sympy技術層面，本章作為個人工作總結，數學老師回饋參考資料難以查找，提供中文版本參考。后續，不斷完善豊富內容，涵蓋中學階段數學知識點。
