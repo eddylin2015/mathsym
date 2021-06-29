@@ -4,26 +4,22 @@
 
 
 ## 預備工作:  
-預備可請資訊老師代為安裝1,2。可以跳至第5點,簡單複製代碼,試用一下。
-### 1. Python 3.9.x,以及第三方組件
+預備可請資訊老師代為安裝測試。可以跳至第5點,簡單複製代碼,試用一下。
+### 1. Python 3.9.x,以及第三方組件  
+- https://www.python.org/   
 
-- https://www.python.org/
-
-下載安裝Python 3.9.x
-
-- 使用命令行指令 Win+R cmd
-
+下載安裝Python 3.9.x  
+- 使用命令行指令 Win+R cmd  
 ```cmd
 c:\Users\pi>pip install numpy sympy scipy matplotlib jupyterlab
 ```
-### 2.工作環境, 命令行執行jupyter notebook
+### 2.工作環境, 命令行執行jupyter notebook   
 ```cmd
 c:\Users\pi>jupyter notebook
-```
+```   
 ![](https://www.dev2qa.com/wp-content/uploads/2019/03/create-new-jupyter-notebook-execute-python-file.png)
 
-
-### 3.Latex 數學印刷體(MathJax網頁版)
+### 3.Latex 數學印刷體(MathJax網頁版)    
 |          |          |          | 
 |----------|----------|----------|
 | 分數 a/b  | \frac{a}{b}   | ![](https://latex.codecogs.com/svg.latex?\Large&space;\frac{a}{b})  |
@@ -32,7 +28,7 @@ c:\Users\pi>jupyter notebook
 |開方 sqrt(x+y) | \sqrt[]{x+y}  | ![](https://latex.codecogs.com/svg.latex?\Large&space;\sqrt[]{x+y})    |
 |求根公式 | x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  |![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a})|    
 
-jupyter notebook 實作一下數學印刷體
+jupyter notebook 實作一下數學印刷體    
 ```python
 from IPython.display import display, Math, Latex
 display(Math(r' \frac{a}{b}                       '))
@@ -40,15 +36,14 @@ display(Math(r' a^{b}                             '))
 display(Math(r' \log_{b}{a}                       '))
 display(Math(r' \sqrt[]{x+y}                      '))
 display(Math(r' x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  '))
-```
-![](img/latex_sample.png)
+```    
+![](img/latex_sample.png)     
 
+### 4. numpy , sympy, scipy, matplotlib   
+python 科學計算組件,主要使用sympy 代數符號運算, 及matplotlib的繪圖功能。      
 
-### 4. numpy , sympy, scipy, matplotlib
-python 科學計算組件,主要使用sympy 代數符號運算, 及matplotlib的繪圖功能。   
-
-### 5. sympy演示複雜式子
-```python
+### 5. sympy演示複雜式子   
+```python   
 from sympy import *           #註解: 使用組件sympy 
 init_printing(use_latex='mathjax')      #註解: 顯示數學印刷體
 x = Symbol('x')               #註解: x ,y 是代數符號
