@@ -181,6 +181,7 @@ ax.plot(*zip(*t.vertices), 'o')
 plt.show()
 ```
 簡化程序碼, 完整可參考[README.ipynb](README.ipynb)   
+
 ![](http://mail.mbc.edu.mo/images/mathicons/sympy/right_triangle.png)
 
 ## 三.總結
