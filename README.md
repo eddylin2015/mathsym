@@ -29,7 +29,7 @@ c:\Users\pi>jupyter notebook
 | 分數 a/b  | \frac{a}{b}   | ![](https://latex.codecogs.com/svg.latex?\Large&space;\frac{a}{b})  |
 | 指數 a^b  | a^{b}    |  ![](https://latex.codecogs.com/svg.latex?\Large&space;a^{b})    |
 |對數 log(a,b) | \log_{b}{a}| ![](https://latex.codecogs.com/svg.latex?\Large&space;\log_{b}{a})    |
-|開方 sqrt(a) | \sqrt[]{x+y}  | ![](https://latex.codecogs.com/svg.latex?\Large&space;\sqrt[]{x+y})    |
+|開方 sqrt(x+y) | \sqrt[]{x+y}  | ![](https://latex.codecogs.com/svg.latex?\Large&space;\sqrt[]{x+y})    |
 |求根公式 | x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  |![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a})|    
 
 jupyter notebook 實作一下數學印刷體
