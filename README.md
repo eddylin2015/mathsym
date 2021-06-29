@@ -54,7 +54,7 @@ Rational(3 ,2) * pi + E**(I*x) / (x**2 + y)
 ```python   
 (Rational(3 ,2) * pi + E**(I*x) / (x**2 + y)  ).subs({x:pi,y:7})
 ```
-![](https://mail.mbc.edu.mo/images/mathicons/sympy/sympy_jupyternb_demo.png)
+![](http://mail.mbc.edu.mo/images/mathicons/sympy/sympy_jupyternb_demo.png)
 
 ## 二. Smpy與初級數學知識點
 ### 代數符號的宣告
