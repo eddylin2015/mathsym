@@ -183,10 +183,10 @@ plt.show()
 簡化程序碼, 完整可參考[README.ipynb](README.ipynb)   
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Rtriangle.svg/220px-Rtriangle.svg.png)
 
-## 總結
+## 三.總結
 Sympy在符號運算表現優異，初級數學以至引申至大專數學，都可以應用輔助學習及教學。數學老師在學習Sympy比資訊同事學習更快，理解更好，有能力自行設計出知識點練習題型。個人工作屬資訊專職，從Sympy技術層面，本章作為個人工作總結，數學老師回饋參考資料難以查找，提供中文版本參考。后續，不斷完善豊富內容，涵蓋中學階段數學知識點。
 
-## 初級數學知識點題型練習
+## 四.初級數學知識點題型練習
 
 幫助同學,掌握不同類型題目:
 
@@ -227,8 +227,11 @@ Sympy在符號運算表現優異，初級數學以至引申至大專數學，都
 - [PF604.一元二次方程190305.ipynb](PF604.%E4%B8%80%E5%85%83%E4%BA%8C%E6%AC%A1%E6%96%B9%E7%A8%8B190305.ipynb)
 - [PF605.三角函数同角变换190410.ipynb](PF605.%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0%E5%90%8C%E8%A7%92%E5%8F%98%E6%8D%A2190410.ipynb)
 
-### 參考
-- 自定義函數及演示    
-[lib.py](lib.py)   
-[lesson1_sympy簡介](meeting/lesson01_ex0.ipynb)    
+### 五.參考
+
+https://docs.sympy.org/latest/index.html
+
+https://www.sympygamma.com/
+
+
 
