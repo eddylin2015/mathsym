@@ -168,7 +168,7 @@ ax.add_patch(plt.Polygon(t.vertices, fill=False))
 ax.plot(*zip(*t.vertices), 'o')
 plt.show()
 ```
-
+簡化程序碼, 完整可參考[README.ipynb](README.ipynb)   
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Rtriangle.svg/220px-Rtriangle.svg.png)
 
 ## 總結
