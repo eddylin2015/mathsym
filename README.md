@@ -56,7 +56,7 @@ Rational(3 ,2) * pi + E**(I*x) / (x**2 + y)
 ```
 ![](http://mail.mbc.edu.mo/images/mathicons/sympy/sympy_jupyternb_demo.png)
 
-## 二. Smpy與初級數學知識點
+## 二. Sympy與初級數學知識點
 ### 代數符號的宣告
 在Sympy中宣告代數符號有未知數x,y,z定義,為實數解； 整數k,m,n 定義； 函數f,g,h定義。
 ```python
@@ -118,7 +118,7 @@ from sympy.abc import A, B, C, D
 f=(A-B)*D + C**2 + (-B-A)*C+B**2
 solve(f, A)
 ```
-[1/(C−D)(B^2−BC−BD+C^2)]  
+![](https://latex.codecogs.com/svg.latex?\Large&space;\left[\frac{B^{2}-BC-BD+C^{2}}{C-D}\right])
 
 ### 4.不等式
 ```python
@@ -130,6 +130,7 @@ x=Symbol('x')
 St=(x +1)*(2*x-1) < 0
 solve_univariate_inequality(St,x)      #solve_univariate_inequality 解不等式  
 ```
+![](https://latex.codecogs.com/svg.latex?\Large&space;-1<x\wedge&space;x<\frac{1}{2})
 
 ### 5.數列和
 ```python
