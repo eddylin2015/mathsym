@@ -24,45 +24,21 @@ c:\Users\pi>jupyter notebook
 
 
 ### 3.Latex 數學印刷體(MathJax網頁版)
-
-分數 a/b      
-```
-\frac{a}{b}   
-```
-![](https://latex.codecogs.com/svg.latex?\Large&space;\frac{a}{b})    
-
-
-指數 a^b      
-```
-a^{b}    
-```
-![](https://latex.codecogs.com/svg.latex?\Large&space;a^{b})    
-
-對數 log(a,b) 
-```
-\log_{b}{a}
-```
-![](https://latex.codecogs.com/svg.latex?\Large&space;\log_{b}{a})    
-
-開方 sqrt(a)  
-```
-\sqrt[]{x+y} 
-```
-![](https://latex.codecogs.com/svg.latex?\Large&space;\sqrt[]{x+y})    
-
-一元二次求根公式   
-```
-x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  
-```
-![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a})    
+|          |          |          | 
+|----------|----------|----------|
+| 分數 a/b  | \frac{a}{b}   | ![](https://latex.codecogs.com/svg.latex?\Large&space;\frac{a}{b})  |
+| 指數 a^b  | a^{b}    |  ![](https://latex.codecogs.com/svg.latex?\Large&space;a^{b})    |
+|對數 log(a,b) | \log_{b}{a}| ![](https://latex.codecogs.com/svg.latex?\Large&space;\log_{b}{a})    |
+|開方 sqrt(a) | \sqrt[]{x+y}  | ![](https://latex.codecogs.com/svg.latex?\Large&space;\sqrt[]{x+y})    |
+|求根公式 | x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  |![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a})|    
 
 jupyter notebook 實作一下數學印刷體
 ```python
 from IPython.display import display, Math, Latex
-display(Math(r' \frac{a}{b} '))
-display(Math(r' a^{b}     '))
-display(Math(r' \log_{b}{a} '))
-display(Math(r' \sqrt[]{x+y}  '))
+display(Math(r' \frac{a}{b}                       '))
+display(Math(r' a^{b}                             '))
+display(Math(r' \log_{b}{a}                       '))
+display(Math(r' \sqrt[]{x+y}                      '))
 display(Math(r' x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}  '))
 ```
 ![](img/latex_sample.png)
