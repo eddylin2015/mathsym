@@ -49,9 +49,12 @@ init_printing(use_latex='mathjax')      #註解: 顯示數學印刷體
 x = Symbol('x')               #註解: x ,y 是代數符號
 y = Symbol('y')
 #註解: Rational有理數 3/2,  pi常數 ,  exp 是常數E的虛數I乘x次方, x**2即x平方.
-Rational(3 ,2) * pi + exp(I*x) / (x**2 + y)  
+Rational(3 ,2) * pi + E**(I*x) / (x**2 + y)  
 ```
-![](https://camo.qiitausercontent.com/eb0b2f3ace3542ef943fa97c78283cf02f6ded49/68747470733a2f2f71696974612d696d6167652d73746f72652e73332e616d617a6f6e6177732e636f6d2f302f3134303037352f31303232313863322d653462322d373565652d386439392d3738623862323766386535302e706e67)
+```python   
+(Rational(3 ,2) * pi + E**(I*x) / (x**2 + y)  ).subs({x:pi,y:7})
+```
+![](https://mail.mbc.edu.mo/images/mathicons/sympy/sympy_jupyternb_demo.png)
 
 ## 二. Smpy與初級數學知識點
 ### 代數符號的宣告
