@@ -10,11 +10,11 @@
 
 下載安裝Python 3.9.x  
 - 使用命令行指令 Win+R cmd  
-```cmd
+```console
 c:\Users\pi>pip install numpy sympy scipy matplotlib jupyterlab
 ```
 ### 2.工作環境, 命令行執行jupyter notebook   
-```cmd
+```console
 c:\Users\pi>jupyter notebook
 ```   
 ![](https://www.dev2qa.com/wp-content/uploads/2019/03/create-new-jupyter-notebook-execute-python-file.png)
