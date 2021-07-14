@@ -20,13 +20,27 @@
     /*Public common function */
     /*output display for Math_Val*/
     function Val2OutStr(dVal) {
-        if (dVal == "(-oo < x) & (x < oo)") return dVal;
+        //if (dVal == "(-oo < x) & (x < oo)") return dVal;
+        if (dVal == "(-oo < x) & (x < oo)") return "R";
+        if (dVal == "False")  return "空集";
+        dVal=dVal.replace( /sqrt[(]/g , 'J(' );
         for (l_ of ["& (-oo < x)", "(x < oo) &", "(-oo < x) &", "& (x < oo)", "(x > -oo ) &",]) {
-            dVal = dVal.replace(l_, "")
+            for(let ii=0;ii<2;ii++)  dVal = dVal.replace(l_, "")
+        }
+        try{
+            if(dVal.indexOf(") | (")>-1){
+                dVal=dVal.replace(") | (",",")
+                if(dVal[0]=="(" && dVal[dVal.length-1]==")") dVal=dVal.substring(1,dVal.length-1)
+            }
+            if(dVal.indexOf("x) & (x")>-1){
+                dVal=dVal.replace("x) & (x","x")
+                if(dVal[0]=="(" && dVal[dVal.length-1]==")") dVal=dVal.substring(1,dVal.length-1)
+            }
+        }catch(exp){
         }
         return dVal;
-
     }
+
 
     /*Output MM:SS format */
 
