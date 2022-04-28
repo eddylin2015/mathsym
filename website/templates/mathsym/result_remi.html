@@ -1,0 +1,39 @@
+<tr>
+    <td>題型</td>
+    <td>題號</td>
+    <td>對錯"</td>
+    <td>耗時</td>
+    <td>得分</td>
+    <td>命題</td>
+    <td>解題</td>
+    <td>標準答案</td>
+</tr>
+{% for TE in NTE %}
+<tr>
+    <td>{{TE.Tx + 1}}</td>
+    <td>{{TE.Id + 1}}</td>
+    <td>
+        <div>{{TE.OK}}</div>
+    </td>
+    <td>{{TE.Minute}}</td>
+    <td>
+        <div>{{TE.Mark}}</div>
+    </td>
+    <td>
+        {% if TE.St is iterable and TE.St is not string %}
+        {% for St1 in TE.St %}
+        <div> {{St1|safe}}</div>
+        {% endfor %}
+
+        {% else %}
+        <div> {{TE.St|safe}}</div>
+        {% endif %}
+    </td>
+    <td>
+        <div>{{TE.Ans}}</div>
+    </td>
+    <td>
+        <div>{{TE.Val}}</div>
+    </td>
+</tr>
+{% endfor %}

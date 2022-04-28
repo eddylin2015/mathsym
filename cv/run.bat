@@ -1,0 +1,1 @@
+wt -d e:\mathsym\cv cmd /k python b.py;new-tab -d e:\mathsym\cv cmd /k rundino.bat

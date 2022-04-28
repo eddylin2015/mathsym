@@ -1,0 +1,105 @@
+
+{% extends "mathsym/base.html" %}
+
+{% block content %}
+<style>
+      span.cbutton {
+        color: white;
+        background: #045ABC;
+        text-align: center;
+        width: 60px;
+        height: 25px;
+        box-shadow: 3px 3px 5px rgb(150 150 150);
+    }
+    span.dbutton {
+        color: white;
+        background: #5e5f61;
+        text-align: center;
+        width: 60px;
+        height: 25px;
+        box-shadow: 3px 3px 5px rgb(150 150 150);
+    }
+
+</style>
+<div>支援 chrome 瀏覽器.</div>
+<input class="form-control" id="myInput" type="text" placeholder="Search..">
+<table id="desc" class="table">
+{% for book in books %}
+{% set QID,TX,Name = book.split('.') %}
+<tr><td>
+<div class="media">
+  <a href="/trythisapps/apps/{{book}}/view" id="View{{QID}}" class="bluelink">
+    <h4>
+      {% if s=="P" %}
+      <img src="//mail.mbc.edu.mo/images/mathicons/math_history_{{loop.index}}.png">
+      {% endif %}
+      {{loop.index}}. {{Name}}
+    </h4>
+    <small>{{QID}}</small>
+  </a>
+  <span>我的等級:</span><span id="myGrade{{QID}}"></span><span id="myStars{{QID}}"></span><br>
+  <span>我的得分:</span><span id="myMark{{QID}}"></span><br>
+</div>
+<div>
+  {% for n in range(0,TX|int) %}
+  <a href="/trythisapps/apps/{{book}}?Tx={{n}}"></a>
+  
+  <button>題型{{n+1}}</button>
+  {% endfor %}
+</div>
+</td>  
+</tr>
+{% else %}
+<tr><td><p>No books found</p></td></tr>
+{% endfor %}
+</table>
+
+<footer>
+<p class="float-right">
+  <a href="#"> Back to top</a>
+  <div>Macau Baptist College. All Rights Reserved</div>
+</p>
+</footer>
+
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#desc tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+  $.get( "/internal/TMS/myScore/json", function( data ) {
+    let qid_mark={}
+    for(let row of data)
+    {
+      if(!(row.qid in qid_mark)) qid_mark[row.qid]=0;
+      if(row.totalmark>30) qid_mark[row.qid]+=row.tx*row.totalmark;
+    }
+    $( "a.bluelink" ).each(function( index ) {
+      console.log( index + ": " + $( this ).text() );
+      let key=$( this ).attr("id").replace("View","")
+      if(key in qid_mark){
+        $(`#myMark${key}`).html(qid_mark[key])
+        let mgrade=Number(qid_mark[key])
+        if(mgrade>1000){mgrade=5}
+        else if(mgrade>780){mgrade=4}
+        else if(mgrade>500){mgrade=3}
+        else if(mgrade>260){mgrade=2}
+        else if(mgrade>100){mgrade=1}
+        else{ mgrade=0;}
+        $(`#myGrade${key}`).html(mgrade)
+        //"⭐"
+        let stars="";
+        for(let i=0;i<mgrade;i++) stars+= "⭐";
+        $(`#myStars${key}`).html(stars)
+        let link=$( this ).attr("href")
+        $( this ).attr("href",link+`?xt_grad=${mgrade}`)
+
+      }
+    });
+  }, "json" );
+});        
+</script>
+
+{% endblock %}

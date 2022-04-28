@@ -1,0 +1,31 @@
+{% extends "qizitem/base.html" %}
+
+{% block content %}
+{% if session.profile and session.profile.Role == "1" %}
+<h4>Lessons</h4>
+<a href="/trythisapps/qizitem/add" class="btn btn-success btn-sm">
+  <i class="glyphicon glyphicon-plus"></i>
+  Add Qiz
+</a>
+{% endif %}
+{% for book in books %}
+<div class="media">
+  <a href="/trythisapps/qizitem/{{book.id}}">
+    <div class="media-body">
+      <h4>{{book.id}} {{book.qtitle}}</h4>
+    </div>
+  </a>
+</div>
+{% else %}
+<p>No lessons found</p>
+{% endfor %}
+
+{% if next_page_token %}
+<nav>
+  <ul class="pager">
+    <li><a href="?page_token={{next_page_token}}">More</a></li>
+  </ul>
+</nav>
+{% endif %}
+
+{% endblock %}

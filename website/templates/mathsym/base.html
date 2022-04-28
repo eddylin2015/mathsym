@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <title>Math</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>        
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.2/dist/js/bootstrap.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  </head>
+  <body>
+    <div class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button class="navbar-toggle",type='button', data-toggle='collapse', data-target='#myNavbar'>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <div class="navbar-brand">
+            {% if title %}
+            <span>{{title}}</span>
+            {% else %}
+            <span>Math</span>
+            {% endif %}
+            
+          </div>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+          <li><a href="/"><span class="glyphicon">&#xe021</span></a></li>
+          <li class="active"><a href="/mathsym/apps">目錄</a></li>
+
+          <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">設定<span class="caret">
+            <ul class="dropdown-menu">
+              <li><a href="/internal/mathsym/list">編輯簡介</a></li>
+              <li><a href="#">🙋🏻‍♂️ Ask Sou Sir?</a></li>
+            </ul>
+          </li>
+        </ul>
+        {# [START profile] #}
+        <div class="navbar-text navbar-right">
+        {% if session.profile %}
+          <a href="#">🙋🏻‍♂️</a>
+          <span>|</span>
+          <a href="#">
+            {% if session.profile.image %}
+              <img class="img-circle" src="{{session.profile.image.url}}" width="24">
+            {% endif %}
+            {{session.profile.user}}
+            {{session.profile.username}}
+          </a>
+        {% else %}
+          <a href="#">Sign in</a>
+        {% endif %}
+        </div>
+        {# [END profile] #}        
+
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid">
+      {% block content %}
+    
+    {% endblock %}
+    </div>
+    {{user}}
+  </body>
+</html>
+

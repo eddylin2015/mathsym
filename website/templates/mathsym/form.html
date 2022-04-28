@@ -1,0 +1,288 @@
+{% extends "mathsym/base.html" %}
+
+{% block content %}
+<script>
+  var InputElmId = 0;
+</script>
+{% include "mathsym/math_panel.html" %}
+<style>
+  table.table_rec td.table_rec{
+    padding: 5px;
+    text-align: center;
+  }
+  tr.tr_tm {
+    height: 60px;
+    text-align: center;
+  }
+  input.InputAns{
+    height:50px;
+    width: 230px;
+    font-size: 20px;
+  }
+  .grid-container {
+    max-width: 800px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    background-color: #fde9d9;
+    padding: 10px;
+    margin: 0 auto;
+    display: grid;
+  }
+  .grid-item-1 {
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    padding: 1rem;
+    width:350px;
+  }
+  .grid-item-2 {
+    width:350px;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    padding: 1rem;
+  }
+  a:link { text-decoration: none; }
+  a:visited { text-decoration: none; }
+  a:hover { text-decoration: none; }
+  a:active { text-decoration: none; }  
+  .button {
+  background-color:blue; /* Green */
+  border: none;
+  color: white;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  }
+</style>
+<script>
+  $(document).ready(function () {
+    $('#formid').on('keyup keypress', function (e) {
+      var keyCode = e.keyCode || e.which;
+      if (keyCode === 13) {
+        e.preventDefault();
+        return false;
+      }
+    });
+  });
+  function MSTime(x = null) {
+    if (x == null) {
+      let d = new Date();
+      let m = d.getMinutes();
+      let s = d.getSeconds();
+      return (m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
+    } else {
+      let m = Math.floor(x / 60);
+      let s = x % 60;
+      return (m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
+    }
+  }
+  function spend_Time(x) {
+    let a_ = x.split(":")
+    let m_ = Number(a_[0])
+    let s_ = Number(a_[1])
+    let ms_ = m_ * 60 + s_
+    let d = new Date();
+    let m = d.getMinutes();
+    let s = d.getSeconds();
+    if (m_ == m && (s < s_)) s = s_
+    let ms = m * 60 + s
+    let c = ms - ms_;
+    console.log(m_, s_, m, s)
+    console.log(c, ms, ms_)
+
+    if (c < 0) c = c + 3600
+    return MSTime(c);
+  }
+
+  function formSubmit(cid) {
+    for (let i = 0; i < 10; i++) {
+      let elm = document.getElementsByName("" + i);
+      if (elm[0]) { elm[0].disabled = false; }
+    }
+    document.getElementById('formid').submit();
+  }
+
+  function showCtx(cid) {
+    InputElmId = Number(cid) + 1
+    var x = document.getElementById("content" + cid);
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+    var t = document.getElementById("T" + cid);
+    for (let i = 1; i < 8; i++) {
+      t = document.getElementById("T" + (cid + i)); if (t !== null) t.value = MSTime()
+      x = document.getElementById("content" + (cid + i));
+      if (x !== null) {
+        if (x.style.display === "none") {
+          x.style.display = "block";
+        } else {
+          x.style.display = "none";
+        }
+      } else {
+        continue
+      }
+      break;
+    }
+  }
+  function CheckTE(i) {
+    offkeyboard();
+    var t = document.getElementById("T" + i);
+    t.value = spend_Time(t.value)
+    $.post(`?fmt=JSON&TEid=${i}`, $("#formid").serialize(), function (data) {
+      let d = JSON.parse(data)
+      let OK_Symbol = ""
+      if (d.OK == "1") {
+        OK_Symbol = '<span class="glyphicon glyphicon-ok"></span>';
+      }
+      else {
+        OK_Symbol = '<span class="glyphicon glyphicon-remove"></span>';
+      }
+      //$(`#OK${i}`).html(OK_Symbol);
+      //$(`#Mark${i}`).html(d.Mark);
+      //$(`#SpendMinute${i}`).html(d.Minute);
+      //$(`#Ans${i}`).html(htmlEntities(d.Ans));
+      let dVal = d.Val
+      if (dVal == "(-oo < x) & (x < oo)") {
+      } else {
+        for (l_ of ["& (-oo < x)", "(x < oo) &", "(-oo < x) &", "& (x < oo)", "(x > -oo ) &"]) {
+          dVal = dVal.replace(l_, "")
+        }
+      }
+
+      $(`#Standrad_And${i}`).html(dVal);
+      let rec_history = document.getElementById("rec_history")
+      let row = rec_history.insertRow();
+      row.style = "font-size:12px;"
+      row.insertCell().innerHTML = i + 1
+      row.insertCell().innerHTML = OK_Symbol //d.OK
+      row.insertCell().innerHTML = d.Minute
+      let cell_mark =row.insertCell()
+      cell_mark.innerHTML = d.Mark
+      cell_mark.style="text-align: center;"
+      //row.insertCell().innerHTML =htmlEntities(d.Ans)
+      //row.insertCell().innerHTML =dVal
+    }).fail(function(err) {
+            $.post("/internal/cloudTMS/troubleshoot", $("#formid").serialize(), function (data) {
+                    alert("troubleshoot...請再按一下[确定]")
+                });                
+
+        });;
+    document.getElementById("btnNext" + i).style.display = "block";
+    document.getElementById("btnSubm" + i).style.display = "none";
+    for (let in_ of document.getElementsByName("" + i)) { in_.disabled = true; }
+  }
+</script>
+
+  <div class="grid-container" >
+    <div class="grid-item-1">
+      <form method="POST" id="formid">
+        <P>
+          <input name="SID" type="hidden" value="{{sid}}">
+        </P>
+        {% for TE in NTE %}
+        {% if loop.previtem is defined %}
+        {% set display_style = "display:none" %}
+        {% else %}
+        {% set display_style = "display:block" %}
+        {% endif %}
+        <div id="content{{TE.Id}}" style="{{display_style}}">
+          <table>
+            <tr class="tr_tm">
+              <td>
+                命題:
+                <span style="display: none;">{{TE.Id+1}}:</span>
+              </td>
+              <td colspan="2">
+                {% if TE.St is iterable and TE.St is not string %}
+                {% for St1 in TE.St %}
+                <div> \({{St1|safe}}\)</div>
+                {% endfor %}
+
+                {% else %}
+                <div> \( \Large {{TE.St|safe}}\)</div>
+                {% endif %}
+
+              </td>
+
+            </tr>
+            <tr class="tr_tm">
+              <td>
+                答題:<br>
+                <a onclick="showkeyboard()">⌨</a>
+              </td>
+              <td>
+                {% if TE.Val is iterable and TE.Val is not string %}
+                {% for Val1 in TE.Val %}
+                <div><input name="{{TE.Id}}" autocomplete="off" class="InputAns"></div>
+                {% endfor %}
+                {% else %}
+                <div><input type="text" value="" name="{{TE.Id}}" autocomplete="off" class="InputAns"
+                    onclick="InputEdit(this);"></div>
+                {% endif %}
+
+              </td>
+              <td>
+                <div style="padding-top: 0px;">
+                    <a id="btnSubm{{TE.Id}}" class="button" onclick="CheckTE({{TE.Id}})">提交</a>
+                </div>
+  
+                {% if loop.nextitem is defined %}
+                <div id="btnNext{{TE.Id}}" style="padding-top: 0px;display:none"><a class="button" href=#
+                    onclick="showCtx({{TE.Id}})">下一題</a></div>
+                {% else %}
+                <div id="btnNext{{TE.Id}}" style="padding-top: 0px;display:none"><a class="button" href=#
+                    onclick="formSubmit({{TE.Id}})">預覽<br>小結</a></div>
+                {% endif %}
+              </td>
+            </tr>
+            <tr class="tr_tm">
+              <td>
+                答案:
+              </td>
+              <td colspan=2>
+                <table>
+                  <tr style="font-size:26px">
+                    <td><span id="OK{{TE.Id}}"></span></td>
+                    <td><span id="Mark{{TE.Id}}"></span></td>
+                    <td><span id="SpendMinute{{TE.Id}}"></span></td>
+                    <td><span id="Ans{{TE.Id}}"></span></td>
+                    <td><span id="Standrad_And{{TE.Id}}"></span></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td colspan=3 style="  vertical-align: top;              text-align: left;">
+                <div style="margin-top:10px">说明：</div>
+                {% if TE.PlotImg %}
+                <img src="/mathsym/apps/img/{{TE.PlotImg}}">
+                {% else %}
+                {% endif %}
+                <div>{{TE.Tip}}</div>
+              </td>
+            </tr>
+          </table>
+          <input style="display:none" name="{{TE.Id+1000}}" id="T{{TE.Id}}" value="{{TE.Minute}}">
+        </div>
+        {% else %}
+        <p>No Item .</p>
+        {% endfor %}
+      </form>
+    </div>
+    <div class="grid-item-2">
+      <table class="table_rec" id="rec_history">
+        <tr>
+          <td class="table_rec"><small>题号</small></td>
+          <td class="table_rec"><small>對錯</small></td>
+          <td class="table_rec"><small>耗時</small></td>
+          <td class="table_rec"><small>得分</small></td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+
+
+{% endblock %}

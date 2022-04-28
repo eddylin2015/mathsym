@@ -1,0 +1,33 @@
+digraph{
+
+# Graph style
+"ordering"="out"
+"rankdir"="TD"
+
+#########
+# Nodes #
+#########
+
+"Add(Symbol('b'), Mul(Symbol('a'), Symbol('b'), cos(Mul(Symbol('c'), Symbol('x')))))_()" ["color"="black", "label"="Add", "shape"="ellipse"];
+"Symbol('b')_(0,)" ["color"="black", "label"="b", "shape"="ellipse"];
+"Mul(Symbol('a'), Symbol('b'), cos(Mul(Symbol('c'), Symbol('x'))))_(1,)" ["color"="black", "label"="Mul", "shape"="ellipse"];
+"Symbol('a')_(1, 0)" ["color"="black", "label"="a", "shape"="ellipse"];
+"Symbol('b')_(1, 1)" ["color"="black", "label"="b", "shape"="ellipse"];
+"cos(Mul(Symbol('c'), Symbol('x')))_(1, 2)" ["color"="black", "label"="cos", "shape"="ellipse"];
+"Mul(Symbol('c'), Symbol('x'))_(1, 2, 0)" ["color"="black", "label"="Mul", "shape"="ellipse"];
+"Symbol('c')_(1, 2, 0, 0)" ["color"="black", "label"="c", "shape"="ellipse"];
+"Symbol('x')_(1, 2, 0, 1)" ["color"="black", "label"="x", "shape"="ellipse"];
+
+#########
+# Edges #
+#########
+
+"Add(Symbol('b'), Mul(Symbol('a'), Symbol('b'), cos(Mul(Symbol('c'), Symbol('x')))))_()" -> "Symbol('b')_(0,)";
+"Add(Symbol('b'), Mul(Symbol('a'), Symbol('b'), cos(Mul(Symbol('c'), Symbol('x')))))_()" -> "Mul(Symbol('a'), Symbol('b'), cos(Mul(Symbol('c'), Symbol('x'))))_(1,)";
+"Mul(Symbol('a'), Symbol('b'), cos(Mul(Symbol('c'), Symbol('x'))))_(1,)" -> "Symbol('a')_(1, 0)";
+"Mul(Symbol('a'), Symbol('b'), cos(Mul(Symbol('c'), Symbol('x'))))_(1,)" -> "Symbol('b')_(1, 1)";
+"Mul(Symbol('a'), Symbol('b'), cos(Mul(Symbol('c'), Symbol('x'))))_(1,)" -> "cos(Mul(Symbol('c'), Symbol('x')))_(1, 2)";
+"cos(Mul(Symbol('c'), Symbol('x')))_(1, 2)" -> "Mul(Symbol('c'), Symbol('x'))_(1, 2, 0)";
+"Mul(Symbol('c'), Symbol('x'))_(1, 2, 0)" -> "Symbol('c')_(1, 2, 0, 0)";
+"Mul(Symbol('c'), Symbol('x'))_(1, 2, 0)" -> "Symbol('x')_(1, 2, 0, 1)";
+}

@@ -1,0 +1,6 @@
+Flask
+sympy
+numpy
+matplotlib
+jupyterlab
+0304001030970005 拱北電

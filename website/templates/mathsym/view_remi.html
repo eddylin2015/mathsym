@@ -1,0 +1,44 @@
+{% extends "mathsym/base_remi.html" %}
+{% block content %}
+
+<div class="HBox"
+  style="width:780px;height:500px;position:absolute;left:10px;top:130px;background-color:#fde9d9;display:flex;flex-direction:row;justify-content:space-around;align-items:center">
+  <div class="Container" style="width:500px;height:380px;position:static;top:130px;background-color:#fde9d9;order:-1">
+    <div id="1962765948912"
+      style="width:492px;height:480px;position:absolute;left:10px;top:10px;background-color:#ffffd8">
+      <h6>步驟：</h6>
+      <ul>
+        <li>1.設置：(1) 選擇題型。</li>
+        <li>2.做題：(1)【下一題】，(2) 做題並開始計時，(3) 填寫答案。</li>
+        <li>3.【確定】 --- 評判答案幷打分。</li>
+        <li>4.【儲存答案】 --- 確認評分之後,儲存分數 。</li>
+      </ul>
+      <h6>說明：</h6>
+      <ul>
+        <li>1.可以用紙筆計算，也可以用計算器輔助計算。</li>
+        <li>2.單行分數寫法如右，例如：\(\frac{𝑎}{𝑏} \) 寫成 a / b ----- 分數線用斜橫。</li>
+        <li>3.單行指數寫法如右，例如： \(x^2+1\) 寫成 x^2+1 ---- 用指數符"^"或"**"。</li>
+        <li>4.單行根式寫法如右，例如：\(\sqrt[2]{𝑥+1}\) 寫成 J(x+1) ---- 大寫 J+ 括弧。</li>
+        <li>5.單行對數寫法如右，例如：\(\log_{2}{64}\) 寫成 log(64,2) 或 log(64)/log(2) 。</li>
+        <li>6.特殊集合寫法如：空集 和 R  。</li>
+        <li>7.每題10分。內設基準時間，提前完成加分，超時完成扣分。</li>
+        <li>8.一次測驗必須做滿10題，然後電腦自動填寫報表。</li>
+      </ul>
+
+    </div>
+
+
+  </div>
+
+  <div style="width:266px;height:490px;position:static;background-color:#e9fdd9;z-index:10;">
+    <table id="rec_history" class="Table" style="width:260px;position:relative;left:5px;top:210px;float:none;display:table;font-size:16px">
+      <tr class="TableRow" style="float:none">
+        <th class="TableTitle">題號</th>
+        <th class="TableTitle">對/錯</th>
+        <th class="TableTitle">耗時</th>
+        <th class="TableTitle">得分</th>
+      </tr>
+    </table>
+  </div>
+</div>
+{% endblock %}

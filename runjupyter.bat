@@ -1,0 +1,1 @@
+jupyter lab --ip=0.0.0.0 --no-browser --ServerApp.port=8888 --ServerApp.token='abcd1234'

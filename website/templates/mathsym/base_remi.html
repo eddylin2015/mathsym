@@ -1,0 +1,400 @@
+{% set remi_baseurl="/trythisapps/apps" %}
+{% set remi_posturl="/internal/TMS/AddTMSQF" %}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <title>Math</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <link rel="stylesheet" href="//www.mbc.edu.mo/remi_res_style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<script>
+    /*Gobol Variables*/
+    var InputElmId = 0;
+    /*Public common function */
+    /*output display for Math_Val*/
+    function Val2OutStr(dVal) {
+        //if (dVal == "(-oo < x) & (x < oo)") return dVal;
+        if (dVal == "(-oo < x) & (x < oo)") return "R";
+        if (dVal == "False")  return "空集";
+        dVal=dVal.replace( /sqrt[(]/g , 'J(' );
+        for (l_ of ["& (-oo < x)", "(x < oo) &", "(-oo < x) &", "& (x < oo)", "(x > -oo ) &",]) {
+            for(let ii=0;ii<2;ii++)  dVal = dVal.replace(l_, "")
+        }
+        try{
+            if(dVal.indexOf(") | (")>-1){
+                dVal=dVal.replace(") | (",",")
+                if(dVal[0]=="(" && dVal[dVal.length-1]==")") dVal=dVal.substring(1,dVal.length-1)
+            }
+            if(dVal.indexOf("x) & (x")>-1){
+                dVal=dVal.replace("x) & (x","x")
+                if(dVal[0]=="(" && dVal[dVal.length-1]==")") dVal=dVal.substring(1,dVal.length-1)
+            }
+        }catch(exp){
+        }
+        return dVal;
+    }
+
+    /*Output MM:SS format */
+
+    function MSTime(x = null) {
+        let m = 0, s = 0;
+        if (x) { m = Math.floor(x / 60); s = x % 60; }
+        else { let d = new Date(); m = d.getMinutes(); s = d.getSeconds(); }
+        return (m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
+    }
+
+    /*Spend_Time: now-x ,return MM:SS*/
+    function spend_Time(x,Fmt="MM:SS") {
+        let a_ = x.split(":")
+        let m_ = Number(a_[0]); let s_ = Number(a_[1])
+        let ms_ = m_ * 60 + s_
+        let d = new Date();
+        let m = d.getMinutes(); let s = d.getSeconds();
+        let ms = m * 60 + s
+        let c = Math.abs(ms - ms_); 
+        if(Fmt=="MM:SS"){
+          return MSTime(c);
+        }
+        return c;
+    }
+
+    /*Add 2 DateTimes*/
+    function time2val(x){
+        if (x==0 ) return 0;
+        let a_ = x.split(":")
+        let m_ = Number(a_[0]); let s_ = Number(a_[1])
+        let ms_ = m_ * 60 + s_
+        return ms_;
+    }
+
+    function add_time(x,y){
+        console.log(x,y);
+        return MSTime(time2val(x)+time2val(y))
+    }
+
+    $(document).ready(function () {
+        /*prevent auto submit for any press*/
+        $('#formid').on('keyup keypress', function (e) {
+            var keyCode = e.keyCode || e.which;
+            if (keyCode === 13) { e.preventDefault(); return false; }
+        });
+    });
+    /* formsubit action*/
+    function formSubmit__(cid) {
+        for (let i = 0; i < 10; i++) {
+            let elm = document.getElementsByName("" + i);
+            if (elm[0]) { elm[0].disabled = false; }
+        }
+        document.getElementById('formid').submit();
+    }
+
+    function show_AnsMsgbox(x, cid) {
+        var table = document.getElementById("AnsMsgResTable");
+        alert("上載成績.處理中..請等待..!");
+        let tabData = [];
+        tabData[0] = [];
+        tabData[0][0]="classno"
+        tabData[0][1]=document.getElementById('std_classno').value
+        tabData[0][2]="name"
+        tabData[0][3]=document.getElementById('std_name').value
+        for (var i = 1, row_; row_ = table.rows[i-1]; i++) {
+            tabData[i] = [];
+            for (var j = 0, col_; col_ = row_.cells[j]; j++) {
+                if (i > 0 && j == 5) {
+                    let a = ["\\left\\{\\begin{array}", "\\end{array}\\right"]
+                    let b = ["", ""]
+                    temp_ = col_.innerText.replace(/[\\]left[(]/g, "(").replace(/[\\]right[)]/g, ")")
+                    for (let c = 0; c < a.length; c++) {
+                        temp_ = temp_.replace(a[c], b[c])
+                    }
+
+                    console.log(temp_)
+                    col_.innerText = temp_
+                }
+                tabData[i][j] = col_.innerText
+            }
+        }
+        //alert("上載成績.處理中..請等待..!");
+        //x=x.replace(/[\\]/g, "\\\\").replace(/[\n]/g, "")
+        //let tabData =JSON.parse(x);
+        let qtitle = "{{title}}";
+        ft = qtitle.split(".")[0];
+        let d = new Date();
+        let yy = d.getFullYear(); let mm = d.getMonth() + 1; let dd = d.getDate();
+        let HH = d.getHours(); let MM = d.getMinutes(); let SS = d.getSeconds();
+        let md = `${yy}${mm < 10 ? "0" : ""}${mm}${dd < 10 ? "0" : ""}${dd}${HH < 10 ? "0" : ""}${HH}${MM < 10 ? "0" : ""}${MM}${SS < 10 ? "0" : ""}${SS}`;
+        tabData = JSON.stringify(tabData);
+        $.post("{{remi_posturl}}", { "fn": "" + ft + "_0_" + md, "data": tabData },  //"fileid": "$('#FileId').val()",
+            function (data) {
+                alert(data);
+                show_infobox(data);
+                document.getElementById(`btnNext${cid}`).style.display = "none"
+            });
+    }
+
+    function formSubmit(cid) {
+        for (let i = 0; i < 10; i++) {
+            let elm = document.getElementsByName("" + i);
+            if (elm[0]) { elm[0].disabled = false; }
+        }
+        let qtitle = "{{title}}";
+        ft = qtitle.split(".")[0];     
+        let xt_tx      =$('#xt_tx').val();
+        let std_classno=$('#std_classno').val();
+        let std_name   =$('#std_name').val();
+        let xt_mark=$('#xt_mark').val();
+        let xt_spendtime=$('#xt_spendtime').val();
+        let xt_data={"qid":ft,"tx":xt_tx,"class_no":std_classno,"name":std_name,"mark":xt_mark,"spendtime":xt_spendtime}
+        $.post(`/internal/TMS/AddNTEMark?fmt=REMI&TEid=-1`, xt_data, function (data) {
+            console.log(data)
+        });
+
+        $.post(`?fmt=REMI&TEid=-1`, $("#formid").serialize(), function (data) {
+            //console.log(data)
+            var table = document.getElementById("AnsMsgResTable");
+            table.innerHTML = data;
+            show_AnsMsgbox(data, cid)
+        }).fail(function(err) {
+            $.post("/internal/cloudTMS/troubleshoot", $("#formid").serialize(), function (data) {
+                    alert("troubleshoot...請再按一下[确定]")
+                });                
+
+        });;
+    }
+    /* showCtx: show next Tx */
+    function showCtx(cid) {
+        if (cid == -1) {
+            var x = document.getElementById("content0");
+            x.style.display = x.style.display === "none" ? "block" : "none";
+            document.getElementById("content_note_panel").style.display = "none"
+            document.getElementById("xt_tid").value = InputElmId + 1;
+            return;
+        }
+        InputElmId = Number(cid) + 1
+        var x = document.getElementById("content" + cid);
+        x.style.display = x.style.display === "none" ? "block" : "none";
+        for (let i = 1; i < 10; i++) {
+            let t = document.getElementById("T" + (cid + i)); if (t !== null) t.value = MSTime()
+            x = document.getElementById("content" + (cid + i));
+            if (x) {
+                x.style.display = x.style.display === "none" ? "block" : "none";
+                break;
+            }
+        }
+        document.getElementById("xt_tid").value = InputElmId + 1;
+    }
+
+    function showTM(cid){
+        for(let i=1;i<30;i++)
+        {
+            let x = document.getElementById(`TM${cid}_${i}`);
+            if (x) {
+                x.style.display = x.style.display === "none" ? "block" : "none";
+            }
+        }
+    }
+    /*Check TE.Ans*/
+    function CheckTE(i) {
+        offkeyboard();
+        
+        
+        var t = document.getElementById("T" + i);
+        if(spend_Time(t.value,Fmt="INT")<1) return;
+        t.value = spend_Time(t.value)
+        $.post(`?fmt=JSON&TEid=${i}`, $("#formid").serialize(), function (data) {
+            let d = JSON.parse(data)
+            let ok_or_not_span = d.OK == "1" ? '<span>√</span>' : '<span>X</span>';
+            let dVal = Val2OutStr(d.Val)
+
+            if (d.ValFmt=="LATEX"){
+               let html = MathJax.tex2chtml(d.ValSt, {em: 12, ex: 6, display: false});
+               let text = html.outerHTML;
+               $(`#Standrad_And${i}`).html(text);
+            }else if(d.ValFmt=="HTML"){
+                $(`#Standrad_And${i}`).html(d.ValSt);
+            }else{
+                let dVal = Val2OutStr(d.Val)
+                $(`#Standrad_And${i}`).html(dVal);
+            }
+            let rec_history = document.getElementById("rec_history")
+            let row = rec_history.insertRow(); row.style = "font-size:12px;"
+            let cel=null;
+            cel=row.insertCell();cel.innerHTML = i + 1; cel.classList.add("TableTitle");
+            cel=row.insertCell();cel.innerHTML = ok_or_not_span ;cel.classList.add("TableTitle");
+            cel=row.insertCell();cel.innerHTML = d.Minute;cel.classList.add("TableTitle");
+            cel=row.insertCell();cel.innerHTML = d.Mark;cel.classList.add("TableTitle");
+            $('#xt_mark').val(Number($('#xt_mark').val())+ Number(d.Mark));
+            $('#xt_spendtime').val(add_time($('#xt_spendtime').val(),d.Minute));
+        }).fail(function(err) {
+            $.post("/internal/cloudTMS/troubleshoot", $("#formid").serialize(), function (data) {
+                    alert("troubleshoot...請再按一下[确定]")
+                });                
+
+        });;
+        document.getElementById("btnNext" + i).style.display = "block";
+        document.getElementById("btnSubm" + i).style.display = "none";
+        for (let in_ of document.getElementsByName("" + i)) { in_.disabled = true; }
+    }
+
+    function choiceTx(i,xg) {
+        let cno = encodeURI(document.getElementById('std_classno').value)
+        let name = encodeURI(document.getElementById('std_name').value)
+        window.location.replace(`{{remi_baseurl}}/{{title}}?Tx=${i}&cno=${cno}&name=${name}&xt_grad={{xtgrade}}`);
+    }
+
+</script>
+<style>
+    span.cbutton {
+        color: white;
+        background: #045ABC;
+        text-align: center;
+        width: 60px;
+        height: 25px;
+        box-shadow: 3px 3px 5px rgb(150 150 150);
+    }
+    span.dbutton {
+        color: white;
+        background: #5e5f61;
+        text-align: center;
+        width: 60px;
+        height: 25px;
+        box-shadow: 3px 3px 5px rgb(150 150 150);
+    }
+
+
+    div.msgcenter {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 90%;
+        height: 30%;
+        border: 3px solid #045ABC;
+        ;
+        padding: 3px;
+        background-color: white;
+        font-size: 30px;
+    }
+
+    div.msgboxclosebtn {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+</style>
+
+<body class="BODY remi-main">
+
+    <a href="{{remi_baseurl}}"><span class="cbutton" style="position:absolute;left:0px;top:2px;">返回</span></a>
+
+    <div id="loading" class="Container" data-parent-widget="1962765476816" style="display:none;margin:None">
+        <div id="loading-animation" class="Widget" data-parent-widget="1962765501920" style="margin:None"></div>
+    </div>
+    <div id="1962765534496" class="Container" data-parent-widget="1962764129376"
+        style="width:800px;height:640px;background-color:#cdf2ff">
+        <p class="Label"
+            style="min-width:260px;margin:5px;position:absolute;left:300px;top:0px;font-family:隶书;font-size:30px;font-color:rgb(0,0,255);font-weight:bold">
+            {{mtitle}}</p>
+        <p class="Label" style="margin:0px;position:absolute;left:10px;top:50px">班级</p>
+        <input id="std_classno" class="" value="{{cno}}{{seat}}" type=""
+            style="margin:3px;width:80px;height:20px;position:absolute;left:38px;top:45px"></input>
+        <p class="Label" style="margin:0px;position:absolute;left:150px;top:50px">姓名</p>
+        <input id="std_name" class="" value="{{name}}" type=""
+            style="margin:3px;width:80px;height:20px;position:absolute;left:178px;top:45px"></input>
+        <p class="Label" style="min-width:60px;margin:0px;position:absolute;left:320px;top:50px">日期</p>
+        <input id="xt_date" class="" value="" type="" autocomplete="off"
+            style="margin:3px;width:70px;height:20px;position:absolute;left:348px;top:45px"></input>
+        <p class="Label" style="min-width:60px;margin:0px;position:absolute;left:440px;top:50px">時間</p>
+        <input id="xt_time" class="" value=""
+            style="margin:3px;width:60px;height:20px;position:absolute;left:468px;top:45px"></input>
+        <p class="Label" style="min-width:60px;margin:0px;position:absolute;left:562px;top:50px">總耗時</p>
+        <input id="xt_spendtime" class="" value="0" type="" autocomplete="off"
+            style="margin:3px;width:50px;height:20px;position:absolute;left:605px;top:45px"></input>
+        <p class="Label" style="min-width:60px;margin:0px;position:absolute;left:678px;top:50px">總得分</p>
+        <input id="xt_mark" class="" value="0" type="" autocomplete="off" readonly
+            style="margin:3px;width:50px;height:20px;position:absolute;left:720px;top:45px"></input>
+        <p class="Label" style="min-width:60px;margin:0px;position:absolute;left:345px;top:90px">題型</p>
+        <input id="xt_tx" class="" value="{{Tx+1}}" type="" autocomplete="off" readonly
+            style="margin:3px;width:40px;height:20px;position:absolute;left:375px;top:85px"></input>
+        <p class="Label" style="min-width:60px;margin:0px;position:absolute;left:458px;top:90px">題號</p>
+        <input id="xt_tid" class="" value="0" type="" autocomplete="off" readonly
+            style="margin:3px;width:40px;height:20px;position:absolute;left:488px;top:85px"></input>
+        <p class="Label" style="min-width:60px;margin:0px;position:absolute; left:690px; top:90px">等级</p>
+        <input id="xt_grade" class="" value="{{xtgrade}}" type="" autocomplete="off" readonly
+            style="margin:3px;width:40px;height:20px;position:absolute; left:720px; top:85px"></input>
+        {% set QID,TX,Name = title.split('.') %}
+        {% for n in range(0,TX|int) %}
+        {% set B_POSI = 10+70 * n %}
+        {% if xtgrade+1 > n  %}
+        <a onclick="choiceTx({{n}},{{xtgrade}})"><button class="Button"
+                style="margin:0px;width:60px;height:25px;position:absolute;left:{{B_POSI}}px;top:85px">題型{{n+1}}</button></a>
+        {% else %}
+        <a><span class="dbutton"
+            style="margin:0px;width:60px;height:25px;position:absolute;left:{{B_POSI}}px;top:85px">題型{{n+1}}</span></a>
+
+        {% endif %}
+
+        {% endfor %}
+
+
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+
+    </div>
+    {% include "mathsym/math_panel.html" %}
+
+    <div id=msgbox class="msgcenter" style="display: none;z-index:999 ;overflow-y: auto;">
+      <div id=msgbox_txt></div>
+      <table id=AnsMsgResTable style="font-size: 12px;" >
+  
+      </table>
+      <div class="msgboxclosebtn">
+          <button onclick="max_msgbox('msgbox')">[M]</button>
+          <button onclick="close_msgbox('msgbox')">[x]</button>
+        </div>  
+    </div>      
+    <script>
+   function GetDate(x = null) {
+      let y=0, m = 0, r = 0;
+      let d = new Date(); 
+      y=d.getFullYear();
+      m=d.getMonth()+1;
+      r=d.getDate();
+      return (y < 10 ? `0${y}` : `${y}`) + (m < 10 ? `-0${m}` : `-${m}`) + (r < 10 ? `-0${r}` : `-${r}`)
+    }
+  
+    function GetTime(x = null) {
+      let  h=0, m = 0, s = 0;
+      let d = new Date(); 
+      h = d.getHours(); 
+      m = d.getMinutes(); 
+      s = d.getSeconds(); 
+      return  h +":" + (m < 10 ? `0${m}` : `${m}`) + (s < 10 ? `:0${s}` : `:${s}`)
+    }
+  
+      document.getElementById("xt_date").value=GetDate();
+      document.getElementById("xt_time").value=GetTime();
+      function show_infobox(x) {
+        document.getElementById("msgbox_txt").innerHTML=x;
+          document.getElementById('msgbox').style.display = "block";
+        //$("#formid_select").val(-2);
+      }
+      function close_msgbox(x) {
+          document.getElementById(x).style.display = "none";
+        //$("#formid_select").val(-2);
+      }
+      function max_msgbox(x) {
+        document.getElementById(x).setAttribute("style","overflow:scroll;height:90%");
+        //$("#formid_select").val(-2);
+      }      
+    </script>    
+</body>
+
+</html>

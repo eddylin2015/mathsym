@@ -1,0 +1,30 @@
+{#
+# Copyright 2015  Inc.
+#}
+
+{% extends "qizitem/base.html" %}
+
+{% block content %}
+
+<h4>{{book.Lesson}} {{book.Title}}</h4>
+{% if session.profile and session.profile.Role < "8" %}
+<div class="btn-group">
+  <a href="/trythisapps/qizitem/{{book.id}}/edit" class="btn btn-primary btn-sm">
+    <i class="glyphicon glyphicon-edit"></i>
+    Edit Lesson
+  </a>
+  <a href="/trythisapps/qizitem/{{book.id}}/delete" class="btn btn-danger btn-sm">
+    <i class="glyphicon glyphicon-trash"></i>
+    Delete Lesson
+  </a>
+</div>
+{% endif %}
+<div class="media-body">
+  <h4 class="book-title">
+    {{book.qtitle}}
+  </h4>
+  <div>{{book.qnote|safe }} </div>
+  <small class="book-added-by">created by userid( {{book.get('createbyid')|default('Anonymous', True)}})</small>
+</div>
+{% endblock %}
+

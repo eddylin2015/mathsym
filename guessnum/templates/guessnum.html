@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<h3>{{title}}</h3>
+<div style="margin: auto;width: 30%;">
+  <form method="POST">
+    <p>St:{{TE.St}}</p>  
+    <p>Tip:{{TE.Tip}}</p>  
+    <p>try times:{{TE.TryCnt}}</p>  
+    <P>
+      <input name="SID" type="hidden" value="{{SID}}">
+    </P>
+    {% if TE.OK==0 %}
+    <P>
+        <input name="Ans" >
+        <div><input class="btn btn-success" type="submit" value="提交試題"></div>
+    </P>
+    {% else %}
+    
+    {% endif %}
+
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    td {padding-right:30px}
+</style>
+<h3>{{title}}</h3>
+<div style="  margin: auto;width: 80%;">
+    <table>
+        <tr>
+            <td>St</td>
+            <td>Val</td>
+            <td>Ans</td>
+            <td>OK</td>
+        </tr>
+        {% for TE in NTE %}
+        <tr>
+            <td>
+                {% if TE.St is iterable and TE.St is not string  %}
+                {% for St1 in TE.St %}
+                <div> \[{{St1|safe}}\]</div>
+                {% endfor %}
+
+                {% else %}
+                <div> \[{{TE.St|safe}}\]</div>
+                {% endif %}
+            </td>
+
+            <td>
+                {% if TE.Val is iterable and TE.Val is not string  %}
+                {% for Val1 in TE.Val %}
+                <div>{{Val1}}</div>
+                {% endfor %}
+                {% else %}
+                <div>{{TE.Val}}</div>
+                {% endif %}
+            </td>
+            <td>
+                <div>{{TE.Ans}}</div>
+            </td>
+            <td>
+                <div>{{TE.OK}}</div>
+            </td>            
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="/books/" class="btn btn-success btn-sm">
+        Return
+      </a>
+</div>
+{% endblock %}
