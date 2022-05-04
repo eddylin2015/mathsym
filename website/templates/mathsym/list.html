@@ -71,14 +71,19 @@ $(document).ready(function(){
   });
   $.get( "/internal/TMS/myScore/json", function( data ) {
     let qid_mark={}
+    let qid_tx_max_mark={}    
     for(let row of data)
     {
       if(!(row.qid in qid_mark)) qid_mark[row.qid]=0;
       if(row.totalmark>30) qid_mark[row.qid]+=row.tx*row.totalmark;
+
+      if(!(row.qid+row.tx in qid_tx_max_mark)) qid_tx_max_mark[row.qid+row.tx]=0;
+      if(row.maxmark>30) qid_tx_max_mark[row.qid+row.tx]=row.maxmark;
     }
     $( "a.bluelink" ).each(function( index ) {
       console.log( index + ": " + $( this ).text() );
-      let key=$( this ).attr("id").replace("View","")
+      let key=$( this ).attr("id").replace("View","")     //Qid
+      let max_tx= $( this ).attr("href").split('.')[1];   //Max Tx Number      
       if(key in qid_mark){
         $(`#myMark${key}`).html(qid_mark[key])
         let mgrade=Number(qid_mark[key])

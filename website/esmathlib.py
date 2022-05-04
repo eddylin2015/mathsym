@@ -1,4 +1,3 @@
-
 import random  # 亂數
 import math  # math 內置數學函數
 import numpy as np  # 數字矩陣
@@ -19,6 +18,8 @@ import esutils as lib
 import os
 from sympy.geometry import Point, Circle, Triangle, Segment, Line, RegularPolygon
 import matplotlib.pyplot as plt
+import base64
+from io import BytesIO
 import PF602_Module 
 """
 基本數據結構
@@ -42,8 +43,9 @@ def GetTE(Qid, St, Val, Tx=0):
     TE["Ans"] = ""
     TE["OK"] = 0
     TE["Mark"] = 0
+    TE["MxMunites"] = 3
     TE["Minute"]= datetime.datetime.now().strftime("%M:%S")   #"%m-%d-%Y %H:%M:%S"
-    TE["Tip"] = "xyz"
+    TE["Tip"] = ["答題","答題","答題","答題","答題","答題","答題","答題","答題","答題"]
     TE["PotImg"]=None
     TE["PlainText"]=None
     TE["ValFmt"]=None
@@ -59,7 +61,7 @@ def GetQList():
         "PF105.3.二元一次方程",
         "PF106.4.一元一次不等式",
         "PF107.4.一元一次不等式組",    
-        "PF108.4.整式的乘法練習",
+        "PF108.5.整式的乘法練習",
         "PF201.4.根式的運算",
         "PF202.3.整式的乘法公式平方差",
         "PF2021.4.整式的乘法公式完全平方公式",
@@ -75,13 +77,14 @@ def GetQList():
         #"PF302.4.解可化為一元二次方程的分式方程",
         #"PF303.4.解二元二次方程組",
         #"PF304.4.二次函數圖像的性質",
-        #"PF305.4.解直角三角形",
-        #"PF306.2.解直角三角形",
+        "PF305.1.角度制與弧度制互換",
+        "PF306.2.解直角三角形",
         #"PF401.4.解一元二次不等式",
         #"PF402.4.等差數列之和",
         #"PF403.4.等比數列之和",
-        "PF404.1.對數與指數關係",
         "PF402.7.等差數列之和",
+        "PF403.7.等比數列之和",
+        "PF404.1.對數與指數關係",
         "PF405.7.對數的基礎運算",        
         #"PF501.4.高次不等式及分式不等式",
         #"PF503.4.高二二項式定理",
@@ -89,7 +92,7 @@ def GetQList():
         ##"PF405.1.高中一元二次方程式",
         ##"PF406.1.高中乘法公式",
         #"PF602.4.高中綫性規劃",
-        #"PF603.4.高中三角函數同角變換",
+        "PF603.3.高中三角函數同角變換",
         ]
 """
 算式
@@ -154,7 +157,7 @@ def Post_Expr_UpdateAns(ReqForm,NTE,TEid):
                         else:
                             TE["Ans"]=value
 
-def Post_Expr_CheckAns(QIID,NTE,TEid=-1,MxMunites=6):
+def Post_Expr_CheckAns(QIID,NTE,TEid=-1,MxMunites=3):
     for TE in NTE:
         if TEid > 0 and TE["Id"] != TEid:
             continue
@@ -181,10 +184,11 @@ def Post_Expr_CheckAns(QIID,NTE,TEid=-1,MxMunites=6):
         elif QIID=="PF302" : Put_PF302_Expr(TE)
         elif QIID=="PF303" : Put_PF303_Expr(TE)
         elif QIID=="PF304" : Put_PF304_Expr(TE)
-        elif QIID=="PF305" : Put_Expr_V1(TE)  
+        elif QIID=="PF305" : Put_PF305_Expr(TE)
         elif QIID=="PF306" : Put_Expr_V1(TE)
         elif QIID=="PF401" : Put_Expr_InequV1(TE)
         elif QIID=="PF402" : Put_PF402_Expr(TE)
+        elif QIID=="PF403" : Put_PF403_Expr(TE)
         elif QIID=="PF404" : Put_PF404_Expr(TE)
         elif QIID=="PF405" : Put_PF405_Expr(TE)
         elif QIID=="PF501" : Put_Expr_InequV1(TE)
@@ -196,9 +200,10 @@ def Post_Expr_CheckAns(QIID,NTE,TEid=-1,MxMunites=6):
         else:  Put_Expr_V1(TE)
         Get_Expr_CheckAnsMark(QIID,TE)
 
-def Get_Expr_CheckAnsMark(QIID,TE,MxMunites=3):
+def Get_Expr_CheckAnsMark(QIID,TE):
     if TE["OK"]==1:
         try:
+            MxMunites=TE["MxMunites"]
             stepM = MxMunites / 3 * 60
             m,s=TE["Minute"].split(":")
             m=int(m)
@@ -326,6 +331,33 @@ def Put_Expr_X1(TE):
             TE["OK"]=0
     except:
         pass
+
+
+
+def PlotImg(expr):
+    x, y, z = sp.symbols('x,y,z')
+    try:
+        lam_x = lambdify(x, expr, modules=['numpy'])
+        x_vals = np.linspace(-5, 5, 10)
+        y_vals = lam_x(x_vals)
+        fig = Figure()
+        fig.set_figheight(3)
+        fig.set_figwidth(3)            
+        ax = fig.subplots()
+        ax.plot(x_vals, y_vals)
+        ax.axhline(0, color='black')
+        ax.axvline(0, color='black')          
+        #fig.savefig(os.getcwd()+"\\static\\"+TE["PlotImg"])
+        # Save it to a temporary buffer.
+        buf = BytesIO()
+        fig.savefig(buf, format="png")
+        return base64.b64encode(buf.getbuffer()).decode("ascii")
+        #TE["PlotImg"]=f'data:image/png;base64,{data}'
+        #return f"<img src='data:image/png;base64,{data}'/>"        
+    except Exception as inst:
+        print(inst)
+        return None
+
 
 """
 P301
@@ -1142,71 +1174,108 @@ def Put_PF108_Expr(TE):
 
 def Get_PF108_Expr(QN,Tx=-1):
     NTE = []
+
     for Qid in range(0, QN):
+        x=sp.Symbol('x')
+        y=sp.Symbol('y')
+        a=random.choice([2,3,4,5,6,7,8,9])
+        b=random.choice([-5,-4,-3,-2,-1,2,3,4,5])
+        c=random.choice([2,3,4,5,6,7,8,9])
+        d=random.choice([2,3,4])
+        e=random.choice([-1,1])
+        f=random.choice([-1,1])
+        fac1=sp.Rational(a,b)
         if Tx==0:
-            a = 1
-            p = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-            q = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-            b = p+q
-            c = p*q
-            express_str = f"(x +({b})) * ( x + ({c}))  "  # 題型 express_str ax+bx+c
-            St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
-            Val = sp.expand(St)
-            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+            #print("""同底數冪相乘""")
+            ji=a*x+d
+            St=e*x**a*x**d*(f)*x**ji   
+            St_latex=r" {%s} x^{%s}  x^{%s} ({%s}) x^{%s} " %(e,a,d,f,sp.latex(ji))
+            if f==1:
+                St_latex=r" {%s} x^{%s}  x^{%s}  x^{%s} " %(e,a,d,sp.latex(ji))
+            #display(Latex(st_st))
+            #val=sp.simplify(st)
+            #display(val)
+            Val = sp.simplify(St)
+            TE = GetTE(Qid, St_latex, Val, Tx)
             NTE.append(TE)
-        elif Tx==1:
-            a = 1
-            p = random.choice(range(-10,10))
-            q = random.choice(range(-10,10))
-            if p==0 : p=2
-            if q==0 : q=2
-            b = p+q
-            c = p*q
-            express_str = f"(x +({b})) * ( x + ({c}))  "  # 題型 express_str ax+bx+c
-            St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
-            Val = sp.expand(St)
-            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+
+        elif Tx==1:            
+            #print("""冪的乘方""")
+            ji=a*x+d
+            St=(fac1*x**a*y**c)**d
+            St_latex=r" ({%s} x^{%s}  y^{%s})^{%s} " %(sp.latex(fac1),a,c,d)
+            #display(Latex(st_st))
+            #val=sp.simplify(st)
+            #display(val)
+            Val = sp.simplify(St)
+            TE = GetTE(Qid, St_latex, Val, Tx)
             NTE.append(TE)
-        elif Tx==2:
-            a = 1
-            p = random.choice(range(-16,16))
-            q = random.choice(range(-16,16))
-            if p==0 : p=2
-            if q==0 : q=2
-            b = p+q
-            c = p*q
-            express_str = f"(x +({b})) * ( x + ({c}))  "  # 題型 express_str ax+bx+c
-            St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
-            Val = sp.expand(St)
-            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+
+        elif Tx==2:            
+            #print("""單項式乘以單項式""")
+            b=random.choice([-4,-3,-2,-1,2,3,4])
+            d=random.choice([1,2,3])
+            e=random.choice([2,3,4])
+            f=random.choice([-1,1])
+            g=random.choice([-1,1])
+            m=random.choice([2,3,4,5,6])
+            n=random.choice([2,3,4,5,6])
+            fac1=sp.Rational(a,b)
+            fac2=sp.Rational(b,a)*d
+            St=(fac1*x**m*y**n)**d*(fac2*x**d*y**e)
+            St_latex=r" ({%s} x^{%s}  y^{%s})^{%s}({%s} x^{%s}  y^{%s}) " %(sp.latex(fac1),m,n,d,sp.latex(fac2),d,e)
+            #display(Latex(st_st))
+            #val=sp.simplify(st)
+            #display(val)
+            Val = sp.simplify(St)
+            TE = GetTE(Qid, St_latex, Val, Tx)
             NTE.append(TE)
-        elif Tx==3:
-            a = 1
-            p = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-            q = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-            u = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-            r = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-            b = p+q
-            c = p*q
-            u= f"{u}*x" if  u != 1 else "x"
-            r= f"{r}*x" if  r != 1 else "x"
-            express_str = f"( {u} + ({b}) ) * ( {r} + ({c}) )"  # 題型 express_str ax+bx+c
-            St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
-            Val = sp.expand(St)
-            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+
+        elif Tx==3:            
+            #print("""單項式與多項式的乘法""")
+            c=random.choice([2,3,4,5,6,7,8,9])
+            g=random.choice([2,3,4,5,6,7,8,9])
+            i=random.choice([2,3,4,5,6,7,8,9])
+            d=random.choice([2,3,4])
+            e=random.choice([-1,1])
+            f=random.choice([-1,1])
+            h=random.choice([2,3,4,5,6,7,8,9])
+            fac1=sp.Rational(a,b)*d
+            fac2=sp.Rational(a,b)*a
+            fac3=sp.Rational(b,a)
+            ji=a*x+d
+            St=(fac1*x**a*y**c+fac2*x**g*y**i)*fac3*x**d*y**h
+            St_latex=r"({%s}x^{%s}  y^{%s} + {%s} x^{%s} y^{%s})({%s} x^{%s}  y^{%s})" %(sp.latex(fac1),a,c,sp.latex(fac2),g,i,sp.latex(fac3),d,h)
+            #display(Latex(st_st))
+            #val=sp.expand(st)
+            #display(val)
+            Val = sp.simplify(St)
+            TE = GetTE(Qid, St_latex, Val, Tx)
             NTE.append(TE)
-        else:
-            a = 1
-            p = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-            q = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-            u = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-            r = random.choice([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5])
-            b = p+q
-            c = p*q
-            express_str = f"(x +({b}))* ( x + ({c}))  "  # 題型 express_str ax+bx+c
-            St = parse_expr(express_str, evaluate=False)  # 字串解釋為可運算式子 expression
-            Val = sp.expand(St)
-            TE = GetTE(Qid, sp.latex(St), Val, Tx)
+
+        elif Tx==4:            
+            #print("""多項式的乘法""")
+            m=random.choice([-9,-7,-6,-5,-4,-3,-2,2,3,4,5,6,7,8,9])
+            n=random.choice([-9,-7,-6,-5,-4,-3,-2,2,3,4,5,6,7,8,9])
+            c=random.choice([2,3,4,5,6,7,8,9,])
+            g=random.choice([2,3,4,5,6,7,8,9])
+            i=random.choice([2,3,4,5,6,7,8,9])
+            d=random.choice([1,2,3])
+            k=random.choice([1,2,3])
+            e=random.choice([-1,1])
+            f=random.choice([-1,1])
+            h=random.choice([2,3,4,5,6,7,8,9])
+            fac1=sp.Rational(a,b)*d
+            fac2=sp.Rational(a,b)*a
+            fac3=sp.Rational(b,a)
+            ji=a*x+d
+            St=(b*x**d+m*y**k)*(n*x**d+a*y**k)
+            St_latex=r"({%s} x^{%s} +{%s} y^{%s})({%s} x^{%s} + {%s} y^{%s})" %(b,d,m,k,n,d,a,k)
+            #display(Latex(st_st))
+            #val=sp.expand(st)
+            #display(val)        
+            Val = sp.simplify(St)
+            TE = GetTE(Qid, St_latex, Val, Tx)
             NTE.append(TE)
     return NTE
 
@@ -1841,14 +1910,17 @@ def Get_PF207_Expr(QN,Tx=-1):
             ax = fig.subplots()
             ax.plot(x_vals, y_vals)
             ax.axhline(0, color='black')
-            ax.axvline(0, color='black')            
+            ax.axvline(0, color='black')          
             fig.savefig(os.getcwd()+"\\static\\"+TE["PlotImg"])
+
             # Save it to a temporary buffer.
             #buf = BytesIO()
             #fig.savefig(buf, format="png")
             #data = base64.b64encode(buf.getbuffer()).decode("ascii")
+            #TE["PlotImg"]=f'data:image/png;base64,{data}'
             #return f"<img src='data:image/png;base64,{data}'/>"        
-        except:
+        except Exception as inst:
+            #print(inst)
             TE["PlotImg"]=None
         NTE.append(TE)
 
@@ -2291,38 +2363,46 @@ def ang_expre(a, d, e):
 ############################################################################
 
 
-def Get_PF305_Expr(QN,Tx=-1):
-    TxFlag=Tx==-1       
+def Put_PF305_Expr(TE):
+    x = sp.Symbol('x')
+    Val = TE["Val"]
+    ans = TE["Ans"]
+    if ans.strip() == "": ans = "3.1415926"
+    
+    try:
+        if parse_expr(ans) == Val:  # 比對答案:
+            TE["OK"] = 1
+        else:  # 不則
+            TE["OK"] = 0
+    except:
+        pass
 
+    
+def Get_PF305_Expr(QN,Tx=-1):
+    sp.init_printing("mathjax")
+    x = sp.symbols('x')
+    pp =[sp.Rational(1,6),sp.Rational(1,4),sp.Rational(1,3),sp.Rational(1,2),sp.Rational(2,3),sp.Rational(3,4),sp.Rational(5,6),1,sp.Rational(7,6),sp.Rational(5,4),sp.Rational(4,3),sp.Rational(3,2),sp.Rational(5,3),sp.Rational(7,3),sp.Rational(11,6)]
     NTE = []
     for Qid in range(0, QN):
-        op = random.choice([" + ", " - ", " * ", " / "])
-        e = random.choice([1, 2])
-        a = random.choice([1, 2, 3])
-        b = random.choice([1, 2, 3])
-        d1 = random.choice([1, 2, 3, 4, 5])
-        d2 = random.choice([1, 2, 3, 4, 5])
-
-        if a == 3 and d1 == 5:
-            d1 = 4
-        if b == 3 and d2 == 5:
-            d2 = 4
-        St = sjstr(a, d1, e) + op + sjstr(b, d2, 1)
-        if op == " / ":
-            St = sjstr(a, d1, e) + "\div " + sjstr(b, d2, 1)
-        Val = sp.S(0)
-
-        if op == " + ":
-            Val = ang_expre(a, d1, e) + ang_expre(b, d2, 1)
-        elif op == " - ":
-            Val = ang_expre(a, d1, e) - ang_expre(b, d2, 1)
-        elif op == " * ":
-            Val = ang_expre(a, d1, e) * ang_expre(b, d2, 1)
-        elif op == " / ":
-            Val = ang_expre(a, d1, e) / ang_expre(b, d2, 1)
-
-        TE = GetTE(Qid, St, Val, Tx)
-        NTE.append(TE)
+        if Tx==0:
+            mode = random.choice([1,2])
+            
+            p = random.choice(pp)
+            ra = p*180
+            if mode==1:
+                St=r"{%s}°=A{%s},求A的值" %(ra,chr(960))
+                Val = p
+                TE = GetTE(Qid, St, Val)
+                TE["Tip"]= "A"
+            elif mode ==2:
+                St=r"{%s}=A°,求A的值" %(chr(960))
+                Val = ra
+                TE = GetTE(Qid, sp.latex(p)+St, Val)
+                TE["Tip"]= "A"
+            if Val == []:
+                pass
+            else:
+                NTE.append(TE)
     return NTE
 
 #######################
@@ -2377,12 +2457,72 @@ def plotTriangle(t,BAngle,li,Path_):
         xc = r*np.cos(rad)
         yc = r*np.sin(rad)
         ax.plot(xc,yc,color=[20/255,20/255,20/255],linestyle='-')   
-        ax.text(B[0]+r,B[1]+0.04,f'${BAngle}^o$')
+        ax.text(B[0]+r,B[1]+0.04,r'$%s^o$' % BAngle)
     #plt.show()
     fig.savefig(os.getcwd()+"\\static\\"+Path_) 
     return Path_       
-    
+
 def Get_PF306_Expr(QN,Tx=-1):
+    TxFlag=Tx==-1       
+
+    NTE = []
+    for Qid in range(0, QN):
+        if Tx==0:
+            op = random.choice([" + "])
+            e = random.choice([1, 2])
+            a = random.choice([1, 2, 3])
+            b = random.choice([1, 2, 3])
+            d1 = random.choice([1, 2, 3, 4, 5])
+            d2 = random.choice([1, 2, 3, 4, 5])
+
+            if a == 3 and d1 == 5:
+                d1 = 4
+            if b == 3 and d2 == 5:
+                d2 = 4
+            St = sjstr(a, d1, e) 
+            if op == " / ":
+                St = sjstr(a, d1, e) 
+            Val = sp.S(0)
+
+            if op == " + ":
+                Val = ang_expre(a, d1, e)
+            TE = GetTE(Qid, St, Val, Tx)
+            TE["Tip"]=["答案(若無解請輸入zoo)"]
+
+        elif Tx==1:
+            op = random.choice([" + ", " - ", " * ", " / "])
+            e = random.choice([1, 2])
+            a = random.choice([1, 2, 3])
+            b = random.choice([1, 2, 3])
+            d1 = random.choice([1, 2, 3, 4, 5])
+            d2 = random.choice([1, 2, 3, 4, 5])
+
+            if a == 3 and d1 == 5:
+                d1 = 4
+            if b == 3 and d2 == 5:
+                d2 = 4
+            St = sjstr(a, d1, e) + op + sjstr(b, d2, 1)
+            if op == " / ":
+                St = sjstr(a, d1, e) + "\div " + sjstr(b, d2, 1) + "(若無解請輸入zoo)"
+            Val = sp.S(0)
+
+            if op == " + ":
+                Val = ang_expre(a, d1, e) + ang_expre(b, d2, 1)
+            elif op == " - ":
+                Val = ang_expre(a, d1, e) - ang_expre(b, d2, 1)
+            elif op == " * ":
+                Val = ang_expre(a, d1, e) * ang_expre(b, d2, 1)
+            elif op == " / ":
+                Val = ang_expre(a, d1, e) / ang_expre(b, d2, 1)
+            TE = GetTE(Qid, St, Val, Tx)
+            #TE["Tip"] = ["log(a,b)","c"]
+            TE["Tip"]=["答案(若無解請輸入zoo)"]
+        NTE.append(TE)
+    return NTE
+
+##############################################################
+
+def Get_PF306666_Expr(QN,Tx=-1):
     NTE = []
     for Qid in range(0, QN):
         x=random.choice([2,3,4,5])
@@ -2518,6 +2658,10 @@ def Get_PF401_Expr(QN,Tx=-1):
         NTE.append(TE)    
     return NTE
 
+"""
+PF402等差數列之和
+"""
+
 def Put_PF402_Expr(TE):
     x = sp.Symbol('x')
     Val = TE["Val"]
@@ -2615,6 +2759,24 @@ def Get_PF402_Expr(QN,Tx=-1):
 
 
 
+"""
+PF403等比數列之和
+"""
+
+def Put_PF403_Expr(TE):
+    x = sp.Symbol('x')
+    Val = TE["Val"]
+    ans = TE["Ans"]
+    if ans.strip() == "": ans = "3.1415926"
+    
+    try:
+        if parse_expr(ans) == Val:  # 比對答案:
+            TE["OK"] = 1
+        else:  # 不則
+            TE["OK"] = 0
+    except:
+        pass
+
 def Get_PF403_Expr(QN,Tx=-1):
     x=sp.symbols('x')
     n= sp.symbols('n')
@@ -2622,17 +2784,13 @@ def Get_PF403_Expr(QN,Tx=-1):
     a1=random.sample([sp.S(-4),-3,-2,sp.Rational(-1,2),sp.Rational(-1,3),sp.Rational(-1,4),1,2,3,4], k=10)
     for i in range(0,QN):
         if Tx==0:
-            a2=random.randrange(3) +1 
-            a3=(a2+random.choice(range(2,5)) )% 8 ;a3=a3 if a3>0 else 1;
+            a2=random.choice([-3,-2,sp.Rational(-1,2),sp.Rational(-1,3),sp.Rational(-1,4),2,3,4,5,6,7,8,9])
+            a3=1+random.choice([2,3,4,5])
             q=a1[i]; 
             if q==0 :q=2
             if q==1 :q=2
-            expre= q**n
-            a=[]
-            for j in range(12):
-                a.append(expre.subs(n,j))
-            St=r"己知 a_{%s}={%s},q=%s,求a_{%s}?" % (a2,a[a2],q,a3)
-            Val=a[a3]
+            St=r"己知 a_{%s}={%s},q=%s,求a_{%s}" % (1,a2,q,a3)
+            Val=a2*(q**(a3-1))
         elif Tx==1:
             a2=random.randrange(3) +1 
             a3=(a2+random.choice(range(2,5)) )% 8 ;a3=a3 if a3>0 else 1;
@@ -2643,9 +2801,35 @@ def Get_PF403_Expr(QN,Tx=-1):
             a=[]
             for j in range(12):
                 a.append(expre.subs(n,j))
-            St=r"己知 a_{%s}=%s,a_{%s}=%s,求?q" %(a2,a[a2],a3,a[a3])
-            Val=q
+            St=r"己知 a_{%s}={%s},q=%s,求a_{%s}" % (a2,a[a2],q,a3)
+            Val=a[a3]
         elif Tx==2:
+            a2=random.choice([-3,-2,sp.Rational(-1,2),sp.Rational(-1,3),sp.Rational(-1,4),2,3,4,5,6,7,8,9])
+            a22=random.choice([2,3,4,5])
+            a3=a22+random.choice([2,3,4,5])
+            q=a1[i]; 
+            if q==0 :q=2
+            if q==1 :q=2
+            ch=random.choice([1,2])
+            if ch==1:
+                St=r"己知 a_{%s}={%s},q=%s,求a_{%s}" % (a22,a2,q,a3)
+                Val=a2*(q**(a3-a22))
+            elif ch==2:
+                St=r"己知 a_{%s}={%s},q=%s,求a_{%s}" % (a3,a2*(q**(a3-a22)),q,a22)
+                Val=a2
+        elif Tx==3:
+            a2=random.randrange(3) +1 
+            a3=(a2+random.choice(range(2,5)) )% 8 ;a3=a3 if a3>0 else 1;
+            q=a1[i]; 
+            if q==0 :q=2
+            if q==1 :q=2
+            expre= q**n
+            a=[]
+            for j in range(12):
+                a.append(expre.subs(n,j))
+            St=r"己知 a_{%s}=%s,a_{%s}=%s,求q" %(a2,a[a2],a3,a[a3])
+            Val=q
+        elif Tx==4:
             a2=random.randrange(3) +5
             a3=(a2+random.choice(range(2,5)) )% 8 ;a3=a3 if a3>0 else 1;
             q=a1[i]; 
@@ -2658,14 +2842,11 @@ def Get_PF403_Expr(QN,Tx=-1):
             tem_=""
             for i_,a_ in enumerate(a):
                 if i_>0 and i_<4  :
-                    tem_ = tem_+str(sp.latex(a_))+"、"
-            
-                    
-            St=r'己知 %s...、%s, S_{%s} ?'%(tem_,sp.latex(a[a2]),sp.latex(a2))            
-
+                    tem_ = tem_+str(sp.latex(a_))+"、"     
+            St=r'己知 %s...、%s, 求S_{%s} '%(tem_,sp.latex(a[a2]),sp.latex(a2))            
             Val=sp.summation(expre, (n, 1, a2))
             pass
-        elif Tx==3:
+        elif Tx==5:
             a2=random.randrange(3) +4 
             a3=(a2+random.choice(range(2,5)) )% 8 ;a3=a3 if a3>0 else 1;
             q=a1[i]; 
@@ -2675,8 +2856,19 @@ def Get_PF403_Expr(QN,Tx=-1):
             a=[]
             for j in range(12):
                 a.append(expre.subs(n,j))
-            St=r'己知 a_1={},q={}, S_{} ?'.format(a[1],q,a2)
+            St=r'己知 a_1={},q={}, 求S_{} '.format(a[1],q,a2)
             Val=sp.summation(expre, (n, 1, a2))
+            pass
+        elif Tx==6:
+            a11=random.choice([sp.Rational(1,2),sp.Rational(1,3),sp.Rational(1,4),2,3,4,5,6,7,8,9])
+            a22=random.choice([2,3,4,5])
+            a3=a22+random.choice([2,3,4,5])
+            q=random.choice([sp.Rational(1,2),sp.Rational(1,3),sp.Rational(1,4),2,3,4])
+            s=3+random.choice([1,2,3,4])
+            if q==0 :q=2
+            if q==1 :q=2
+            St=r"己知 a_{%s}={%s},a_{%s}={%s},求S_{%s}" % (a22,a11*(q**(a22-1)),a3,a11*(q**(a3-1)),s)
+            Val=a11*(1-q**s)/(1-q)
             pass
         TE=GetTE(i,St,Val,Tx)        
         NTE.append(TE)    
@@ -2844,19 +3036,23 @@ def Get_PF405_Expr(QN,Tx=-1):
             Val=c
             SSt=sp.log(d,b)  
         elif Tx==1:
-            val_=[2,3,4,5,6,7,8,9]
+            val_=[2,3,5,6,7,11,13]
             base=random.choice(base_)
             c=random.choice(val_)
             d=random.choice(val_)
+            while c==d:
+                d=random.choice(val_)
             e=c*d
             St=r"\log_{%s}{%s} + \log_{%s}{%s}" %(base,c,base,d)  #Val=c1+sp.log(c2,b)+sp.log(c3,b)
             SSt=sp.log(d,base)  # display(SSt)
             Val=sp.log(e,base)     #display(sp.logcombine(SSt,force=True))
         elif Tx==2:
-            val_=[2,3,4,5,6,7,8,9]
+            val_=[2,3,5,6,7,11,13]
             base=random.choice(base_)
             c=random.choice(val_)
             d=random.choice(val_)
+            while c==d:
+                d=random.choice(val_)
             e=c*d
             St=r"\log_{%s}{%s} - \log_{%s}{%s}" %(base,e,base,c)  #Val=c1+sp.log(c2,b)+sp.log(c3,b)
             SSt=sp.log(d,base)  # display(SSt)
@@ -3304,7 +3500,7 @@ def Get_PF603_Expr(QN,Tx=-1):
             TE["ValFmt"]=r"HTML"
             TE["ValSt"]=r"<table><tr><td>%s<tr><td>%s</table>"%(Ts1,Ts2)
             TE["Tip"]=["分子","分母"]
-        elif Tx == 2 :               #给定函数值，指定象限
+        elif Tx == 3 :               #给定函数值，指定象限
             if i < 3 :
                 x = lib.TakeAFrc(9, 2)                                     # sin,cos 取真分数
             elif i < 5 :
@@ -3333,7 +3529,7 @@ def Get_PF603_Expr(QN,Tx=-1):
             TE["ValFmt"]=r"HTML"
             TE["ValSt"]=ValSt+"</table>"
             TE["Tip"]=["分子","分母"]
-        elif Tx == 3 :       #特殊角，例 sin A = J(3)/2   A∈ II, ==> A=? tanA =?         
+        elif Tx == 2 :       #特殊角，例 sin A = J(3)/2   A∈ II, ==> A=? tanA =?         
             Tip=["A=", f"{s2} A="]
             s5 = "**"
             while s5 == "**":
@@ -3341,7 +3537,7 @@ def Get_PF603_Expr(QN,Tx=-1):
                 s5 = Sheet02Cells[i][ 10 + r]
             s1 = f"{s1} A = {s5} "
             s2 = f"A,   {s2} A"
-            a = Sheet02Cells[0][11 + r]
+            a = Sheet02Cells[0][10 + r]
             Ts1 = f"{a}°"
             Ts2 = Sheet02Cells[j][ 10 + r]
             k = int(int(a) / 91)
